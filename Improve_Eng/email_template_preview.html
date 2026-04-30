@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily English Test - Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    padding: 20px;
+    color: #1a1a2e;
+  }
+  .email-wrapper {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  /* ── 헤더 ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    padding: 32px 36px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .header-logo {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.08);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .header-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .header-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+  }
+
+  /* ── 진도 바 ── */
+  .streak-bar {
+    background: #f8f9fb;
+    padding: 16px 36px;
+    border-bottom: 1px solid #eef0f3;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .streak-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+  .streak-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .streak-dot.green { background: #22c55e; }
+  .streak-dot.yellow { background: #eab308; }
+  .streak-dot.gray { background: #d1d5db; }
+  .streak-label { font-weight: 600; color: #1a1a2e; }
+
+  /* ── 전날 분석 배너 ── */
+  .analysis-banner {
+    margin: 24px 36px 0;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #f97316;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .analysis-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #c2410c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .analysis-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #78350f;
+    line-height: 1.5;
+  }
+  .analysis-row:last-child { margin-bottom: 0; }
+  .analysis-tag {
+    background: #f97316;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .analysis-tag.grammar { background: #8b5cf6; }
+  .analysis-tag.listening { background: #0ea5e9; }
+
+  /* ── 섹션 공통 ── */
+  .section {
+    padding: 28px 36px;
+    border-bottom: 1px solid #eef0f3;
+  }
+  .section:last-of-type { border-bottom: none; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-listening  { background: #e0f2fe; }
+  .icon-grammar    { background: #f3e8ff; }
+  .icon-reading    { background: #dcfce7; }
+  .icon-speaking   { background: #fef9c3; }
+  .section-meta { flex: 1; }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1;
+  }
+  .section-source {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 3px;
+  }
+  .level-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .level-b1  { background: #dcfce7; color: #15803d; }
+  .level-b2  { background: #dbeafe; color: #1d4ed8; }
+  .level-c1  { background: #f3e8ff; color: #7c3aed; }
+
+  /* ── 듣기 섹션 ── */
+  .audio-block {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .audio-player-mock {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .play-btn {
+    width: 42px; height: 42px;
+    background: #0ea5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+  .audio-info { flex: 1; }
+  .audio-title { font-size: 14px; font-weight: 600; color: #0c4a6e; }
+  .audio-duration { font-size: 12px; color: #7dd3fc; margin-top: 2px; }
+  .audio-waveform {
+    height: 4px;
+    background: #bae6fd;
+    border-radius: 2px;
+    position: relative;
+  }
+  .audio-waveform::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0;
+    width: 35%;
+    height: 100%;
+    background: #0ea5e9;
+    border-radius: 2px;
+  }
+  .topic-label {
+    font-size: 12px;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  /* ── 문제 공통 ── */
+  .question-block {
+    margin-bottom: 18px;
+  }
+  .question-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .question-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: #1a1a2e;
+    color: white;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .option:hover { border-color: #6366f1; background: #f5f3ff; }
+  .option-letter {
+    width: 24px; height: 24px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #6b7280;
+    flex-shrink: 0;
+  }
+
+  /* ── 문법 섹션 ── */
+  .grammar-note {
+    background: #faf5ff;
+    border: 1px solid #e9d5ff;
+    border-left: 3px solid #8b5cf6;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #5b21b6;
+    line-height: 1.6;
+  }
+  .grammar-note strong { color: #4c1d95; }
+  .fill-blank {
+    font-size: 15px;
+    color: #1a1a2e;
+    font-weight: 600;
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+  .blank {
+    display: inline-block;
+    border-bottom: 2px solid #8b5cf6;
+    min-width: 80px;
+    color: #8b5cf6;
+    font-weight: 700;
+    padding: 0 4px;
+  }
+
+  /* ── 독해 섹션 ── */
+  .reading-passage {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    font-size: 14px;
+    color: #1a1a2e;
+    line-height: 1.85;
+    margin-bottom: 18px;
+  }
+  .reading-passage .vocab-highlight {
+    background: #bbf7d0;
+    color: #14532d;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .reading-source {
+    font-size: 12px;
+    color: #86efac;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* ── 말하기 섹션 ── */
+  .speaking-script {
+    background: #fefce8;
+    border: 1px solid #fde047;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .script-role {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a16207;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .script-text {
+    font-size: 15px;
+    color: #1a1a2e;
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+  .script-phonetic {
+    font-size: 12px;
+    color: #92400e;
+    font-style: italic;
+  }
+  .speaking-tip {
+    background: #fffbeb;
+    border: 1px dashed #fcd34d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #78350f;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .speaking-tip strong { color: #92400e; }
+
+  /* ── 제출 버튼 ── */
+  .submit-section {
+    padding: 24px 36px 28px;
+    background: #f8f9fb;
+    text-align: center;
+  }
+  .submit-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    margin-bottom: 10px;
+  }
+  .submit-note {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 8px;
+  }
+
+  /* ── 푸터 ── */
+  .footer {
+    background: #1a1a2e;
+    padding: 20px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-left { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .footer-score {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-align: right;
+  }
+  .footer-score strong { color: #22c55e; font-size: 16px; }
+
+  /* ── 스코어카드 (미리보기용 추가) ── */
+  .score-card {
+    display: flex;
+    gap: 12px;
+    margin: 0 36px 24px;
+    flex-wrap: wrap;
+  }
+  .score-item {
+    flex: 1;
+    min-width: 100px;
+    background: #f8f9fb;
+    border: 1px solid #eef0f3;
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .score-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a2e;
+    line-height: 1;
+  }
+  .score-value.good { color: #22c55e; }
+  .score-value.warn { color: #f59e0b; }
+  .score-value.bad  { color: #ef4444; }
+  .score-skill {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<div style="max-width:680px;margin:0 auto 16px;font-size:13px;color:#666;">
+  📌 <strong>이메일 미리보기</strong> — 매일 아침 이 형식으로 전송됩니다
+</div>
+
+<div class="email-wrapper">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-top">
+      <span class="header-logo">Improve English</span>
+      <span class="header-date">Wednesday, Apr 30, 2026 · Day 12</span>
+    </div>
+    <div class="header-title">오늘의 영어 테스트 📚</div>
+    <div class="header-subtitle">4가지 영역 · 총 12문항 · 예상 소요시간 약 20분</div>
+  </div>
+
+  <!-- 전날 점수 요약 -->
+  <div class="score-card" style="margin-top:20px;">
+    <div class="score-item">
+      <div class="score-value good">85%</div>
+      <div class="score-skill">듣기</div>
+    </div>
+    <div class="score-item">
+      <div class="score-value warn">60%</div>
+      <div class="score-skill">문법</div>
+    </div>
+    <div class="score-item">
+      <div class="score-value good">80%</div>
+      <div class="score-skill">독해</div>
+    </div>
+    <div class="score-item">
+      <div class="score-value bad">40%</div>
+      <div class="score-skill">말하기</div>
+    </div>
+  </div>
+
+  <!-- 전날 오답 분석 배너 -->
+  <div class="analysis-banner">
+    <div class="analysis-title">🔍 어제 틀린 항목 분석</div>
+    <div class="analysis-row">
+      <span class="analysis-tag grammar">문법</span>
+      <span><strong>"used to" vs "be used to"</strong> 혼동 — "used to"는 과거 습관(현재는 아님), "be used to"는 현재 익숙함을 표현합니다. <em>예: I used to swim. / I am used to swimming.</em></span>
+    </div>
+    <div class="analysis-row">
+      <span class="analysis-tag listening">듣기</span>
+      <span><strong>연음(liaison) 오류</strong> — "did you"가 빠르게 발음될 때 <em>/dɪdʒu/</em>로 들립니다. 오늘 섹션 1에서 같은 패턴을 집중 연습합니다.</span>
+    </div>
+  </div>
+
+  <!-- ══════════ 섹션 1: 듣기 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-listening">🎧</div>
+      <div class="section-meta">
+        <div class="section-title">Section 1 · 듣기 (Listening)</div>
+        <div class="section-source">출처: BBC 6 Minute English · "The future of AI in healthcare"</div>
+      </div>
+      <span class="level-badge level-b2">B2</span>
+    </div>
+
+    <span class="topic-label">📌 오늘 주제: 연음(Liaison) — "did you / would you"</span>
+
+    <div class="audio-block">
+      <div class="audio-player-mock">
+        <a class="play-btn" href="#">▶</a>
+        <div class="audio-info">
+          <div class="audio-title">BBC 6 Minute English – Apr 30, 2026</div>
+          <div class="audio-duration">6:02 · 재생 속도 0.85x 추천</div>
+        </div>
+      </div>
+      <div class="audio-waveform"></div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">1</span>
+        What does the speaker say is the biggest challenge for AI in healthcare?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q1&body=A">
+          <span class="option-letter">A</span> Lack of computing power
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q1&body=B">
+          <span class="option-letter">B</span> Data privacy and patient trust
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q1&body=C">
+          <span class="option-letter">C</span> High cost of development
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q1&body=D">
+          <span class="option-letter">D</span> Shortage of trained doctors
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">2</span>
+        Which phrase did you hear in the audio? (연음 집중)
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q2&body=A">
+          <span class="option-letter">A</span> "Did you know that…"  <em style="font-size:12px;color:#9ca3af;">[/dɪdʒu/]</em>
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q2&body=B">
+          <span class="option-letter">B</span> "Do you think that…"
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_L_Q2&body=C">
+          <span class="option-letter">C</span> "Have you considered…"
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 섹션 2: 문법 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-grammar">✏️</div>
+      <div class="section-meta">
+        <div class="section-title">Section 2 · 문법 (Grammar)</div>
+        <div class="section-source">출처: Perfect English Grammar · British Council</div>
+      </div>
+      <span class="level-badge level-b2">B2</span>
+    </div>
+
+    <div class="grammar-note">
+      📖 <strong>오늘의 포인트: 가정법 과거 (Second Conditional)</strong><br>
+      구조: <strong>If + 과거시제, would + 동사원형</strong><br>
+      현재 사실과 반대되는 상황을 가정할 때 사용합니다.<br>
+      예: <em>If I had more time, I <strong>would learn</strong> Japanese.</em>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">3</span>
+        빈칸에 알맞은 것을 고르세요.<br>
+        <div class="fill-blank">If she <span class="blank">______</span> harder, she would get promoted.</div>
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q3&body=A">
+          <span class="option-letter">A</span> works
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q3&body=B">
+          <span class="option-letter">B</span> worked
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q3&body=C">
+          <span class="option-letter">C</span> will work
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q3&body=D">
+          <span class="option-letter">D</span> had worked
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">4</span>
+        다음 중 올바른 문장은?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q4&body=A">
+          <span class="option-letter">A</span> If I would have time, I would call you.
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q4&body=B">
+          <span class="option-letter">B</span> If I had time, I would call you.
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q4&body=C">
+          <span class="option-letter">C</span> If I have time, I would call you.
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">5</span>
+        "I wish I _____ taller." — 알맞은 형태는?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q5&body=A">
+          <span class="option-letter">A</span> am
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q5&body=B">
+          <span class="option-letter">B</span> were
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_G_Q5&body=C">
+          <span class="option-letter">C</span> will be
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 섹션 3: 독해 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-reading">📖</div>
+      <div class="section-meta">
+        <div class="section-title">Section 3 · 독해 (Reading)</div>
+        <div class="section-source">출처: VOA Learning English · News in Levels</div>
+      </div>
+      <span class="level-badge level-b1">B1</span>
+    </div>
+
+    <div class="reading-passage">
+      &nbsp;&nbsp;South Korea is <span class="vocab-highlight" title="n. 인공지능">artificial intelligence</span> to improve its public health system. The government recently announced a new program that will use AI to <span class="vocab-highlight" title="v. 분석하다">analyze</span> patient data and help doctors make faster decisions.
+      <br><br>
+      &nbsp;&nbsp;Supporters say the technology could reduce waiting times and <span class="vocab-highlight" title="v. 개선하다">improve outcomes</span> for patients. However, critics warn that <span class="vocab-highlight" title="n. 개인 정보 보호">privacy concerns</span> must be addressed before the program is fully <span class="vocab-highlight" title="v. 시행되다">implemented</span>.
+      <br><br>
+      &nbsp;&nbsp;The Health Ministry plans to run a six-month <span class="vocab-highlight" title="n. 시범 사업">pilot program</span> in three major hospitals starting next year.
+      <div class="reading-source">— VOA Learning English, Apr 29, 2026 (adapted)</div>
+    </div>
+
+    <div style="font-size:12px;color:#9ca3af;margin-bottom:14px;">💡 색칠된 단어에 커서를 올리면 뜻이 표시됩니다</div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">6</span>
+        What is the main purpose of Korea's new AI program?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q6&body=A">
+          <span class="option-letter">A</span> To replace doctors with AI systems
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q6&body=B">
+          <span class="option-letter">B</span> To improve public health decision-making using AI
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q6&body=C">
+          <span class="option-letter">C</span> To export AI technology to other countries
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q6&body=D">
+          <span class="option-letter">D</span> To reduce the number of hospitals
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">7</span>
+        What concern do critics raise about the program?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q7&body=A">
+          <span class="option-letter">A</span> It is too expensive to develop
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q7&body=B">
+          <span class="option-letter">B</span> Doctors don't know how to use AI
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q7&body=C">
+          <span class="option-letter">C</span> Privacy issues haven't been solved yet
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">8</span>
+        "Pilot program"의 의미에 가장 가까운 것은?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q8&body=A">
+          <span class="option-letter">A</span> 비행 훈련 프로그램
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q8&body=B">
+          <span class="option-letter">B</span> 전면 시행 전 소규모 시범 운영
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_R_Q8&body=C">
+          <span class="option-letter">C</span> 기존 프로그램 폐지 계획
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 섹션 4: 말하기 ══════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-speaking">🗣️</div>
+      <div class="section-meta">
+        <div class="section-title">Section 4 · 말하기 (Speaking)</div>
+        <div class="section-source">새도잉 + 패턴 연습 (3회 반복 권장)</div>
+      </div>
+      <span class="level-badge level-b2">B2</span>
+    </div>
+
+    <div class="speaking-tip">
+      💡 <strong>오늘의 포인트: 비즈니스 영어 — 의견 제시하기</strong><br>
+      "From my perspective…", "I'd argue that…", "It seems to me that…" 같은 표현으로 부드럽게 의견을 시작하는 연습을 합니다. 직접적인 "I think"보다 더 전문적으로 들립니다.
+    </div>
+
+    <div class="speaking-script">
+      <div class="script-role">🎯 오늘의 새도잉 스크립트 (3회 반복)</div>
+      <div class="script-text">
+        "From my perspective, <strong>investing in technology</strong> is no longer optional for businesses. It's <strong>essential</strong> for staying competitive in today's market. I'd argue that companies that <strong>fail to adapt</strong> will <strong>fall behind</strong> within five years."
+      </div>
+      <div class="script-phonetic">
+        발음 팁: "essential" → /ɪˈsenʃəl/ · "competitive" → /kəmˈpetɪtɪv/ · "adapt" → /əˈdæpt/
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">9</span>
+        다음 중 비즈니스 미팅에서 의견을 제시하기에 가장 적절한 표현은?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Q9&body=A">
+          <span class="option-letter">A</span> "You are wrong about that."
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Q9&body=B">
+          <span class="option-letter">B</span> "From my perspective, there might be another way to approach this."
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Q9&body=C">
+          <span class="option-letter">C</span> "I don't like your idea."
+        </a>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="question-text">
+        <span class="question-num">10</span>
+        오늘 새도잉 스크립트를 소리내어 읽었나요?
+      </div>
+      <div class="options">
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Practice&body=done_3times">
+          <span class="option-letter">✓</span> 네, 3회 이상 읽었습니다
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Practice&body=done_1time">
+          <span class="option-letter">△</span> 1~2회 읽었습니다
+        </a>
+        <a class="option" href="mailto:ggulbok2@gmail.com?subject=Day12_S_Practice&body=skipped">
+          <span class="option-letter">✗</span> 아직 못 했습니다
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 제출 버튼 -->
+  <div class="submit-section">
+    <div style="font-size:13px;color:#6b7280;margin-bottom:14px;">
+      각 보기를 클릭하면 자동으로 답안이 제출됩니다<br>
+      (이메일 앱이 열리면 전송 버튼을 눌러주세요)
+    </div>
+    <a class="submit-btn" href="https://docs.google.com/forms/d/FORM_ID/viewform">
+      📊 Google Form으로 한 번에 제출하기
+    </a>
+    <div class="submit-note">결과는 다음날 아침 메일의 오답 분석 섹션에서 확인하실 수 있습니다</div>
+  </div>
+
+  <!-- 푸터 -->
+  <div class="footer">
+    <div class="footer-left">
+      Improve_Eng · Daily English System<br>
+      ggulbok2@gmail.com
+    </div>
+    <div class="footer-score">
+      이번 주 평균<br>
+      <strong>72%</strong>
+    </div>
+  </div>
+
+</div>
+
+<!-- 구조 설명 패널 -->
+<div style="max-width:680px;margin:32px auto 0;background:#1a1a2e;border-radius:16px;padding:28px 32px;color:#e5e7eb;">
+  <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;">⚙️ 시스템 구조 요약</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+    <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+      <div style="color:#60a5fa;font-weight:700;margin-bottom:8px;">📡 콘텐츠 소스 (매일 다른 채널)</div>
+      <div style="color:#9ca3af;line-height:1.8;">
+        듣기: BBC 6min English RSS<br>
+        듣기: VOA Learning English RSS<br>
+        문법: British Council / PerfectEnglishGrammar<br>
+        독해: VOA News / News in Levels<br>
+        말하기: TED Talks + YouTube 스크립트
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+      <div style="color:#34d399;font-weight:700;margin-bottom:8px;">📊 정오답 트래킹</div>
+      <div style="color:#9ca3af;line-height:1.8;">
+        • 각 보기 클릭 → mailto 자동 전송<br>
+        • 또는 Google Form 한 번에 제출<br>
+        • Google Sheets에 자동 기록<br>
+        • 오답 → 다음날 분석 배너 표시<br>
+        • 주간/월간 영역별 점수 추적
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+      <div style="color:#f59e0b;font-weight:700;margin-bottom:8px;">🤖 자동화 방식</div>
+      <div style="color:#9ca3af;line-height:1.8;">
+        • GitHub Actions (무료) 매일 08:00 실행<br>
+        • RSS 파싱 → Claude API로 문제 생성<br>
+        • Gmail SMTP로 HTML 메일 발송<br>
+        • 오답 분석도 Claude가 자동 생성
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);border-radius:10px;padding:16px;">
+      <div style="color:#e879f9;font-weight:700;margin-bottom:8px;">📈 학습 설계 원칙</div>
+      <div style="color:#9ca3af;line-height:1.8;">
+        • 간격 반복(Spaced Repetition)<br>
+        • 쉐도잉(Shadowing) — 발음·리듬<br>
+        • 다독(Extensive Reading) — 어휘<br>
+        • 연음/청크 집중 듣기 훈련<br>
+        • 비즈니스 맥락 위주 콘텐츠
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
