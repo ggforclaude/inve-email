@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Day 1 — Improve English</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  padding: 24px 20px 20px;
+  color: #fff;
+}
+.hdr-top { display: flex; justify-content: space-between; align-items: center;
+           font-size: 11px; color: #8899bb; letter-spacing: 1.5px;
+           text-transform: uppercase; margin-bottom: 10px; }
+.hdr-date { background: rgba(255,255,255,.12); padding: 3px 10px; border-radius: 20px; }
+.hdr-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.hdr-meta { font-size: 12px; color: #8899bb; margin-bottom: 14px; }
+.lv-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px;
+            border-radius: 20px; color: #1a1a2e; }
+
+/* CONTAINER */
+.container { max-width: 680px; margin: 0 auto; padding: 16px 12px 40px; }
+
+/* CARDS */
+.card { background: #fff; border-radius: 14px; padding: 20px;
+        margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* PREV ANALYSIS */
+.analysis-card { border-left: 4px solid #f97316; background: #fff7ed; }
+.card-label { font-size: 11px; font-weight: 700; color: #c2410c;
+              text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* LESSON */
+.lesson-card { border: 1.5px solid; }
+.lesson-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.lesson-type-badge { font-size: 10px; font-weight: 700; padding: 2px 8px;
+                     border-radius: 4px; letter-spacing: 1px; }
+.lesson-icon { font-size: 20px; }
+.lesson-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.lesson-subtitle { font-size: 13px; color: #555; margin-bottom: 12px; }
+.lesson-keypoint { font-size: 14px; background: rgba(0,0,0,.04); padding: 10px 12px;
+                   border-radius: 8px; margin-bottom: 12px; }
+.lesson-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.lesson-ex { border-left: 3px solid currentColor; padding: 8px 12px;
+             background: rgba(0,0,0,.03); border-radius: 0 6px 6px 0; }
+.lesson-ex-text { font-size: 14px; font-weight: 600; font-style: italic; margin-bottom: 3px; }
+.lesson-ex-note { font-size: 12px; color: #666; }
+.lesson-tip { font-size: 13px; color: #555; background: rgba(0,0,0,.04);
+              padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; }
+.lesson-remember { font-size: 13px; font-weight: 600; border: 1.5px solid;
+                   padding: 8px 12px; border-radius: 8px; }
+
+/* PROGRESS */
+.progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
+                 margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.progress-label { display: flex; justify-content: space-between;
+                  font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+.progress-bar-bg { background: #e5e7eb; border-radius: 4px; height: 6px; }
+.progress-bar-fill { background: linear-gradient(90deg, #22c55e, #0ea5e9);
+                     height: 6px; border-radius: 4px; transition: width .3s; }
+
+/* SECTION */
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.section-icon-wrap { width: 40px; height: 40px; border-radius: 10px;
+                     display: flex; align-items: center; justify-content: center;
+                     font-size: 18px; flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 700; }
+.section-source { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.src-link { color: #9ca3af; text-decoration: none; }
+.src-link:hover { color: #6b7280; }
+
+/* AUDIO */
+.audio-box { background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px;
+             padding: 14px 16px; margin-bottom: 16px; }
+.audio-hint { font-size: 12px; color: #0369a1; margin-bottom: 8px; }
+.audio-link-btn { display: inline-block; background: #0ea5e9; color: #fff;
+                  font-size: 14px; font-weight: 600; padding: 10px 20px;
+                  border-radius: 8px; text-decoration: none; }
+
+/* PASSAGE */
+.passage-box { background: #f8faf8; border: 1px solid #bbddc0; border-left: 4px solid #22c55e;
+               border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                 text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.passage-text { font-size: 14px; line-height: 1.8; color: #1a1a2e; }
+
+/* SHADOWING */
+.shadow-box { background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
+              padding: 14px 16px; margin-bottom: 16px; }
+.shadow-label { font-size: 11px; font-weight: 700; color: #a16207;
+                text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; }
+.shadow-tip { font-size: 12px; color: #92400e; margin-top: 8px; font-style: italic; }
+
+/* QUESTIONS */
+.question { margin-bottom: 20px; padding: 14px; border-radius: 10px;
+            border: 1.5px solid #e5e7eb; transition: border-color .2s; }
+.question.q-correct { border-color: #86efac; background: #f0fdf4; }
+.question.q-wrong   { border-color: #fca5a5; background: #fff1f2; }
+.q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+.q-num { display: inline-flex; align-items: center; justify-content: center;
+         width: 22px; height: 22px; background: #1a1a2e; color: #fff;
+         border-radius: 50%; font-size: 10px; font-weight: 700;
+         margin-right: 6px; flex-shrink: 0; }
+.q-level { font-size: 10px; font-weight: 700; padding: 2px 7px;
+           border-radius: 10px; margin-left: 6px; }
+.opts { display: flex; flex-direction: column; gap: 7px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+       border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff;
+       cursor: pointer; text-align: left; width: 100%; font-size: 14px;
+       color: #374151; transition: all .15s; }
+.opt:hover:not([disabled]) { border-color: #93c5fd; background: #eff6ff; }
+.opt.sel { border-color: #3b82f6; background: #eff6ff; }
+.opt.opt-correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #166534 !important; }
+.opt.opt-wrong   { border-color: #ef4444 !important; background: #fee2e2 !important; color: #991b1b !important; }
+.opt-letter { width: 22px; height: 22px; border: 1.5px solid #d1d5db; border-radius: 50%;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 11px; font-weight: 700; color: #6b7280; flex-shrink: 0; }
+.opt-text { flex: 1; }
+.expl { font-size: 13px; color: #374151; background: #f9fafb; padding: 10px 12px;
+        border-radius: 8px; margin-top: 10px; line-height: 1.6; }
+
+/* SUBMIT */
+.submit-area { text-align: center; padding: 24px 0; }
+.submit-hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+.btn-submit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff;
+              font-size: 16px; font-weight: 700; padding: 14px 40px;
+              border-radius: 12px; border: none; cursor: pointer;
+              transition: opacity .2s; }
+.btn-submit:hover { opacity: .85; }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* RESULTS */
+.results-panel { background: #fff; border-radius: 14px; padding: 24px 20px;
+                 margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.result-score { font-size: 52px; font-weight: 800; text-align: center; }
+.result-sub { text-align: center; font-size: 18px; color: #6b7280; margin-bottom: 20px; }
+.dom-scores { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.dom-score { text-align: center; background: #f8f9fb; border-radius: 10px; padding: 12px 16px; min-width: 70px; }
+.dom-pct { font-size: 22px; font-weight: 800; }
+.dom-name { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+.wrong-title { font-size: 13px; font-weight: 700; color: #c2410c;
+               text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.wrong-item { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316;
+              border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+.wrong-tag { background: #f97316; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+.wrong-expl { color: #78350f; margin-top: 6px; line-height: 1.5; }
+.all-correct { text-align: center; font-size: 16px; font-weight: 700; color: #22c55e;
+               padding: 20px; background: #dcfce7; border-radius: 10px; }
+.result-note { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 16px; }
+
+@media (max-width: 480px) {
+  .container { padding: 12px 8px 32px; }
+  .card { padding: 16px 14px; }
+  .hdr-title { font-size: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <span class="hdr-sub">Improve English &nbsp;·&nbsp; Day 1</span>
+    <span class="hdr-date">Apr 30, 2026</span>
+  </div>
+  <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
+  <p class="hdr-meta">4개 영역 · 4 섹션 · 약 20분</p>
+  <div class="lv-badges"><span class="lv-badge" style="background:#93c5fd">🎧 듣기: B1</span><span class="lv-badge" style="background:#93c5fd">✏️ 문법: B1</span><span class="lv-badge" style="background:#93c5fd">📖 독해: B1</span><span class="lv-badge" style="background:#93c5fd">🗣️ 말하기: B1</span></div>
+</header>
+
+<div class="container">
+
+  
+
+  <div class="card lesson-card" style="background:#fdf4ff;border-color:#c084fc">
+  <div class="lesson-header">
+    <span class="lesson-type-badge" style="background:#7e22ce;color:#fff">PRONUNCIATION</span>
+    <span class="lesson-icon">🎙️</span>
+  </div>
+  <h2 class="lesson-title" style="color:#7e22ce">Word Stress: Where Korean Speakers Go Wrong</h2>
+  <p class="lesson-subtitle">한국어에는 없는 영어의 '강세(stress)' — 비즈니스 단어에서 자주 틀립니다</p>
+  <div class="lesson-keypoint">English words have one stressed syllable that is louder, longer, and higher in pitch. Korean has relatively flat stress, so Korean speakers often stress the wrong syllable, making business words hard to understand.</div>
+  <div class="lesson-examples"><div class="lesson-ex">
+      <div class="lesson-ex-text">"rePORT → not REport (noun) / rePORT (verb)"</div>
+      <div class="lesson-ex-note">report는 동사일 때 두 번째 음절 강세! '리포트'처럼 평평하게 말하면 안 돼요</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"preSENtation → not PREsentation"</div>
+      <div class="lesson-ex-note">프레젠테이션의 강세는 'SEN'에! 회의에서 가장 많이 쓰는 단어 중 하나</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"imPORtant → not IMportant"</div>
+      <div class="lesson-ex-note">'임포턴트'가 아니라 'im-POR-tant' — 두 번째 음절을 강하게!</div>
+    </div></div>
+  <div class="lesson-tip">💡 새 단어를 사전에서 찾을 때, 반드시 발음 기호의 강세 표시(ˈ)를 확인하세요. Google에서 단어를 검색하면 바로 발음을 들을 수 있어요.</div>
+  <div class="lesson-remember" style="border-color:#c084fc;color:#7e22ce">🧠 영어는 '어디를 세게 말하느냐'가 의미를 바꾼다 — 강세 하나가 프로답게 들리게 만든다!</div>
+</div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>진행률</span>
+      <span id="progressText">0 / 12 문항</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#e0f2fe">🎧</div>
+    <div>
+      <div class="section-title" style="color:#0ea5e9">Section · Listening</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0jfh3s3">BBC English At Work</a> · Stealing Power</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" type="audio/mpeg">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" target="_blank">음성 링크 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q0">
+  <div class="q-text">
+    <span class="q-num">1</span>
+    What is meter tampering?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Paying your electricity bill late</span>
+  </button><button class="opt" data-q="0" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Altering a meter to prevent it from recording how much energy is being used</span>
+  </button><button class="opt" data-q="0" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Repairing a broken gas meter</span>
+  </button><button class="opt" data-q="0" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Checking your energy usage regularly</span>
+  </button></div>
+  <div class="expl" id="expl0" style="display:none">💬 텍스트에서 직접적으로 정의된 내용입니다. A는 미터 변조와 무관하고, C는 합법적 수리, D는 정상적인 사용 확인입니다.</div>
+</div><div class="question" id="q1">
+  <div class="q-text">
+    <span class="q-num">2</span>
+    According to the text, why has energy theft been increasing recently?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">More people are becoming engineers</span>
+  </button><button class="opt" data-q="1" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The cost of living crisis is a main reason for the sharp increase</span>
+  </button><button class="opt" data-q="1" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Energy companies are raising prices unfairly</span>
+  </button><button class="opt" data-q="1" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">People are not aware that it is illegal</span>
+  </button></div>
+  <div class="expl" id="expl1" style="display:none">💬 텍스트에서 '에너지 절도가 새로운 현상은 아니지만 생활비 위기가 급증의 주된 이유'라고 명시했습니다. A는 언급되지 않았고, C와 D는 텍스트 근거가 없습니다.</div>
+</div><div class="question" id="q2">
+  <div class="q-text">
+    <span class="q-num">3</span>
+    What does the contrast between the reported cases (2,566 in 2017 vs. 10,694 last year) and the industry's estimate of 200,000 suggest?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The energy industry is deliberately overestimating the problem</span>
+  </button><button class="opt" data-q="2" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Official reports significantly underestimate the true scale of energy theft</span>
+  </button><button class="opt" data-q="2" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Most cases are solved by Ofgem before they are reported</span>
+  </button><button class="opt" data-q="2" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">The number of cases has actually decreased despite what statistics show</span>
+  </button></div>
+  <div class="expl" id="expl2" style="display:none">💬 공식 신고 수치(10,694)와 실제 추정치(200,000)의 큰 차이는 많은 사건이 보고되지 않는다는 의미입니다. A는 산업계 입장을 오해한 것이고, C와 D는 텍스트 내용과 맞지 않습니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#ede9fe">✏️</div>
+    <div>
+      <div class="section-title" style="color:#8b5cf6">Section · Grammar</div>
+      <div class="section-source"><span>British Council / Perfect English Grammar</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q3">
+  <div class="q-text">
+    <span class="q-num">4</span>
+    직원이 "I will finish the report by Friday."라고 말했습니다. 이를 간접화법으로 나타내면?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">He said he will finish the report by Friday.</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">He said he would finish the report by Friday.</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">He said he finishes the report by Friday.</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">He said he finished the report by Friday.</span>
+  </button></div>
+  <div class="expl" id="expl3" style="display:none">💬 간접화법에서는 주절의 시제가 과거형(said)이면, 종속절의 시제를 한 단계 과거로 이동시킵니다. will → would로 변환되어야 합니다.</div>
+</div><div class="question" id="q4">
+  <div class="q-text">
+    <span class="q-num">5</span>
+    고객이 "Have you sent my order?"라고 물었습니다. 이를 간접화법으로 올바르게 나타낸 것은?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The customer asked if I have sent his order.</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The customer asked if I had sent his order.</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The customer asked me have I sent his order.</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">The customer asked whether I sent his order or not.</span>
+  </button></div>
+  <div class="expl" id="expl4" style="display:none">💬 의문문의 간접화법에서는 'if/whether + 주어 + 동사' 어순으로 변환하며, 시제는 한 단계 과거로 이동합니다. have sent → had sent</div>
+</div><div class="question" id="q5">
+  <div class="q-text">
+    <span class="q-num">6</span>
+    영업팀 리더는 "We've already negotiated with three companies, and we're planning to sign contracts next month."라고 보고했습니다. 다음 중 가장 자연스러운 간접화법은?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The sales leader reported that they have already negotiated with three companies, and they are planning to sign contracts next month.</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The sales leader reported that they had already negotiated with three companies, and they were planning to sign contracts the following month.</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The sales leader reported they already negotiated with three companies and planned to sign contracts next month.</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">The sales leader reported that they had negotiated with three companies already, and they plan to sign contracts the next month.</span>
+  </button></div>
+  <div class="expl" id="expl5" style="display:none">💬 보고 동사(reported)의 과거형에 이어지는 종속절의 시제는 과거완료(had negotiated), 과거진행(were planning)으로 이동하며, 'next month'는 'the following month'로 수정되어야 합니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#dcfce7">📖</div>
+    <div>
+      <div class="section-title" style="color:#22c55e">Section · Reading</div>
+      <div class="section-source"><span>VOA Learning English News</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q6">
+  <div class="q-text">
+    <span class="q-num">7</span>
+    What time does Sarah start work?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">7 a.m.</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">8 a.m.</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">9 a.m.</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">10 a.m.</span>
+  </button></div>
+  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 'She starts work at 8 a.m. every day'라고 명시되어 있습니다. 직접 찾는 문제로 A2 수준의 기본 읽기 능력을 평가합니다.</div>
+</div><div class="question" id="q7">
+  <div class="q-text">
+    <span class="q-num">8</span>
+    Why did Tom give his team a bonus?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Because the company needed to spend more money</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Because his team finished the project early and worked hard</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Because it was his birthday</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Because the team asked for more money</span>
+  </button></div>
+  <div class="expl" id="expl7" style="display:none">💬 텍스트에서 'his team completed a big project two days early'와 'Your hard work makes our company successful'라는 표현으로부터 인과관계를 파악해야 합니다. A는 근거 없음, C와 D는 텍스트에 언급되지 않음.</div>
+</div><div class="question" id="q8">
+  <div class="q-text">
+    <span class="q-num">9</span>
+    What does Dr. Chen suggest as the main solution to remote work challenges?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Forcing all employees to work in the office</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Investing in digital tools and regular video meetings, while maintaining flexibility</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Eliminating remote work entirely</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Paying employees higher salaries to compensate for isolation</span>
+  </button></div>
+  <div class="expl" id="expl8" style="display:none">💬 Dr. Chen은 'invest in better digital tools and regular video meetings'와 'flexibility'를 모두 강조합니다. A와 C는 그의 주장과 반대이며, D는 언급되지 않음. B2 수준에서는 전문가의 종합적인 조언을 종합적으로 파악해야 합니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#fef9c3">🗣️</div>
+    <div>
+      <div class="section-title" style="color:#f59e0b">Section · Speaking</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0ngc2yx">BBC Learning English Stories</a> · Classic Stories: The Tempest</div>
+    </div>
+  </div>
+  <div class="shadow-box">
+      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트 (3회 반복)</div>
+      <p class="shadow-text">We need to weather the storm during this difficult project. Our team will storm through the challenges together.</p>
+      <p class="shadow-tip">🔊 'weather'는 '웨더'로 발음하고, 'storm'의 'o'는 짧게 '스톰'으로 강하게 발음하세요.</p>
+    </div>
+  <div class="question" id="q9">
+  <div class="q-text">
+    <span class="q-num">10</span>
+    비즈니스 미팅에서 경제 위기를 대처하는 방법을 설명할 때, 어떤 표현이 가장 적절할까요?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">We need to storm the market with new products.</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">We need to weather the storm by cutting costs and staying focused.</span>
+  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">We need to take the storm seriously.</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">We need to storm ahead without planning.</span>
+  </button></div>
+  <div class="expl" id="expl9" style="display:none">💬 'weather the storm'은 '어려운 상황을 견디다, 극복하다'는 의미로 비즈니스 위기 상황에서 자주 사용되는 관용표현입니다. 다른 선택지들은 'storm'의 부자연스러운 사용이나 비전문적인 표현입니다.</div>
+</div><div class="question" id="q10">
+  <div class="q-text">
+    <span class="q-num">11</span>
+    'storm'을 포함한 다음 문장에서 강세(stress)가 올바르게 표시된 것은?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The team will 'STORM through the project in just two weeks.</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The team will storm 'THROUGH the project in just two weeks.</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The 'TEAM will storm through the project in just two weeks.</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">'THE team will storm through the project in just two weeks.</span>
+  </button></div>
+  <div class="expl" id="expl10" style="display:none">💬 'storm through'는 구동사(phrasal verb)로, 'THROUGH'에 강세가 옵니다. 이는 '빠르게 진행하다'는 의미의 관용구에서 뒷부분 전치사가 강하게 발음되는 영어 발음의 특징입니다.</div>
+</div><div class="question" id="q11">
+  <div class="q-text">
+    <span class="q-num">12</span>
+    다음 쉐도잉 스크립트의 빈칸을 채우세요. 'storm'의 다양한 사용을 이해하며 읽어야 합니다.
+
+"The financial crisis was a perfect storm caused by multiple factors. Investors began to _____ (1) _____ the office demanding answers. Despite the _____ (2) _____ atmosphere in the company, our CEO remained calm and didn't _____ (3) _____ to panic."
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">(1) storm in (2) stormy (3) storm</span>
+  </button><button class="opt" data-q="11" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">(1) storm in (2) stormy (3) succumb</span>
+  </button><button class="opt" data-q="11" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">(1) pour into (2) stormy (3) succumb</span>
+  </button><button class="opt" data-q="11" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">(1) storm at (2) thunderous (3) surrender</span>
+  </button></div>
+  <div class="expl" id="expl11" style="display:none">💬 (1) 'storm in' = 성난 상태로 들어가다 (2) 'stormy' = 격동적인, 거친 (3) 'storm' = 폭발하다, 노하다 ('He stormed at the decision'처럼 사용). 'storm'의 여러 뜻을 동시에 테스트하는 문제로, B2 학습자가 맥락에 따른 어휘의 다양한 사용을 이해해야 합니다.</div>
+</div>
+</div>
+
+  <div class="submit-area" id="submitArea">
+    <p class="submit-hint">모든 문항에 답한 후 제출하세요</p>
+    <button class="btn-submit" id="submitBtn" onclick="submitAnswers()">
+      📝 제출하기
+    </button>
+  </div>
+
+  <div class="results-panel" id="resultsPanel" style="display:none">
+  </div>
+
+</div>
+
+<script>
+const CORRECT   = ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "A"];
+const EXPLS     = ["텍스트에서 직접적으로 정의된 내용입니다. A는 미터 변조와 무관하고, C는 합법적 수리, D는 정상적인 사용 확인입니다.", "텍스트에서 '에너지 절도가 새로운 현상은 아니지만 생활비 위기가 급증의 주된 이유'라고 명시했습니다. A는 언급되지 않았고, C와 D는 텍스트 근거가 없습니다.", "공식 신고 수치(10,694)와 실제 추정치(200,000)의 큰 차이는 많은 사건이 보고되지 않는다는 의미입니다. A는 산업계 입장을 오해한 것이고, C와 D는 텍스트 내용과 맞지 않습니다.", "간접화법에서는 주절의 시제가 과거형(said)이면, 종속절의 시제를 한 단계 과거로 이동시킵니다. will → would로 변환되어야 합니다.", "의문문의 간접화법에서는 'if/whether + 주어 + 동사' 어순으로 변환하며, 시제는 한 단계 과거로 이동합니다. have sent → had sent", "보고 동사(reported)의 과거형에 이어지는 종속절의 시제는 과거완료(had negotiated), 과거진행(were planning)으로 이동하며, 'next month'는 'the following month'로 수정되어야 합니다.", "텍스트에서 'She starts work at 8 a.m. every day'라고 명시되어 있습니다. 직접 찾는 문제로 A2 수준의 기본 읽기 능력을 평가합니다.", "텍스트에서 'his team completed a big project two days early'와 'Your hard work makes our company successful'라는 표현으로부터 인과관계를 파악해야 합니다. A는 근거 없음, C와 D는 텍스트에 언급되지 않음.", "Dr. Chen은 'invest in better digital tools and regular video meetings'와 'flexibility'를 모두 강조합니다. A와 C는 그의 주장과 반대이며, D는 언급되지 않음. B2 수준에서는 전문가의 종합적인 조언을 종합적으로 파악해야 합니다.", "'weather the storm'은 '어려운 상황을 견디다, 극복하다'는 의미로 비즈니스 위기 상황에서 자주 사용되는 관용표현입니다. 다른 선택지들은 'storm'의 부자연스러운 사용이나 비전문적인 표현입니다.", "'storm through'는 구동사(phrasal verb)로, 'THROUGH'에 강세가 옵니다. 이는 '빠르게 진행하다'는 의미의 관용구에서 뒷부분 전치사가 강하게 발음되는 영어 발음의 특징입니다.", "(1) 'storm in' = 성난 상태로 들어가다 (2) 'stormy' = 격동적인, 거친 (3) 'storm' = 폭발하다, 노하다 ('He stormed at the decision'처럼 사용). 'storm'의 여러 뜻을 동시에 테스트하는 문제로, B2 학습자가 맥락에 따른 어휘의 다양한 사용을 이해해야 합니다."];
+const DNAMES    = ["listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL     = 12;
+const TODAY     = "2026-04-30";
+const AS_URL    = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
+const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
+
+let answers   = new Array(TOTAL).fill(null);
+let submitted = false;
+
+// 답 선택
+document.querySelectorAll(".opt").forEach(btn => {
+  btn.addEventListener("click", function() {
+    if (submitted) return;
+    const q = parseInt(this.dataset.q);
+    const l = this.dataset.l;
+    document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b => b.classList.remove("sel"));
+    this.classList.add("sel");
+    answers[q] = l;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const n = answers.filter(a => a !== null).length;
+  document.getElementById("progressText").textContent = n + " / " + TOTAL + " 문항";
+  document.getElementById("progressFill").style.width = (n / TOTAL * 100) + "%";
+}
+
+function submitAnswers() {
+  if (submitted) return;
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    alert("아직 " + unanswered + "문항에 답하지 않았어요.");
+    return;
+  }
+  submitted = true;
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("submitBtn").textContent = "채점 중...";
+
+  // 채점
+  let correct = 0;
+  const domSc = {listening:{c:0,t:0},grammar:{c:0,t:0},reading:{c:0,t:0},speaking:{c:0,t:0}};
+  const wrongItems = [];
+
+  answers.forEach((ans, i) => {
+    const domain = DNAMES[i];
+    const ok     = CORRECT[i];
+    const isOk   = ans === ok;
+    if (isOk) { correct++; domSc[domain].c++; }
+    else { wrongItems.push({q:i+1, domain, chosen:ans, correct:ok, expl:EXPLS[i]}); }
+    domSc[domain].t++;
+
+    // 문항 시각화
+    const qEl = document.getElementById("q" + i);
+    if (qEl) qEl.classList.add(isOk ? "q-correct" : "q-wrong");
+    document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(b => {
+      if (b.dataset.l === ok)  b.classList.add("opt-correct");
+      if (b.dataset.l === ans && !isOk) b.classList.add("opt-wrong");
+    });
+    const explEl = document.getElementById("expl" + i);
+    if (explEl) explEl.style.display = "block";
+  });
+
+  showResults(correct, domSc, wrongItems);
+  saveResults(answers, correct, domSc);
+}
+
+function showResults(correct, domSc, wrongItems) {
+  const pct   = Math.round(correct / TOTAL * 100);
+  const color = pct >= 80 ? "#22c55e" : pct >= 60 ? "#f59e0b" : "#ef4444";
+  const emoji = pct >= 80 ? "🎉" : pct >= 60 ? "👍" : "💪";
+
+  let domHtml = "";
+  ["listening","grammar","reading","speaking"].forEach(d => {
+    const s = domSc[d];
+    const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+    const c = p >= 80 ? "#22c55e" : p >= 60 ? "#f59e0b" : "#ef4444";
+    domHtml += `<div class="dom-score"><div class="dom-pct" style="color:${c}">${p}%</div><div class="dom-name">${DOMAINS_KR[d]}</div></div>`;
+  });
+
+  let wrongHtml = "";
+  wrongItems.forEach(w => {
+    wrongHtml += `<div class="wrong-item"><span class="wrong-tag">${DOMAINS_KR[w.domain]}</span> Q${w.q} — 선택: <b>${w.chosen}</b> / 정답: <b>${w.correct}</b><div class="wrong-expl">${w.expl}</div></div>`;
+  });
+
+  const panel = document.getElementById("resultsPanel");
+  panel.innerHTML = `
+    <div class="result-score" style="color:${color}">${emoji} ${pct}%</div>
+    <div class="result-sub">${correct} / ${TOTAL} 정답</div>
+    <div class="dom-scores">${domHtml}</div>
+    ${wrongItems.length > 0 ? '<div class="wrong-title">오답 분석</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
+    <div class="result-note">내일 아침 테스트 페이지에서 추가 피드백을 확인하세요.</div>
+  `;
+  panel.style.display = "block";
+  panel.scrollIntoView({behavior: "smooth", block: "start"});
+
+  document.getElementById("submitArea").style.display = "none";
+}
+
+function saveResults(answers, correct, domSc) {
+  if (!AS_URL) return;
+  const params = new URLSearchParams({
+    date: TODAY,
+    answers: answers.join(","),
+    correct,
+    listening: domSc.listening.c + "/" + domSc.listening.t,
+    grammar:   domSc.grammar.c   + "/" + domSc.grammar.t,
+    reading:   domSc.reading.c   + "/" + domSc.reading.t,
+    speaking:  domSc.speaking.c  + "/" + domSc.speaking.t,
+  });
+  fetch(AS_URL + "?" + params.toString(), {mode:"no-cors"}).catch(() => {});
+}
+</script>
+</body>
+</html>
