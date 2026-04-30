@@ -4,3 +4,5 @@
 __pycache__/
 *.pyc
 .DS_Store
+# Google 서비스 계정 키 (절대 커밋 금지)
+Improve_Eng/*.json
