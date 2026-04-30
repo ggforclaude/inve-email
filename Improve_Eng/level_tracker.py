@@ -30,9 +30,10 @@ Q_DATE, Q_DOMAIN, Q_NUM, Q_LEVEL, Q_TEXT = 0, 1, 2, 3, 4
 Q_OPT_A, Q_OPT_B, Q_OPT_C, Q_OPT_D     = 5, 6, 7, 8
 Q_CORRECT, Q_EXPL, Q_SCRIPT              = 9, 10, 11
 
-# Responses 시트: [timestamp, date_field, ans_q1 .. ans_q12]
-R_DATE = 1
-R_ANS_START = 2
+# Responses 시트: Apps Script가 저장하는 형식
+# [date, answers_csv, total_correct, l_acc, g_acc, r_acc, s_acc]
+R_DATE        = 0
+R_ANSWERS_CSV = 1
 
 
 class LevelTracker:
@@ -76,7 +77,7 @@ class LevelTracker:
         if not responses:
             log.info("어제 응답 없음 (미제출)")
             return None
-        return self._grade(questions, responses, yesterday)
+        return self._grade(questions, responses)
 
     def calculate_current_levels(self) -> dict:
         """최근 ROLLING_DAYS일 Level_History를 읽어 영역별 추정 레벨 반환."""
@@ -90,14 +91,15 @@ class LevelTracker:
 
     # ── 채점 ─────────────────────────────────────────────────────────────────
 
-    def _grade(self, questions: list, user_answers: list, date_str: str) -> dict:
+    def _grade(self, questions: list, user_answers: list) -> dict:
+        """채점만 수행. Level_History 기록은 Apps Script가 담당."""
         answers    = user_answers[0] if user_answers else []
         correct_ct = 0
         wrong      = []
         domain_sc  = {d: {"correct": 0, "total": 0} for d in DOMAINS}
 
         for q in questions:
-            q_idx  = int(q[Q_NUM]) - 1        # 0-based
+            q_idx  = int(q[Q_NUM]) - 1
             domain = q[Q_DOMAIN]
             level  = q[Q_LEVEL]
             q_text = q[Q_TEXT]
@@ -116,10 +118,7 @@ class LevelTracker:
                     "chosen": chosen,  "explanation": expl,
                 })
 
-        self._record_history(date_str, domain_sc)
-
         return {
-            "date":         date_str,
             "total":        len(questions),
             "correct":      correct_ct,
             "domain_scores": domain_sc,
@@ -150,14 +149,6 @@ class LevelTracker:
             return "B1"
         else:
             return "A2"
-
-    def _record_history(self, date_str: str, domain_sc: dict) -> None:
-        row = [date_str]
-        for d in DOMAINS:
-            s = domain_sc.get(d, {"correct": 0, "total": 0})
-            acc = round(s["correct"] / s["total"], 3) if s["total"] else 0.0
-            row.append(acc)
-        self._append(SH_HISTORY, [row])
 
     # ── Sheets 읽기/쓰기 ─────────────────────────────────────────────────────
 
@@ -211,6 +202,11 @@ class LevelTracker:
         return [r for r in self._read(SH_QUESTIONS) if r and r[0] == date_str]
 
     def _responses_for(self, date_str: str) -> list:
-        """Google Form 응답 시트에서 해당 날짜 행만 반환 (답 부분만)."""
+        """Apps Script가 저장한 Responses 시트에서 answers 리스트 반환."""
         rows = self._read(SH_RESPONSES)
-        return [r[R_ANS_START:] for r in rows if len(r) > R_ANS_START and r[R_DATE] == date_str]
+        result = []
+        for r in rows:
+            if len(r) > R_ANSWERS_CSV and r[R_DATE] == date_str:
+                answers = [a.strip().upper() for a in r[R_ANSWERS_CSV].split(",")]
+                result.append(answers)
+        return result

@@ -251,6 +251,77 @@ def _parse_json(raw: str, mix: list) -> list[dict]:
         return _fallback_questions("unknown")
 
 
+async def generate_daily_lesson(
+    grammar_topic: str,
+    grammar_topic_kr: str,
+    reading_source: str,
+    current_levels: dict,
+    day_number: int,
+) -> dict:
+    """오늘의 학습 포인트를 Claude가 선택·생성. 문법/표현/어휘/발음/전략 중 최적 1개."""
+    avg_level = max(
+        ["A2", "B1", "B2", "C1"],
+        key=lambda l: sum(1 for v in current_levels.values() if v >= l)
+    ) if current_levels else "B1"
+
+    prompt = f"""You are an English coach for a Korean business professional (targeting B2 by Oct 2026, current level ~{avg_level}).
+
+Today's test covers:
+- Grammar topic: {grammar_topic} ({grammar_topic_kr})
+- Reading source: {reading_source}
+- Day number: {day_number}
+
+Choose ONE lesson type that adds the most value today and is NOT just a repeat of the grammar topic:
+- GRAMMAR: a common confusion point Korean speakers face (different angle from today's test)
+- EXPRESSION: a natural business idiom or phrase with 3 real-world examples
+- VOCABULARY: 3 power words useful in business contexts, with collocations
+- PRONUNCIATION: one sound/stress/rhythm issue specific to Korean speakers
+- STRATEGY: a concrete study technique for one of today's 4 skills
+
+Return ONLY valid JSON (no markdown, no extra text):
+{{
+  "type": "GRAMMAR|EXPRESSION|VOCABULARY|PRONUNCIATION|STRATEGY",
+  "icon": "one emoji",
+  "title": "Lesson title in English (max 8 words)",
+  "subtitle": "한 줄 한국어 설명",
+  "key_point": "The core rule or insight (English, 1-2 sentences)",
+  "examples": [
+    {{"text": "English example sentence", "note": "한국어 포인트"}},
+    {{"text": "English example sentence", "note": "한국어 포인트"}},
+    {{"text": "English example sentence", "note": "한국어 포인트"}}
+  ],
+  "tip": "실전 팁 한국어 1-2문장",
+  "remember": "외우기 쉬운 한 줄 요약 (한국어 OK)"
+}}"""
+
+    try:
+        resp = _client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=600,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = resp.content[0].text.strip()
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        return json.loads(raw[start:end])
+    except Exception as e:
+        log.warning(f"daily_lesson 생성 실패: {e}")
+        return {
+            "type": "EXPRESSION",
+            "icon": "💼",
+            "title": "Business English of the Day",
+            "subtitle": "오늘의 비즈니스 표현",
+            "key_point": "\"Let's circle back\" means to return to a topic later.",
+            "examples": [
+                {"text": "Let's circle back on this after the meeting.", "note": "나중에 다시 논의하자"},
+                {"text": "Can we circle back to the budget question?", "note": "예산 문제로 돌아가볼까요?"},
+                {"text": "I'll circle back with you once I have the data.", "note": "데이터 확인 후 다시 연락드릴게요"},
+            ],
+            "tip": "회의에서 화제를 잠시 보류할 때 자연스럽게 쓸 수 있는 표현입니다.",
+            "remember": "circle back = 나중에 다시 돌아오다",
+        }
+
+
 def _fallback_questions(domain: str) -> list[dict]:
     return [
         {

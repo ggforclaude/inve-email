@@ -1,9 +1,12 @@
-name: 영어 학습 일일 이메일
+name: 영어 학습 일일 페이지 생성
 
 on:
   schedule:
     - cron: '0 21 * * *'   # 매일 21:00 UTC = 06:00 KST
   workflow_dispatch:         # 수동 실행 버튼
+
+permissions:
+  contents: write            # docs/ 커밋 권한
 
 jobs:
   daily-english:
@@ -13,6 +16,8 @@ jobs:
     steps:
       - name: 코드 체크아웃
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Python 설정
         uses: actions/setup-python@v5
@@ -24,14 +29,24 @@ jobs:
       - name: 패키지 설치
         run: pip install -r Improve_Eng/requirements.txt
 
-      - name: 일일 영어 이메일 발송
+      - name: 일일 영어 페이지 생성
         working-directory: Improve_Eng
         env:
           ANTHROPIC_API_KEY:            ${{ secrets.ANTHROPIC_API_KEY }}
-          GMAIL_USER:                   ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASSWORD:           ${{ secrets.GMAIL_APP_PASSWORD }}
-          RECIPIENT_EMAIL:              ${{ secrets.RECIPIENT_EMAIL }}
           GOOGLE_SHEET_ID:              ${{ secrets.GOOGLE_SHEET_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON:  ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          GOOGLE_FORM_URL:              ${{ secrets.GOOGLE_FORM_URL }}
+          APPS_SCRIPT_URL:              ${{ secrets.APPS_SCRIPT_URL }}
+          PAGES_BASE_URL:               https://ggforclaude.github.io/inve-email
+          TELEGRAM_BOT_TOKEN:           ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:             ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python main.py
+
+      - name: 생성된 페이지를 저장소에 커밋
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --cached --quiet && echo "변경 없음" || (
+            git commit -m "Add daily test page: $(date -u '+%Y-%m-%d')" &&
+            git push
+          )
