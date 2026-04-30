@@ -75,8 +75,17 @@ def _build_html(today, day_number, questions, content,
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<style>
+  :root {{ color-scheme: light; }}
+  @media (prefers-color-scheme: dark) {{
+    body {{ background:#f0f2f5 !important; }}
+    div, td, span, a {{ color: inherit !important; }}
+  }}
+</style>
 </head>
-<body style="margin:0;padding:16px;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+<body style="margin:0;padding:16px;background:#f0f2f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#1a1a2e;">
 <div style="max-width:660px;margin:0 auto;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.1);">
 
   {_header(today, day_number)}
@@ -96,15 +105,15 @@ def _build_html(today, day_number, questions, content,
 
 def _header(today: date, day_number: int) -> str:
     return f"""
-<div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:28px 30px 22px;">
-  <div style="font-size:11px;color:rgba(255,255,255,0.45);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">
+<div style="background:#1a1a2e;background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:28px 30px 22px;" bgcolor="#1a1a2e">
+  <div style="font-size:11px;color:#8899bb !important;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">
     Improve English &nbsp;·&nbsp; Day {day_number}
-    <span style="float:right;background:rgba(255,255,255,0.1);padding:3px 12px;border-radius:20px;font-size:11px;">
+    <span style="float:right;background:rgba(255,255,255,0.15);padding:3px 12px;border-radius:20px;font-size:11px;color:#ccddff !important;">
       {today.strftime('%a, %b %d %Y')}
     </span>
   </div>
-  <div style="font-size:24px;font-weight:700;color:#ffffff;line-height:1.2;">오늘의 영어 테스트 📚</div>
-  <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:6px;">4개 영역 · 12문항 · 약 20분</div>
+  <div style="font-size:24px;font-weight:700;color:#ffffff !important;line-height:1.2;">오늘의 영어 테스트 📚</div>
+  <div style="font-size:13px;color:#99aabb !important;margin-top:6px;">4개 영역 · 12문항 · 약 20분</div>
 </div>"""
 
 
@@ -207,6 +216,19 @@ def _section(domain: str, questions: list, content_item: dict, start_num: int) -
   </div>
 </div>"""
 
+    # 독해: 지문 표시
+    passage_html = ""
+    if domain == "reading":
+        passage = content_item.get("text", "")
+        if passage:
+            passage_html = f"""
+<div style="background:#f8faf8;border:1px solid #bbddc0;border-left:4px solid #22c55e;
+     border-radius:10px;padding:16px 18px;margin-bottom:18px;">
+  <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;
+       letter-spacing:1px;margin-bottom:10px;">📄 지문 (Article)</div>
+  <div style="font-size:14px;color:#1a1a2e;line-height:1.8;">{passage[:800]}{"…" if len(passage) > 800 else ""}</div>
+</div>"""
+
     # 말하기: 첫 문제에서 쉐도잉 스크립트 추출
     script_html = ""
     if domain == "speaking" and questions:
@@ -240,6 +262,7 @@ def _section(domain: str, questions: list, content_item: dict, start_num: int) -
     </div>
   </div>
   {audio_html}
+  {passage_html}
   {script_html}
   {qs_html}
 </div>"""

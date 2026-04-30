@@ -16,15 +16,15 @@ log = logging.getLogger(__name__)
 LISTENING_SOURCES = [
     {
         "name": "BBC 6 Minute English",
-        "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/6-minute-english/rss.xml",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9pj.rss",
     },
     {
         "name": "BBC The English We Speak",
-        "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/the-english-we-speak/rss.xml",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9s3.rss",
     },
     {
-        "name": "VOA Learning English",
-        "rss":  "https://learningenglish.voanews.com/api/zexg-voa-podcast-rss",
+        "name": "BBC English At Work",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9qx.rss",
     },
 ]
 
