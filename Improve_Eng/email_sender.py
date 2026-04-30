@@ -182,6 +182,31 @@ def _section(domain: str, questions: list, content_item: dict, start_num: int) -
         f' · {title[:50]}' if url else source
     )
 
+    # 듣기: 오디오 버튼
+    audio_html = ""
+    if domain == "listening":
+        audio_url     = content_item.get("audio_url", "")
+        original_url  = content_item.get("url", "")
+        play_url      = audio_url or original_url
+        if play_url:
+            label = "🎧 음성 바로 듣기 (MP3)" if audio_url else "🔗 원본 페이지에서 듣기"
+            audio_html = f"""
+<div style="background:#e0f2fe;border:1px solid #7dd3fc;border-radius:12px;
+     padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+  <a href="{play_url}"
+     style="display:inline-flex;align-items:center;gap:8px;background:#0ea5e9;
+            color:#fff;font-size:14px;font-weight:700;padding:10px 20px;
+            border-radius:8px;text-decoration:none;flex-shrink:0;">
+    ▶ 재생
+  </a>
+  <div>
+    <div style="font-size:14px;font-weight:600;color:#0c4a6e;">{label}</div>
+    <div style="font-size:12px;color:#7dd3fc;margin-top:3px;">
+      클릭하면 브라우저에서 재생됩니다 · 문제를 먼저 읽고 들으세요
+    </div>
+  </div>
+</div>"""
+
     # 말하기: 첫 문제에서 쉐도잉 스크립트 추출
     script_html = ""
     if domain == "speaking" and questions:
@@ -214,6 +239,7 @@ def _section(domain: str, questions: list, content_item: dict, start_num: int) -
       <div style="font-size:11px;color:#9ca3af;margin-top:2px;">{src_line}</div>
     </div>
   </div>
+  {audio_html}
   {script_html}
   {qs_html}
 </div>"""

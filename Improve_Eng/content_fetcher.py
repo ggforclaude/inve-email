@@ -116,17 +116,32 @@ def _fetch_from_source(source: dict) -> dict:
             if scraped:
                 text = scraped
 
-        log.info(f"[{source['name']}] 수집 완료: {title[:60]}")
+        audio_url = _extract_audio_url(entry)
+        log.info(f"[{source['name']}] 수집 완료: {title[:60]} | audio={'있음' if audio_url else '없음'}")
         return {
-            "source": source["name"],
-            "title":  title,
-            "url":    link,
-            "text":   text[:2000],
+            "source":    source["name"],
+            "title":     title,
+            "url":       link,
+            "audio_url": audio_url,
+            "text":      text[:2000],
         }
 
     except Exception as e:
         log.warning(f"[{source['name']}] 수집 실패: {e} → Claude가 자체 생성")
         return {"source": source["name"], "title": "Daily Practice", "url": "", "text": ""}
+
+
+def _extract_audio_url(entry) -> str:
+    """RSS 항목에서 MP3/오디오 URL을 추출."""
+    # enclosures 필드 (BBC, VOA 표준)
+    for enc in getattr(entry, "enclosures", []):
+        if "audio" in enc.get("type", "") or enc.get("href", "").endswith(".mp3"):
+            return enc.get("href", "")
+    # links 필드 (일부 피드)
+    for lnk in getattr(entry, "links", []):
+        if "audio" in lnk.get("type", "") or lnk.get("href", "").endswith(".mp3"):
+            return lnk.get("href", "")
+    return ""
 
 
 def _clean_html(html: str) -> str:
