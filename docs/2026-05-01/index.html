@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Day 1 — Improve English</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  padding: 24px 20px 20px;
+  color: #fff;
+}
+.hdr-top { display: flex; justify-content: space-between; align-items: center;
+           font-size: 11px; color: #8899bb; letter-spacing: 1.5px;
+           text-transform: uppercase; margin-bottom: 10px; }
+.hdr-date { background: rgba(255,255,255,.12); padding: 3px 10px; border-radius: 20px; }
+.hdr-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.hdr-meta { font-size: 12px; color: #8899bb; margin-bottom: 14px; }
+.lv-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px;
+            border-radius: 20px; color: #1a1a2e; }
+
+/* CONTAINER */
+.container { max-width: 680px; margin: 0 auto; padding: 16px 12px 40px; }
+
+/* CARDS */
+.card { background: #fff; border-radius: 14px; padding: 20px;
+        margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* PREV ANALYSIS */
+.analysis-card { border-left: 4px solid #f97316; background: #fff7ed; }
+.card-label { font-size: 11px; font-weight: 700; color: #c2410c;
+              text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* LESSON */
+.lesson-card { border: 1.5px solid; }
+.lesson-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.lesson-type-badge { font-size: 10px; font-weight: 700; padding: 2px 8px;
+                     border-radius: 4px; letter-spacing: 1px; }
+.lesson-icon { font-size: 20px; }
+.lesson-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.lesson-subtitle { font-size: 13px; color: #555; margin-bottom: 12px; }
+.lesson-keypoint { font-size: 14px; background: rgba(0,0,0,.04); padding: 10px 12px;
+                   border-radius: 8px; margin-bottom: 12px; }
+.lesson-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.lesson-ex { border-left: 3px solid currentColor; padding: 8px 12px;
+             background: rgba(0,0,0,.03); border-radius: 0 6px 6px 0; }
+.lesson-ex-text { font-size: 14px; font-weight: 600; font-style: italic; margin-bottom: 3px; }
+.lesson-ex-note { font-size: 12px; color: #666; }
+.lesson-tip { font-size: 13px; color: #555; background: rgba(0,0,0,.04);
+              padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; }
+.lesson-remember { font-size: 13px; font-weight: 600; border: 1.5px solid;
+                   padding: 8px 12px; border-radius: 8px; }
+
+/* PROGRESS */
+.progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
+                 margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.progress-label { display: flex; justify-content: space-between;
+                  font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+.progress-bar-bg { background: #e5e7eb; border-radius: 4px; height: 6px; }
+.progress-bar-fill { background: linear-gradient(90deg, #22c55e, #0ea5e9);
+                     height: 6px; border-radius: 4px; transition: width .3s; }
+
+/* SECTION */
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.section-icon-wrap { width: 40px; height: 40px; border-radius: 10px;
+                     display: flex; align-items: center; justify-content: center;
+                     font-size: 18px; flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 700; }
+.section-source { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.src-link { color: #9ca3af; text-decoration: none; }
+.src-link:hover { color: #6b7280; }
+
+/* AUDIO */
+.audio-box { background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px;
+             padding: 14px 16px; margin-bottom: 16px; }
+.audio-hint { font-size: 12px; color: #0369a1; margin-bottom: 8px; }
+.audio-link-btn { display: inline-block; background: #0ea5e9; color: #fff;
+                  font-size: 14px; font-weight: 600; padding: 10px 20px;
+                  border-radius: 8px; text-decoration: none; }
+
+/* PASSAGE */
+.passage-box { background: #f8faf8; border: 1px solid #bbddc0; border-left: 4px solid #22c55e;
+               border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                 text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.passage-text { font-size: 14px; line-height: 1.8; color: #1a1a2e; }
+
+/* SHADOWING */
+.shadow-box { background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
+              padding: 14px 16px; margin-bottom: 16px; }
+.shadow-label { font-size: 11px; font-weight: 700; color: #a16207;
+                text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; }
+.shadow-tip { font-size: 12px; color: #92400e; margin-top: 8px; font-style: italic; }
+
+/* QUESTIONS */
+.question { margin-bottom: 20px; padding: 14px; border-radius: 10px;
+            border: 1.5px solid #e5e7eb; transition: border-color .2s; }
+.question.q-correct { border-color: #86efac; background: #f0fdf4; }
+.question.q-wrong   { border-color: #fca5a5; background: #fff1f2; }
+.q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+.q-num { display: inline-flex; align-items: center; justify-content: center;
+         width: 22px; height: 22px; background: #1a1a2e; color: #fff;
+         border-radius: 50%; font-size: 10px; font-weight: 700;
+         margin-right: 6px; flex-shrink: 0; }
+.q-level { font-size: 10px; font-weight: 700; padding: 2px 7px;
+           border-radius: 10px; margin-left: 6px; }
+.opts { display: flex; flex-direction: column; gap: 7px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+       border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff;
+       cursor: pointer; text-align: left; width: 100%; font-size: 14px;
+       color: #374151; transition: all .15s; }
+.opt:hover:not([disabled]) { border-color: #93c5fd; background: #eff6ff; }
+.opt.sel { border-color: #3b82f6; background: #eff6ff; }
+.opt.opt-correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #166534 !important; }
+.opt.opt-wrong   { border-color: #ef4444 !important; background: #fee2e2 !important; color: #991b1b !important; }
+.opt-letter { width: 22px; height: 22px; border: 1.5px solid #d1d5db; border-radius: 50%;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 11px; font-weight: 700; color: #6b7280; flex-shrink: 0; }
+.opt-text { flex: 1; }
+.expl { font-size: 13px; color: #374151; background: #f9fafb; padding: 10px 12px;
+        border-radius: 8px; margin-top: 10px; line-height: 1.6; }
+
+/* SUBMIT */
+.submit-area { text-align: center; padding: 24px 0; }
+.submit-hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+.btn-submit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff;
+              font-size: 16px; font-weight: 700; padding: 14px 40px;
+              border-radius: 12px; border: none; cursor: pointer;
+              transition: opacity .2s; }
+.btn-submit:hover { opacity: .85; }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* RESULTS */
+.results-panel { background: #fff; border-radius: 14px; padding: 24px 20px;
+                 margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.result-score { font-size: 52px; font-weight: 800; text-align: center; }
+.result-sub { text-align: center; font-size: 18px; color: #6b7280; margin-bottom: 20px; }
+.dom-scores { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.dom-score { text-align: center; background: #f8f9fb; border-radius: 10px; padding: 12px 16px; min-width: 70px; }
+.dom-pct { font-size: 22px; font-weight: 800; }
+.dom-name { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+.wrong-title { font-size: 13px; font-weight: 700; color: #c2410c;
+               text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.wrong-item { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316;
+              border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+.wrong-tag { background: #f97316; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+.wrong-expl { color: #78350f; margin-top: 6px; line-height: 1.5; }
+.all-correct { text-align: center; font-size: 16px; font-weight: 700; color: #22c55e;
+               padding: 20px; background: #dcfce7; border-radius: 10px; }
+.result-note { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 16px; }
+
+@media (max-width: 480px) {
+  .container { padding: 12px 8px 32px; }
+  .card { padding: 16px 14px; }
+  .hdr-title { font-size: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <span class="hdr-sub">Improve English &nbsp;·&nbsp; Day 1</span>
+    <span class="hdr-date">May 01, 2026</span>
+  </div>
+  <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
+  <p class="hdr-meta">4개 영역 · 4 섹션 · 약 20분</p>
+  <div class="lv-badges"><span class="lv-badge" style="background:#93c5fd">🎧 듣기: B1</span><span class="lv-badge" style="background:#93c5fd">✏️ 문법: B1</span><span class="lv-badge" style="background:#93c5fd">📖 독해: B1</span><span class="lv-badge" style="background:#93c5fd">🗣️ 말하기: B1</span></div>
+</header>
+
+<div class="container">
+
+  <div class="card analysis-card">
+  <div class="card-label">🔍 어제 오답 분석</div>
+  <div class="wi"><span class="tag">[문법]</span> <b>핵심</b>: 의문문 간접화법은 if/whether+주어+동사 어순, 시제·시간부사 변환 필수.</div>
+<div class="wi"><span class="tag">[문법]</span> <b>핵심</b>: must→had to, will→would 조동사 변환과 시제 일치를 동시 적용.</div>
+<div class="wi"><span class="tag">[독해]</span> <b>핵심</b>: 본문에 명시된 정보를 정확히 찾기, 유사 시간 정보에 혼동 주의.</div>
+<div class="wi"><span class="tag">[독해]</span> <b>핵심</b>: 행동의 직접적 원인을 본문에서 근거로 찾고 추측 배제.</div>
+<div class="wi"><span class="tag">[말하기]</span> <b>핵심</b>: brought는 /brɔːt/, 뒤 자음 앞에서 't'를 약하게 연음 처리.</div>
+</div>
+
+  <div class="card lesson-card" style="background:#fdf4ff;border-color:#c084fc">
+  <div class="lesson-header">
+    <span class="lesson-type-badge" style="background:#7e22ce;color:#fff">PRONUNCIATION</span>
+    <span class="lesson-icon">🎙️</span>
+  </div>
+  <h2 class="lesson-title" style="color:#7e22ce">Stress Shift in Reported Speech Verbs</h2>
+  <p class="lesson-subtitle">한국인이 자주 틀리는 동사 강세 — 특히 'reported' 관련 단어들</p>
+  <div class="lesson-keypoint">In English, two-syllable verbs often stress the SECOND syllable, but Korean speakers default to stressing the first. Words like 'rePORT', 'exPLAIN', 'adMIT', and 'deCLARE' must have clear second-syllable stress or they sound unnatural to native ears.</div>
+  <div class="lesson-examples"><div class="lesson-ex">
+      <div class="lesson-ex-text">"She rePORTed that sales had increased. ✅  vs.  REport-ed ❌"</div>
+      <div class="lesson-ex-note">'report'는 두 번째 음절에 강세: re-PORT. 첫 음절을 세게 말하면 원어민이 어색하게 들음</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"He exPLAINed that the meeting was delayed."</div>
+      <div class="lesson-ex-note">'explain'은 ex-PLAIN. 한국어식으로 'EX-plain'이라고 하면 강세가 틀림 — 두 번째를 강하고 길게</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"The manager adMITted that the deadline was missed."</div>
+      <div class="lesson-ex-note">'admit'은 ad-MIT. 끝 음절을 강하게, 그리고 't'를 살짝 끊어주는 느낌으로 발음</div>
+    </div></div>
+  <div class="lesson-tip">💡 이 동사들을 연습할 때, 약한 음절은 입을 거의 안 열고 빠르게(schwa 발음 /ə/), 강한 음절만 크고 길게 말하세요. 예: re(작게)-PORT(크게). 강세 차이가 클수록 더 자연스럽게 들립니다.</div>
+  <div class="lesson-remember" style="border-color:#c084fc;color:#7e22ce">🧠 영어 2음절 동사 = 뒤가 강하다! re-PORT, ex-PLAIN, ad-MIT → 뒤를 세게!</div>
+</div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>진행률</span>
+      <span id="progressText">0 / 12 문항</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#e0f2fe">🎧</div>
+    <div>
+      <div class="section-title" style="color:#0ea5e9">Section · Listening</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0ncxpj6">BBC 6 Minute English</a> · The News Quiz: Ep1. Messiah or Doctor?</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0nf23jv.mp3" type="audio/mpeg">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0nf23jv.mp3" target="_blank">음성 링크 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q0">
+  <div class="q-text">
+    <span class="q-num">1</span>
+    How long was Andy Zaltzman off the air before returning?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Two weeks</span>
+  </button><button class="opt" data-q="0" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Four weeks</span>
+  </button><button class="opt" data-q="0" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Six weeks</span>
+  </button><button class="opt" data-q="0" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Eight weeks</span>
+  </button></div>
+  <div class="expl" id="expl0" style="display:none">💬 텍스트의 첫 문장 'After six weeks off air Andy Zaltzman is back'에서 직접적으로 언급됨. A2 수준의 기본 사실 파악 문제.</div>
+</div><div class="question" id="q1">
+  <div class="q-text">
+    <span class="q-num">2</span>
+    Which of the following topics is NOT mentioned as something the show will discuss?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Upcoming elections in May</span>
+  </button><button class="opt" data-q="1" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Donald Trump's conflict with the Pope</span>
+  </button><button class="opt" data-q="1" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Changes in food supply</span>
+  </button><button class="opt" data-q="1" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">New social media policies</span>
+  </button></div>
+  <div class="expl" id="expl1" style="display:none">💬 텍스트에서 명시된 주제는 선거(elections), 트럼프와 교황의 갈등(feuding), 미니 피클 부족(mini-gherkins)임. 소셜 미디어 정책은 언급되지 않음. B1 수준에서는 부정의문과 텍스트 내용의 선택적 이해가 필요함.</div>
+</div><div class="question" id="q2">
+  <div class="q-text">
+    <span class="q-num">3</span>
+    What can be inferred about the show's purpose based on the topics mentioned and the production credits?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">It is a serious news program focused exclusively on political analysis</span>
+  </button><button class="opt" data-q="2" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">It is a satirical comedy show that combines current events with humorous commentary</span>
+  </button><button class="opt" data-q="2" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">It is a documentary series examining historical political events</span>
+  </button><button class="opt" data-q="2" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">It is an educational program teaching listeners about international diplomacy</span>
+  </button></div>
+  <div class="expl" id="expl2" style="display:none">💬 'big questions'과 함께 'feuding with the Pope'와 'mini-gherkins' 같은 황당한 주제를 함께 다루는 점, 여러 코미디언이 참여(Zoe Lyons, Kiri Pritchard-McLean 등), 그리고 Andy Zaltzman의 관여(이미 알려진 코미디언)로 볼 때 풍자적 코미디 쇼임을 추론 가능. B2 수준에서는 직접 명시되지 않은 정보를 텍스트 단서로부터 추론하는 능력이 요구됨.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#ede9fe">✏️</div>
+    <div>
+      <div class="section-title" style="color:#8b5cf6">Section · Grammar</div>
+      <div class="section-source"><span>British Council / Perfect English Grammar</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q3">
+  <div class="q-text">
+    <span class="q-num">4</span>
+    직원이 "I will finish the report by tomorrow."라고 말했습니다. 이를 간접화법으로 바꾸면?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">He said he will finish the report by tomorrow.</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">He said he would finish the report by tomorrow.</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">He said he finishes the report by tomorrow.</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">He said he finished the report by tomorrow.</span>
+  </button></div>
+  <div class="expl" id="expl3" style="display:none">💬 간접화법에서는 주절의 동사가 과거형(said)이면 종속절의 동사도 한 시제 뒤로 물려야 합니다. will → would로 변환됩니다.</div>
+</div><div class="question" id="q4">
+  <div class="q-text">
+    <span class="q-num">5</span>
+    "Do you have any experience with project management?" 라고 면접관이 물었습니다. 이를 간접화법으로 바꾸면?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The interviewer asked me if I have any experience with project management.</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The interviewer asked me whether did I have any experience with project management.</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The interviewer asked me if I had any experience with project management.</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">The interviewer asked me do I have any experience with project management.</span>
+  </button></div>
+  <div class="expl" id="expl4" style="display:none">💬 의문문의 간접화법은 'if/whether + 주어 + 동사' 어순을 사용하며, 주절이 과거형이므로 have → had로 변환됩니다. 의문사 어순은 평서문 어순으로 바뀝니다.</div>
+</div><div class="question" id="q5">
+  <div class="q-text">
+    <span class="q-num">6</span>
+    "If I were you, I wouldn't accept that job offer without negotiating the salary." 상사가 당신에게 조언했습니다. 이를 간접화법으로 바꿀 때 가장 적절한 표현은?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">My boss advised me that if he were me, he wouldn't accept that job offer without negotiating the salary.</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">My boss advised me that if I were him, I wouldn't accept that job offer without negotiating the salary.</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">My boss advised me not to accept that job offer without negotiating the salary.</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">My boss told me that if he was me, he wouldn't accept that job offer without negotiating the salary.</span>
+  </button></div>
+  <div class="expl" id="expl5" style="display:none">💬 조건부 조언(if + 가정법)은 간접화법으로 변환할 때 'advise/suggest + (not) to-infinitive' 구조로 단순화하는 것이 자연스럽습니다. 직역 형태는 어색하고 비효율적입니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#dcfce7">📖</div>
+    <div>
+      <div class="section-title" style="color:#22c55e">Section · Reading</div>
+      <div class="section-source"><span>BBC Learning English Lingohack</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q6">
+  <div class="q-text">
+    <span class="q-num">7</span>
+    Read the text and answer the question.
+
+John works at a coffee shop. He arrives at 7 am every morning. He makes coffee and serves customers. At 12 pm, he takes a lunch break. He finishes work at 5 pm.
+
+What time does John start work?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">5 pm</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">12 pm</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">7 am</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">1 pm</span>
+  </button></div>
+  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 'He arrives at 7 am every morning'이라고 명시되어 있습니다. A(5pm)는 퇴근 시간, B(12pm)는 점심 시간, D(1pm)는 텍스트에 없는 정보입니다.</div>
+</div><div class="question" id="q7">
+  <div class="q-text">
+    <span class="q-num">8</span>
+    Read the text and answer the question.
+
+Remote work has changed how companies manage their employees. Before, managers watched employees working in an office. Now, with remote work, managers must trust their team members to complete tasks without supervision. Some companies use tracking software to monitor productivity, but many experts believe this damages trust. Instead, they recommend focusing on results rather than watching hours worked.
+
+What do experts suggest companies should focus on instead of monitoring hours?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Installing tracking software for all employees</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Watching employees in the office more carefully</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Measuring results and completed work</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Reducing the number of team members</span>
+  </button></div>
+  <div class="expl" id="expl7" style="display:none">💬 'instead, they recommend focusing on results rather than watching hours worked'에서 전문가들의 제안이 명확합니다. A는 전문가 권장과 반대, B는 원격근무 시대와 맞지 않음, D는 텍스트에 언급되지 않습니다.</div>
+</div><div class="question" id="q8">
+  <div class="q-text">
+    <span class="q-num">9</span>
+    Read the text and answer the question.
+
+Artificial intelligence is transforming customer service in unexpected ways. While many feared AI would simply replace human workers, the reality is more nuanced. Companies like Amazon and Apple use AI to handle routine inquiries—answering FAQs and processing refunds—which frees up human agents to deal with complex problems requiring empathy and critical thinking. Interestingly, this shift has improved customer satisfaction scores, as customers now spend less time waiting for basic responses and more time receiving personalized solutions. However, the transition has created new challenges: companies must invest heavily in retraining staff to work alongside AI systems, and some workers still struggle with job insecurity despite these new opportunities.
+
+What is an unintended positive consequence of using AI in customer service?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">AI systems completely replaced the need for human customer service agents</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Customers receive faster responses to routine questions, allowing more time for personalized support</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Companies no longer need to invest in employee training programs</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">All workers feel more secure in their positions due to technological advancement</span>
+  </button></div>
+  <div class="expl" id="expl8" style="display:none">💬 텍스트의 'customers now spend less time waiting for basic responses and more time receiving personalized solutions'와 'This shift has improved customer satisfaction scores'가 긍정적 결과를 설명합니다. A는 현실과 다름('reality is more nuanced'), C는 반대(투자 필요), D는 '일부 근로자는 여전히 불안감'이라는 내용과 모순됩니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#fef9c3">🗣️</div>
+    <div>
+      <div class="section-title" style="color:#f59e0b">Section · Speaking</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nh0hhc">BBC Learning English Conversations</a> · The English We Speak: Think on your feet</div>
+    </div>
+  </div>
+  <div class="shadow-box">
+      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트 (3회 반복)</div>
+      <p class="shadow-text">When the boss asked me a difficult question in the meeting, I had to think on my feet and give a quick answer without preparation.</p>
+      <p class="shadow-tip">🔊 'think on your feet'는 /θɪŋk ɑːn jɔː fiːt/로 'feet'의 /f/를 명확하게 발음하세요.</p>
+    </div>
+  <div class="question" id="q9">
+  <div class="q-text">
+    <span class="q-num">10</span>
+    직장에서 갑자기 의견을 물어볼 때, 어떤 표현을 사용할 수 있을까요?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">I need to think on my feet and answer quickly.</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">I need to think about my feet and answer.</span>
+  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">I need to think under my feet and answer.</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">I need to think for my feet and answer.</span>
+  </button></div>
+  <div class="expl" id="expl9" style="display:none">💬 'Think on your feet'는 '발 빠르게 생각하다', 즉 '즉각적으로 판단하고 행동하다'는 뜻입니다. 회의나 면접 같은 상황에서 준비 없이 빠르게 답변해야 할 때 사용합니다.</div>
+</div><div class="question" id="q10">
+  <div class="q-text">
+    <span class="q-num">11</span>
+    다음 문장을 읽을 때 강세(stress)가 어디에 있어야 할까요? 'When you THINK on your FEET, you respond QUICKLY.'
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">When, you, on, feet에 강세</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">THINK, FEET, QUICKLY에 강세</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">on, your, respond에 강세</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">When, feet, respond에 강세</span>
+  </button></div>
+  <div class="expl" id="expl10" style="display:none">💬 주요 의미를 가진 동사(THINK)와 명사(FEET), 부사(QUICKLY)에 강세를 두어야 합니다. 이를 통해 문장의 의미가 더욱 명확하고 자연스럽게 전달됩니다.</div>
+</div><div class="question" id="q11">
+  <div class="q-text">
+    <span class="q-num">12</span>
+    다음 빈칸을 채우세요: 'In a job interview, you need to ___ ___ ___ and provide thoughtful answers even when you haven't had time to prepare your response.'
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">think with your mind</span>
+  </button><button class="opt" data-q="11" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">think on your feet</span>
+  </button><button class="opt" data-q="11" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">think about your brain</span>
+  </button><button class="opt" data-q="11" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">think by your head</span>
+  </button></div>
+  <div class="expl" id="expl11" style="display:none">💬 'Think on your feet'는 관용표현으로 '즉각적으로 생각하고 판단하다'는 뜻입니다. 면접이나 중요한 비즈니스 상황에서 준비되지 않은 질문에도 자신감 있게 답변해야 할 때 정확히 사용되는 표현입니다.</div>
+</div>
+</div>
+
+  <div class="submit-area" id="submitArea">
+    <p class="submit-hint">모든 문항에 답한 후 제출하세요</p>
+    <button class="btn-submit" id="submitBtn" onclick="submitAnswers()">
+      📝 제출하기
+    </button>
+  </div>
+
+  <div class="results-panel" id="resultsPanel" style="display:none">
+  </div>
+
+</div>
+
+<script>
+const CORRECT   = ["C", "D", "B", "B", "C", "C", "C", "C", "B", "A", "B", "B"];
+const EXPLS     = ["텍스트의 첫 문장 'After six weeks off air Andy Zaltzman is back'에서 직접적으로 언급됨. A2 수준의 기본 사실 파악 문제.", "텍스트에서 명시된 주제는 선거(elections), 트럼프와 교황의 갈등(feuding), 미니 피클 부족(mini-gherkins)임. 소셜 미디어 정책은 언급되지 않음. B1 수준에서는 부정의문과 텍스트 내용의 선택적 이해가 필요함.", "'big questions'과 함께 'feuding with the Pope'와 'mini-gherkins' 같은 황당한 주제를 함께 다루는 점, 여러 코미디언이 참여(Zoe Lyons, Kiri Pritchard-McLean 등), 그리고 Andy Zaltzman의 관여(이미 알려진 코미디언)로 볼 때 풍자적 코미디 쇼임을 추론 가능. B2 수준에서는 직접 명시되지 않은 정보를 텍스트 단서로부터 추론하는 능력이 요구됨.", "간접화법에서는 주절의 동사가 과거형(said)이면 종속절의 동사도 한 시제 뒤로 물려야 합니다. will → would로 변환됩니다.", "의문문의 간접화법은 'if/whether + 주어 + 동사' 어순을 사용하며, 주절이 과거형이므로 have → had로 변환됩니다. 의문사 어순은 평서문 어순으로 바뀝니다.", "조건부 조언(if + 가정법)은 간접화법으로 변환할 때 'advise/suggest + (not) to-infinitive' 구조로 단순화하는 것이 자연스럽습니다. 직역 형태는 어색하고 비효율적입니다.", "텍스트에서 'He arrives at 7 am every morning'이라고 명시되어 있습니다. A(5pm)는 퇴근 시간, B(12pm)는 점심 시간, D(1pm)는 텍스트에 없는 정보입니다.", "'instead, they recommend focusing on results rather than watching hours worked'에서 전문가들의 제안이 명확합니다. A는 전문가 권장과 반대, B는 원격근무 시대와 맞지 않음, D는 텍스트에 언급되지 않습니다.", "텍스트의 'customers now spend less time waiting for basic responses and more time receiving personalized solutions'와 'This shift has improved customer satisfaction scores'가 긍정적 결과를 설명합니다. A는 현실과 다름('reality is more nuanced'), C는 반대(투자 필요), D는 '일부 근로자는 여전히 불안감'이라는 내용과 모순됩니다.", "'Think on your feet'는 '발 빠르게 생각하다', 즉 '즉각적으로 판단하고 행동하다'는 뜻입니다. 회의나 면접 같은 상황에서 준비 없이 빠르게 답변해야 할 때 사용합니다.", "주요 의미를 가진 동사(THINK)와 명사(FEET), 부사(QUICKLY)에 강세를 두어야 합니다. 이를 통해 문장의 의미가 더욱 명확하고 자연스럽게 전달됩니다.", "'Think on your feet'는 관용표현으로 '즉각적으로 생각하고 판단하다'는 뜻입니다. 면접이나 중요한 비즈니스 상황에서 준비되지 않은 질문에도 자신감 있게 답변해야 할 때 정확히 사용되는 표현입니다."];
+const DNAMES    = ["listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL     = 12;
+const TODAY     = "2026-05-01";
+const AS_URL    = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
+const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
+
+let answers   = new Array(TOTAL).fill(null);
+let submitted = false;
+
+// 답 선택
+document.querySelectorAll(".opt").forEach(btn => {
+  btn.addEventListener("click", function() {
+    if (submitted) return;
+    const q = parseInt(this.dataset.q);
+    const l = this.dataset.l;
+    document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b => b.classList.remove("sel"));
+    this.classList.add("sel");
+    answers[q] = l;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const n = answers.filter(a => a !== null).length;
+  document.getElementById("progressText").textContent = n + " / " + TOTAL + " 문항";
+  document.getElementById("progressFill").style.width = (n / TOTAL * 100) + "%";
+}
+
+function submitAnswers() {
+  if (submitted) return;
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    alert("아직 " + unanswered + "문항에 답하지 않았어요.");
+    return;
+  }
+  submitted = true;
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("submitBtn").textContent = "채점 중...";
+
+  // 채점
+  let correct = 0;
+  const domSc = {listening:{c:0,t:0},grammar:{c:0,t:0},reading:{c:0,t:0},speaking:{c:0,t:0}};
+  const wrongItems = [];
+
+  answers.forEach((ans, i) => {
+    const domain = DNAMES[i];
+    const ok     = CORRECT[i];
+    const isOk   = ans === ok;
+    if (isOk) { correct++; domSc[domain].c++; }
+    else { wrongItems.push({q:i+1, domain, chosen:ans, correct:ok, expl:EXPLS[i]}); }
+    domSc[domain].t++;
+
+    // 문항 시각화
+    const qEl = document.getElementById("q" + i);
+    if (qEl) qEl.classList.add(isOk ? "q-correct" : "q-wrong");
+    document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(b => {
+      if (b.dataset.l === ok)  b.classList.add("opt-correct");
+      if (b.dataset.l === ans && !isOk) b.classList.add("opt-wrong");
+    });
+    const explEl = document.getElementById("expl" + i);
+    if (explEl) explEl.style.display = "block";
+  });
+
+  showResults(correct, domSc, wrongItems);
+  saveResults(answers, correct, domSc);
+}
+
+function showResults(correct, domSc, wrongItems) {
+  const pct   = Math.round(correct / TOTAL * 100);
+  const color = pct >= 80 ? "#22c55e" : pct >= 60 ? "#f59e0b" : "#ef4444";
+  const emoji = pct >= 80 ? "🎉" : pct >= 60 ? "👍" : "💪";
+
+  let domHtml = "";
+  ["listening","grammar","reading","speaking"].forEach(d => {
+    const s = domSc[d];
+    const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+    const c = p >= 80 ? "#22c55e" : p >= 60 ? "#f59e0b" : "#ef4444";
+    domHtml += `<div class="dom-score"><div class="dom-pct" style="color:${c}">${p}%</div><div class="dom-name">${DOMAINS_KR[d]}</div></div>`;
+  });
+
+  let wrongHtml = "";
+  wrongItems.forEach(w => {
+    wrongHtml += `<div class="wrong-item"><span class="wrong-tag">${DOMAINS_KR[w.domain]}</span> Q${w.q} — 선택: <b>${w.chosen}</b> / 정답: <b>${w.correct}</b><div class="wrong-expl">${w.expl}</div></div>`;
+  });
+
+  const panel = document.getElementById("resultsPanel");
+  panel.innerHTML = `
+    <div class="result-score" style="color:${color}">${emoji} ${pct}%</div>
+    <div class="result-sub">${correct} / ${TOTAL} 정답</div>
+    <div class="dom-scores">${domHtml}</div>
+    ${wrongItems.length > 0 ? '<div class="wrong-title">오답 분석</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
+    <div class="result-note">내일 아침 테스트 페이지에서 추가 피드백을 확인하세요.</div>
+  `;
+  panel.style.display = "block";
+  panel.scrollIntoView({behavior: "smooth", block: "start"});
+
+  document.getElementById("submitArea").style.display = "none";
+}
+
+function saveResults(answers, correct, domSc) {
+  if (!AS_URL) return;
+  const params = new URLSearchParams({
+    date: TODAY,
+    answers: answers.join(","),
+    correct,
+    listening: domSc.listening.c + "/" + domSc.listening.t,
+    grammar:   domSc.grammar.c   + "/" + domSc.grammar.t,
+    reading:   domSc.reading.c   + "/" + domSc.reading.t,
+    speaking:  domSc.speaking.c  + "/" + domSc.speaking.t,
+  });
+  fetch(AS_URL + "?" + params.toString(), {mode:"no-cors"}).catch(() => {});
+}
+</script>
+</body>
+</html>
