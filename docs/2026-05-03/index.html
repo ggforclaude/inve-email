@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Day 2 — Improve English</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  line-height: 1.6;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  padding: 24px 20px 20px;
+  color: #fff;
+}
+.hdr-top { display: flex; justify-content: space-between; align-items: center;
+           font-size: 11px; color: #8899bb; letter-spacing: 1.5px;
+           text-transform: uppercase; margin-bottom: 10px; }
+.hdr-date { background: rgba(255,255,255,.12); padding: 3px 10px; border-radius: 20px; }
+.hdr-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.hdr-meta { font-size: 12px; color: #8899bb; margin-bottom: 14px; }
+.lv-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px;
+            border-radius: 20px; color: #1a1a2e; }
+
+/* CONTAINER */
+.container { max-width: 680px; margin: 0 auto; padding: 16px 12px 40px; }
+
+/* CARDS */
+.card { background: #fff; border-radius: 14px; padding: 20px;
+        margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* PREV ANALYSIS */
+.analysis-card { border-left: 4px solid #f97316; background: #fff7ed; }
+.card-label { font-size: 11px; font-weight: 700; color: #c2410c;
+              text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* LESSON */
+.lesson-card { border: 1.5px solid; }
+.lesson-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.lesson-type-badge { font-size: 10px; font-weight: 700; padding: 2px 8px;
+                     border-radius: 4px; letter-spacing: 1px; }
+.lesson-icon { font-size: 20px; }
+.lesson-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.lesson-subtitle { font-size: 13px; color: #555; margin-bottom: 12px; }
+.lesson-keypoint { font-size: 14px; background: rgba(0,0,0,.04); padding: 10px 12px;
+                   border-radius: 8px; margin-bottom: 12px; }
+.lesson-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.lesson-ex { border-left: 3px solid currentColor; padding: 8px 12px;
+             background: rgba(0,0,0,.03); border-radius: 0 6px 6px 0; }
+.lesson-ex-text { font-size: 14px; font-weight: 600; font-style: italic; margin-bottom: 3px; }
+.lesson-ex-note { font-size: 12px; color: #666; }
+.lesson-tip { font-size: 13px; color: #555; background: rgba(0,0,0,.04);
+              padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; }
+.lesson-remember { font-size: 13px; font-weight: 600; border: 1.5px solid;
+                   padding: 8px 12px; border-radius: 8px; }
+
+/* PROGRESS */
+.progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
+                 margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.progress-label { display: flex; justify-content: space-between;
+                  font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+.progress-bar-bg { background: #e5e7eb; border-radius: 4px; height: 6px; }
+.progress-bar-fill { background: linear-gradient(90deg, #22c55e, #0ea5e9);
+                     height: 6px; border-radius: 4px; transition: width .3s; }
+
+/* SECTION */
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.section-icon-wrap { width: 40px; height: 40px; border-radius: 10px;
+                     display: flex; align-items: center; justify-content: center;
+                     font-size: 18px; flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 700; }
+.section-source { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.src-link { color: #9ca3af; text-decoration: none; }
+.src-link:hover { color: #6b7280; }
+
+/* AUDIO */
+.audio-box { background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px;
+             padding: 14px 16px; margin-bottom: 16px; }
+.audio-hint { font-size: 12px; color: #0369a1; margin-bottom: 8px; }
+.audio-link-btn { display: inline-block; background: #0ea5e9; color: #fff;
+                  font-size: 14px; font-weight: 600; padding: 10px 20px;
+                  border-radius: 8px; text-decoration: none; }
+
+/* PASSAGE */
+.passage-box { background: #f8faf8; border: 1px solid #bbddc0; border-left: 4px solid #22c55e;
+               border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                 text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.passage-text { font-size: 14px; line-height: 1.8; color: #1a1a2e; }
+
+/* SHADOWING */
+.shadow-box { background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
+              padding: 14px 16px; margin-bottom: 16px; }
+.shadow-label { font-size: 11px; font-weight: 700; color: #a16207;
+                text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; }
+.shadow-tip { font-size: 12px; color: #92400e; margin-top: 8px; font-style: italic; }
+
+/* QUESTIONS */
+.question { margin-bottom: 20px; padding: 14px; border-radius: 10px;
+            border: 1.5px solid #e5e7eb; transition: border-color .2s; }
+.question.q-correct { border-color: #86efac; background: #f0fdf4; }
+.question.q-wrong   { border-color: #fca5a5; background: #fff1f2; }
+.q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+.q-num { display: inline-flex; align-items: center; justify-content: center;
+         width: 22px; height: 22px; background: #1a1a2e; color: #fff;
+         border-radius: 50%; font-size: 10px; font-weight: 700;
+         margin-right: 6px; flex-shrink: 0; }
+.q-level { font-size: 10px; font-weight: 700; padding: 2px 7px;
+           border-radius: 10px; margin-left: 6px; }
+.opts { display: flex; flex-direction: column; gap: 7px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+       border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff;
+       cursor: pointer; text-align: left; width: 100%; font-size: 14px;
+       color: #374151; transition: all .15s; }
+.opt:hover:not([disabled]) { border-color: #93c5fd; background: #eff6ff; }
+.opt.sel { border-color: #3b82f6; background: #eff6ff; }
+.opt.opt-correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #166534 !important; }
+.opt.opt-wrong   { border-color: #ef4444 !important; background: #fee2e2 !important; color: #991b1b !important; }
+.opt-letter { width: 22px; height: 22px; border: 1.5px solid #d1d5db; border-radius: 50%;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 11px; font-weight: 700; color: #6b7280; flex-shrink: 0; }
+.opt-text { flex: 1; }
+.expl { font-size: 13px; color: #374151; background: #f9fafb; padding: 10px 12px;
+        border-radius: 8px; margin-top: 10px; line-height: 1.6; }
+
+/* SUBMIT */
+.submit-area { text-align: center; padding: 24px 0; }
+.submit-hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+.btn-submit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff;
+              font-size: 16px; font-weight: 700; padding: 14px 40px;
+              border-radius: 12px; border: none; cursor: pointer;
+              transition: opacity .2s; }
+.btn-submit:hover { opacity: .85; }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* RESULTS */
+.results-panel { background: #fff; border-radius: 14px; padding: 24px 20px;
+                 margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.result-score { font-size: 52px; font-weight: 800; text-align: center; }
+.result-sub { text-align: center; font-size: 18px; color: #6b7280; margin-bottom: 20px; }
+.dom-scores { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.dom-score { text-align: center; background: #f8f9fb; border-radius: 10px; padding: 12px 16px; min-width: 70px; }
+.dom-pct { font-size: 22px; font-weight: 800; }
+.dom-name { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+.wrong-title { font-size: 13px; font-weight: 700; color: #c2410c;
+               text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.wrong-item { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316;
+              border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+.wrong-tag { background: #f97316; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+.wrong-expl { color: #78350f; margin-top: 6px; line-height: 1.5; }
+.all-correct { text-align: center; font-size: 16px; font-weight: 700; color: #22c55e;
+               padding: 20px; background: #dcfce7; border-radius: 10px; }
+.result-note { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 16px; }
+
+@media (max-width: 480px) {
+  .container { padding: 12px 8px 32px; }
+  .card { padding: 16px 14px; }
+  .hdr-title { font-size: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <span class="hdr-sub">Improve English &nbsp;·&nbsp; Day 2</span>
+    <span class="hdr-date">May 03, 2026</span>
+  </div>
+  <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
+  <p class="hdr-meta">4개 영역 · 4 섹션 · 약 20분</p>
+  <div class="lv-badges"><span class="lv-badge" style="background:#6ee7b7">🎧 듣기: A2</span><span class="lv-badge" style="background:#6ee7b7">✏️ 문법: A2</span><span class="lv-badge" style="background:#c4b5fd">📖 독해: B2</span><span class="lv-badge" style="background:#c4b5fd">🗣️ 말하기: B2</span></div>
+</header>
+
+<div class="container">
+
+  
+
+  <div class="card lesson-card" style="background:#fff7ed;border-color:#fb923c">
+  <div class="lesson-header">
+    <span class="lesson-type-badge" style="background:#c2410c;color:#fff">EXPRESSION</span>
+    <span class="lesson-icon">💼</span>
+  </div>
+  <h2 class="lesson-title" style="color:#c2410c">Say 'Let's Move Forward' Like a Pro</h2>
+  <p class="lesson-subtitle">회의나 이메일에서 '다음 단계로 넘어가자'를 자연스럽게 말하는 법</p>
+  <div class="lesson-keypoint">In business English, 'move forward' is a powerful phrase that replaces awkward direct translations. Korean speakers often say 'let's go to next step' — native speakers say 'let's move forward with...' instead.</div>
+  <div class="lesson-examples"><div class="lesson-ex">
+      <div class="lesson-ex-text">"Let's move forward with the proposal and schedule a follow-up meeting."</div>
+      <div class="lesson-ex-note">제안서를 진행하고 후속 미팅을 잡자 — 회의 마무리할 때 딱 맞는 표현</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"We couldn't agree yesterday, but I'd like to move forward and find a solution."</div>
+      <div class="lesson-ex-note">어제 합의 못 했지만 해결책을 찾고 싶다 — 갈등 후 긍정적으로 전환할 때 사용</div>
+    </div><div class="lesson-ex">
+      <div class="lesson-ex-text">"Once the budget is approved, we can move forward with the hiring plan."</div>
+      <div class="lesson-ex-note">예산 승인되면 채용 계획 진행 가능 — 조건부 비즈니스 상황에 자주 쓰임</div>
+    </div></div>
+  <div class="lesson-tip">💡 'Move forward with + 명사'를 하나의 덩어리로 외우세요. 이메일 끝에 'Please let me know so we can move forward.'라고 써보는 연습을 매일 해보세요.</div>
+  <div class="lesson-remember" style="border-color:#fb923c;color:#c2410c">🧠 ❌ 'Let's go to next step' → ✅ 'Let's move forward with...' — 이것만 바꿔도 훨씬 프로답게 들립니다!</div>
+</div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>진행률</span>
+      <span id="progressText">0 / 12 문항</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#e0f2fe">🎧</div>
+    <div>
+      <div class="section-title" style="color:#0ea5e9">Section · Listening</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0jfh3s3">BBC English At Work</a> · Stealing Power</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" type="audio/mpeg">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" target="_blank">음성 링크 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q0">
+  <div class="q-text">
+    <span class="q-num">1</span>
+    What is meter tampering?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Fixing a broken meter</span>
+  </button><button class="opt" data-q="0" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Changing a meter so it doesn't record all the energy you use</span>
+  </button><button class="opt" data-q="0" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Reading your electricity bill</span>
+  </button><button class="opt" data-q="0" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Paying your gas bill on time</span>
+  </button></div>
+  <div class="expl" id="expl0" style="display:none">💬 텍스트에서 'altering a meter to prevent it from fully recording how much electricity or gas is being used'라고 명확히 설명함. A는 fixing(수리), C는 reading(확인), D는 paying(지불)으로 모두 다른 의미.</div>
+</div><div class="question" id="q1">
+  <div class="q-text">
+    <span class="q-num">2</span>
+    According to the report, why has energy theft increased significantly in recent years?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">More people are becoming engineers</span>
+  </button><button class="opt" data-q="1" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The government is not monitoring meters properly</span>
+  </button><button class="opt" data-q="1" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The cost of living crisis is the main reason</span>
+  </button><button class="opt" data-q="1" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Energy companies are making meters easier to tamper with</span>
+  </button></div>
+  <div class="expl" id="expl1" style="display:none">💬 텍스트의 'the cost of living crisis seems to be the main reason for this sharp increase'에서 직접 언급됨. A는 관계없고, B와 D는 텍스트에서 언급되지 않은 추측.</div>
+</div><div class="question" id="q2">
+  <div class="q-text">
+    <span class="q-num">3</span>
+    What does the incident involving George Hinds illustrate about meter tampering?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">It shows that most people who tamper with meters get caught quickly</span>
+  </button><button class="opt" data-q="2" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">It demonstrates that the consequences can be far more serious than just financial penalties</span>
+  </button><button class="opt" data-q="2" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">It proves that gas engineers are responsible for most meter tampering cases</span>
+  </button><button class="opt" data-q="2" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">It indicates that the government needs to increase energy prices to prevent theft</span>
+  </button></div>
+  <div class="expl" id="expl2" style="display:none">💬 텍스트에서 '2021년 이웃이 파이프를 절단해 가스 폭발이 발생했고 조지 힌즈(2세)가 사망'한 사건을 언급하며 'the consequences can be tragic'라고 표현함. 이는 금전적 처벌을 넘어 생명 위험을 보여줌. A는 과도한 일반화, C는 이웃이 원인, D는 텍스트에 없는 내용.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#ede9fe">✏️</div>
+    <div>
+      <div class="section-title" style="color:#8b5cf6">Section · Grammar</div>
+      <div class="section-source"><span>British Council / Perfect English Grammar</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q3">
+  <div class="q-text">
+    <span class="q-num">4</span>
+    If you _____ the email yesterday, we wouldn't have missed the deadline.
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">sent</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">had sent</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">would send</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">send</span>
+  </button></div>
+  <div class="expl" id="expl3" style="display:none">💬 과거의 가정법(Third Conditional)은 'If + had + 과거분사'로 표현합니다. 실제로 이메일을 보내지 않았으므로, 그 결과로 데드라인을 놓쳤다는 의미입니다.</div>
+</div><div class="question" id="q4">
+  <div class="q-text">
+    <span class="q-num">5</span>
+    Which sentence correctly expresses a regret about a past business decision?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">If I invest in that startup, I would have lost all my money.</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">If I had invested in that startup, I would have lost all my money.</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">If I would have invested in that startup, I lost all my money.</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">If I invested in that startup, I lost all my money.</span>
+  </button></div>
+  <div class="expl" id="expl4" style="display:none">💬 과거에 대한 후회를 표현할 때는 'If + had + 과거분사, would have + 과거분사' 구조를 사용합니다. would have를 if절에 쓰는 것은 문법적으로 오류입니다.</div>
+</div><div class="question" id="q5">
+  <div class="q-text">
+    <span class="q-num">6</span>
+    If the contract _____ more favorable terms, the company _____ the negotiations.
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">had included / would have continued</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">had included / would continue</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">included / would have continued</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">would have included / had continued</span>
+  </button></div>
+  <div class="expl" id="expl5" style="display:none">💬 Third Conditional에서 if절은 'had + 과거분사'(과거의 반사실적 상황), 주절은 'would have + 과거분사'(그에 따른 과거의 결과)를 사용합니다. 두 절 모두 과거시제를 유지하는 것이 핵심입니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#dcfce7">📖</div>
+    <div>
+      <div class="section-title" style="color:#22c55e">Section · Reading</div>
+      <div class="section-source"><span>BBC Learning English Lingohack</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q6">
+  <div class="q-text">
+    <span class="q-num">7</span>
+    Read the text about a job interview. What time should the candidate arrive?
+
+Dear Mr. Kim,
+Thank you for applying for the Marketing Manager position. We would like to invite you to an interview on Friday, March 15th at 2:00 PM. Please arrive 10 minutes early. The interview will take about 45 minutes.
+Best regards,
+HR Department
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">2:00 PM</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">1:50 PM</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">2:45 PM</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">2:10 PM</span>
+  </button></div>
+  <div class="expl" id="expl6" style="display:none">💬 면접 시간이 2:00 PM이고 10분 일찍 도착해야 하므로 1:50 PM이 정답입니다. A는 면접 시간이지만 10분 일찍 도착해야 하므로 틀렸습니다. C와 D는 면접 후 시간이므로 틀렸습니다.</div>
+</div><div class="question" id="q7">
+  <div class="q-text">
+    <span class="q-num">8</span>
+    Read the email about a project deadline. According to the text, why was the deadline extended?
+
+Subject: Project Deadline Extension
+
+Team,
+Due to unexpected delays in receiving client feedback, we have decided to extend the project deadline from March 20th to March 27th. The client needs more time to review our initial proposals. We will have a meeting on Monday to discuss the revised timeline and adjust our work schedule accordingly.
+
+Please note this change and update your calendars.
+Thanks,
+Project Manager
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">The team didn't work fast enough</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The client needed more time to review proposals</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">There was a technical problem with the software</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Team members took unexpected time off</span>
+  </button></div>
+  <div class="expl" id="expl7" style="display:none">💬 텍스트에서 'client needs more time to review our initial proposals'라고 명확히 나와있습니다. A는 팀의 업무 속도 문제가 아니고, C는 소프트웨어 문제가 언급되지 않았으며, D는 직원 휴가가 언급되지 않았으므로 모두 틀렸습니다.</div>
+</div><div class="question" id="q8">
+  <div class="q-text">
+    <span class="q-num">9</span>
+    Read the business article about remote work trends. What can be inferred about the future of office-based work?
+
+According to recent surveys by leading HR consultancies, 73% of companies plan to maintain hybrid work models beyond 2024. While some organizations initially viewed remote work as a temporary measure during the pandemic, the data suggests a fundamental shift in workplace culture. Companies report increased productivity, lower overhead costs, and improved employee satisfaction. However, concerns about team collaboration and company culture have led many firms to require at least two to three days in the office per week. Industry experts believe this balanced approach represents the new normal rather than a temporary trend.
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Traditional five-day office work will completely disappear</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Full-time remote work is now the preferred model for most companies</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">A blend of remote and office work has become the expected standard</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Companies are abandoning remote work in favor of traditional offices</span>
+  </button></div>
+  <div class="expl" id="expl8" style="display:none">💬 텍스트에서 '73% of companies plan to maintain hybrid work models'와 '이는 일시적 추세가 아닌 새로운 표준(new normal)'이라고 명확히 설명합니다. A는 '완전히 사라진다'는 극단적 표현이 과도하고, B는 full-time remote work이 '선호되는' 모델이라는 근거가 없으며, D는 텍스트의 내용과 반대입니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#fef9c3">🗣️</div>
+    <div>
+      <div class="section-title" style="color:#f59e0b">Section · Speaking</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nh0hhc">BBC Learning English Conversations</a> · The English We Speak: Think on your feet</div>
+    </div>
+  </div>
+  <div class="shadow-box">
+      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트 (3회 반복)</div>
+      <p class="shadow-text">When the boss asked me a difficult question in the meeting, I had to think on my feet and come up with a good answer quickly.</p>
+      <p class="shadow-tip">🔊 'think on your feet'에서 'feet'의 /f/ 음을 명확하게 발음하고, 'think'와 'on'을 연음으로 부드럽게 연결하세요.</p>
+    </div>
+  <div class="question" id="q9">
+  <div class="q-text">
+    <span class="q-num">10</span>
+    직장 회의에서 예상치 못한 질문을 받았을 때 빠르게 답변해야 하는 상황입니다. 이를 설명하는 표현은?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">think on your feet</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">think about your feet</span>
+  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">think with your feet</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">think under your feet</span>
+  </button></div>
+  <div class="expl" id="expl9" style="display:none">💬 'Think on your feet'는 '빠르게 생각하다', '순발력 있게 대처하다'라는 의미의 관용표현입니다. 비즈니스 상황에서 준비 없이 빠른 판단이 필요할 때 사용됩니다.</div>
+</div><div class="question" id="q10">
+  <div class="q-text">
+    <span class="q-num">11</span>
+    다음 문장을 읽을 때 올바른 강세(stress)는 어디에 있나요? 'Sometimes you need to THINK on your FEET.'
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Sometimes와 feet에 강세</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">THINK와 FEET에 강세</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">you와 need에 강세</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Sometimes와 need에 강세</span>
+  </button></div>
+  <div class="expl" id="expl10" style="display:none">💬 의미 있는 주요 단어인 'think'와 'feet'에 강세를 두어야 합니다. 이렇게 하면 '발 위에서 빠르게 생각하는' 행동에 더 강조점을 줄 수 있습니다.</div>
+</div><div class="question" id="q11">
+  <div class="q-text">
+    <span class="q-num">12</span>
+    다음 쉐도잉 스크립트의 빈칸을 채우세요: 'For more great language tips and programmes, visit bbclearningenglish.com. As always, find a free _____ here. Discover the NEW series of Office English _____ small talk, organising meetings and rules.'
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">transcript / covering</span>
+  </button><button class="opt" data-q="11" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">translation / covering</span>
+  </button><button class="opt" data-q="11" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">transcript / including</span>
+  </button><button class="opt" data-q="11" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">translation / including</span>
+  </button></div>
+  <div class="expl" id="expl11" style="display:none">💬 'transcript'는 '대본, 문자화된 텍스트'를 의미하며, 'covering'은 '다루다, 포함하다'는 의미입니다. 원본 BBC Learning English 콘텐츠의 정확한 표현입니다.</div>
+</div>
+</div>
+
+  <div class="submit-area" id="submitArea">
+    <p class="submit-hint">모든 문항에 답한 후 제출하세요</p>
+    <button class="btn-submit" id="submitBtn" onclick="submitAnswers()">
+      📝 제출하기
+    </button>
+  </div>
+
+  <div class="results-panel" id="resultsPanel" style="display:none">
+  </div>
+
+</div>
+
+<script>
+const CORRECT   = ["B", "C", "B", "B", "B", "A", "B", "B", "C", "A", "B", "A"];
+const EXPLS     = ["텍스트에서 'altering a meter to prevent it from fully recording how much electricity or gas is being used'라고 명확히 설명함. A는 fixing(수리), C는 reading(확인), D는 paying(지불)으로 모두 다른 의미.", "텍스트의 'the cost of living crisis seems to be the main reason for this sharp increase'에서 직접 언급됨. A는 관계없고, B와 D는 텍스트에서 언급되지 않은 추측.", "텍스트에서 '2021년 이웃이 파이프를 절단해 가스 폭발이 발생했고 조지 힌즈(2세)가 사망'한 사건을 언급하며 'the consequences can be tragic'라고 표현함. 이는 금전적 처벌을 넘어 생명 위험을 보여줌. A는 과도한 일반화, C는 이웃이 원인, D는 텍스트에 없는 내용.", "과거의 가정법(Third Conditional)은 'If + had + 과거분사'로 표현합니다. 실제로 이메일을 보내지 않았으므로, 그 결과로 데드라인을 놓쳤다는 의미입니다.", "과거에 대한 후회를 표현할 때는 'If + had + 과거분사, would have + 과거분사' 구조를 사용합니다. would have를 if절에 쓰는 것은 문법적으로 오류입니다.", "Third Conditional에서 if절은 'had + 과거분사'(과거의 반사실적 상황), 주절은 'would have + 과거분사'(그에 따른 과거의 결과)를 사용합니다. 두 절 모두 과거시제를 유지하는 것이 핵심입니다.", "면접 시간이 2:00 PM이고 10분 일찍 도착해야 하므로 1:50 PM이 정답입니다. A는 면접 시간이지만 10분 일찍 도착해야 하므로 틀렸습니다. C와 D는 면접 후 시간이므로 틀렸습니다.", "텍스트에서 'client needs more time to review our initial proposals'라고 명확히 나와있습니다. A는 팀의 업무 속도 문제가 아니고, C는 소프트웨어 문제가 언급되지 않았으며, D는 직원 휴가가 언급되지 않았으므로 모두 틀렸습니다.", "텍스트에서 '73% of companies plan to maintain hybrid work models'와 '이는 일시적 추세가 아닌 새로운 표준(new normal)'이라고 명확히 설명합니다. A는 '완전히 사라진다'는 극단적 표현이 과도하고, B는 full-time remote work이 '선호되는' 모델이라는 근거가 없으며, D는 텍스트의 내용과 반대입니다.", "'Think on your feet'는 '빠르게 생각하다', '순발력 있게 대처하다'라는 의미의 관용표현입니다. 비즈니스 상황에서 준비 없이 빠른 판단이 필요할 때 사용됩니다.", "의미 있는 주요 단어인 'think'와 'feet'에 강세를 두어야 합니다. 이렇게 하면 '발 위에서 빠르게 생각하는' 행동에 더 강조점을 줄 수 있습니다.", "'transcript'는 '대본, 문자화된 텍스트'를 의미하며, 'covering'은 '다루다, 포함하다'는 의미입니다. 원본 BBC Learning English 콘텐츠의 정확한 표현입니다."];
+const DNAMES    = ["listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL     = 12;
+const TODAY     = "2026-05-03";
+const AS_URL    = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
+const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
+
+let answers   = new Array(TOTAL).fill(null);
+let submitted = false;
+
+// 답 선택
+document.querySelectorAll(".opt").forEach(btn => {
+  btn.addEventListener("click", function() {
+    if (submitted) return;
+    const q = parseInt(this.dataset.q);
+    const l = this.dataset.l;
+    document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b => b.classList.remove("sel"));
+    this.classList.add("sel");
+    answers[q] = l;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const n = answers.filter(a => a !== null).length;
+  document.getElementById("progressText").textContent = n + " / " + TOTAL + " 문항";
+  document.getElementById("progressFill").style.width = (n / TOTAL * 100) + "%";
+}
+
+function submitAnswers() {
+  if (submitted) return;
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    alert("아직 " + unanswered + "문항에 답하지 않았어요.");
+    return;
+  }
+  submitted = true;
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("submitBtn").textContent = "채점 중...";
+
+  // 채점
+  let correct = 0;
+  const domSc = {listening:{c:0,t:0},grammar:{c:0,t:0},reading:{c:0,t:0},speaking:{c:0,t:0}};
+  const wrongItems = [];
+
+  answers.forEach((ans, i) => {
+    const domain = DNAMES[i];
+    const ok     = CORRECT[i];
+    const isOk   = ans === ok;
+    if (isOk) { correct++; domSc[domain].c++; }
+    else { wrongItems.push({q:i+1, domain, chosen:ans, correct:ok, expl:EXPLS[i]}); }
+    domSc[domain].t++;
+
+    // 문항 시각화
+    const qEl = document.getElementById("q" + i);
+    if (qEl) qEl.classList.add(isOk ? "q-correct" : "q-wrong");
+    document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(b => {
+      if (b.dataset.l === ok)  b.classList.add("opt-correct");
+      if (b.dataset.l === ans && !isOk) b.classList.add("opt-wrong");
+    });
+    const explEl = document.getElementById("expl" + i);
+    if (explEl) explEl.style.display = "block";
+  });
+
+  showResults(correct, domSc, wrongItems);
+  saveResults(answers, correct, domSc);
+}
+
+function showResults(correct, domSc, wrongItems) {
+  const pct   = Math.round(correct / TOTAL * 100);
+  const color = pct >= 80 ? "#22c55e" : pct >= 60 ? "#f59e0b" : "#ef4444";
+  const emoji = pct >= 80 ? "🎉" : pct >= 60 ? "👍" : "💪";
+
+  let domHtml = "";
+  ["listening","grammar","reading","speaking"].forEach(d => {
+    const s = domSc[d];
+    const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+    const c = p >= 80 ? "#22c55e" : p >= 60 ? "#f59e0b" : "#ef4444";
+    domHtml += `<div class="dom-score"><div class="dom-pct" style="color:${c}">${p}%</div><div class="dom-name">${DOMAINS_KR[d]}</div></div>`;
+  });
+
+  let wrongHtml = "";
+  wrongItems.forEach(w => {
+    wrongHtml += `<div class="wrong-item"><span class="wrong-tag">${DOMAINS_KR[w.domain]}</span> Q${w.q} — 선택: <b>${w.chosen}</b> / 정답: <b>${w.correct}</b><div class="wrong-expl">${w.expl}</div></div>`;
+  });
+
+  const panel = document.getElementById("resultsPanel");
+  panel.innerHTML = `
+    <div class="result-score" style="color:${color}">${emoji} ${pct}%</div>
+    <div class="result-sub">${correct} / ${TOTAL} 정답</div>
+    <div class="dom-scores">${domHtml}</div>
+    ${wrongItems.length > 0 ? '<div class="wrong-title">오답 분석</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
+    <div class="result-note">내일 아침 테스트 페이지에서 추가 피드백을 확인하세요.</div>
+  `;
+  panel.style.display = "block";
+  panel.scrollIntoView({behavior: "smooth", block: "start"});
+
+  document.getElementById("submitArea").style.display = "none";
+}
+
+function saveResults(answers, correct, domSc) {
+  if (!AS_URL) return;
+  const params = new URLSearchParams({
+    date: TODAY,
+    answers: answers.join(","),
+    correct,
+    listening: domSc.listening.c + "/" + domSc.listening.t,
+    grammar:   domSc.grammar.c   + "/" + domSc.grammar.t,
+    reading:   domSc.reading.c   + "/" + domSc.reading.t,
+    speaking:  domSc.speaking.c  + "/" + domSc.speaking.t,
+  });
+  fetch(AS_URL + "?" + params.toString(), {mode:"no-cors"}).catch(() => {});
+}
+</script>
+</body>
+</html>
