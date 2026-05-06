@@ -1,8 +1,14 @@
 """
 Improve_Eng/question_generator.py
 Claude API로 영역별 문제와 오답 분석을 생성합니다.
-- 문제 생성: claude-haiku-4-5 (빠르고 저렴)
-- 오답 분석: claude-sonnet-4-6 (품질 우선)
+
+듣기 구조 변경:
+  content["listening"] = [short_item, medium_item, long_item]
+  questions["listening"] = [{"audio": item, "questions": [...]}, ...]  (각 2문항)
+
+피드백 구조:
+  generate_wrong_analysis()        → 당일 인라인 짧은 설명 (기존 유지)
+  generate_detailed_wrong_analysis() → 다음날 상세 피드백 (HTML for page + text for Telegram)
 """
 import anthropic
 import json
@@ -11,7 +17,7 @@ import logging
 log = logging.getLogger(__name__)
 _client = anthropic.Anthropic()
 
-LEVEL_ORDER = ["A2", "B1", "B2", "C1"]
+LEVEL_ORDER  = ["A2", "B1", "B2", "C1"]
 LEVEL_COLORS = {"A2": "초급", "B1": "중하급", "B2": "중상급", "C1": "고급"}
 
 DOMAIN_KR = {
@@ -21,15 +27,20 @@ DOMAIN_KR = {
     "speaking":  "말하기",
 }
 
+TIER_LABEL = {"short": "Short (~3분)", "medium": "Medium (~6분)", "long": "Long (~15분)"}
 
-def _adaptive_mix(current_level: str) -> list[tuple[str, int]]:
-    """현재 레벨 1문항 + 상위 레벨 2문항 구성."""
+
+def _adaptive_mix(current_level: str, n: int = 2) -> list[tuple[str, int]]:
+    """현재 레벨 1문항 + 상위 레벨 n-1문항."""
     idx      = LEVEL_ORDER.index(current_level) if current_level in LEVEL_ORDER else 1
     next_lvl = LEVEL_ORDER[min(idx + 1, len(LEVEL_ORDER) - 1)]
-    return [(current_level, 1), (next_lvl, 2)]
+    if n == 1:
+        return [(current_level, 1)]
+    return [(current_level, 1), (next_lvl, n - 1)]
 
-# 베이스라인 1~7일: A2·B1·B2 각 1문항으로 전 레벨 탐색
-BASELINE_MIX = [("A2", 1), ("B1", 1), ("B2", 1)]
+
+BASELINE_MIX_3 = [("A2", 1), ("B1", 1), ("B2", 1)]
+BASELINE_MIX_2 = [("B1", 1), ("B2", 1)]
 
 
 # ── 메인 진입점 ──────────────────────────────────────────────────────────────
@@ -40,11 +51,31 @@ async def generate_all_questions(
     is_baseline: bool,
     day_number: int,
 ) -> dict:
-    """4개 영역 문제를 순차 생성 (각 3문항)."""
+    """4개 영역 문제 생성. 듣기는 3-티어 각 2문항, 나머지 각 3문항."""
     results = {}
-    for domain in ["listening", "grammar", "reading", "speaking"]:
-        mix = BASELINE_MIX if is_baseline else _adaptive_mix(
-            current_levels.get(domain, "B1")
+
+    # 듣기: 3개 오디오 각각 2문항
+    listening_groups = []
+    tier_levels = {"short": "A2", "medium": "B1", "long": "B2"} if is_baseline else {}
+    for audio_item in content.get("listening", []):
+        tier = audio_item.get("tier", "medium")
+        if is_baseline:
+            mix = [( tier_levels.get(tier, "B1"), 2)]
+        else:
+            lvl = current_levels.get("listening", "B1")
+            mix = _adaptive_mix(lvl, n=2)
+        try:
+            qs = await _gen_content_questions("listening", audio_item, mix)
+        except Exception as e:
+            log.error(f"[listening-{tier}] 문제 생성 실패: {e}")
+            qs = _fallback_questions("listening")[:2]
+        listening_groups.append({"audio": audio_item, "questions": qs})
+    results["listening"] = listening_groups
+
+    # 문법 / 독해 / 말하기
+    for domain in ["grammar", "reading", "speaking"]:
+        mix = BASELINE_MIX_3 if is_baseline else _adaptive_mix(
+            current_levels.get(domain, "B1"), n=3
         )
         try:
             if domain == "grammar":
@@ -52,9 +83,7 @@ async def generate_all_questions(
             elif domain == "speaking":
                 results[domain] = await _gen_speaking(content["speaking"], mix)
             else:
-                results[domain] = await _gen_content_questions(
-                    domain, content[domain], mix
-                )
+                results[domain] = await _gen_content_questions(domain, content[domain], mix)
         except Exception as e:
             log.error(f"[{domain}] 문제 생성 실패: {e}")
             results[domain] = _fallback_questions(domain)
@@ -62,8 +91,10 @@ async def generate_all_questions(
     return results
 
 
+# ── 오답 분석 ────────────────────────────────────────────────────────────────
+
 async def generate_wrong_analysis(wrong_items: list[dict]) -> str:
-    """틀린 문항을 분석해 한국어 HTML 설명문을 반환."""
+    """당일 인라인용 짧은 오답 설명 HTML (200자 이내)."""
     if not wrong_items:
         return ""
 
@@ -86,7 +117,6 @@ async def generate_wrong_analysis(wrong_items: list[dict]) -> str:
 - 전체 200자 이내
 - 아래 HTML 형식만 반환 (다른 텍스트 없이):
 
-<div class="wi"><span class="tag">[영역]</span> <b>핵심</b>: 설명...</div>
 <div class="wi"><span class="tag">[영역]</span> <b>핵심</b>: 설명...</div>"""
 
     resp = _client.messages.create(
@@ -97,10 +127,107 @@ async def generate_wrong_analysis(wrong_items: list[dict]) -> str:
     return resp.content[0].text.strip()
 
 
+async def generate_detailed_wrong_analysis(wrong_items: list[dict]) -> dict:
+    """다음날 상세 학습 피드백 생성.
+    Returns {"html": str, "telegram": str}
+    """
+    if not wrong_items:
+        return {"html": "", "telegram": ""}
+
+    items_text = "\n".join(
+        f"Q{i+1}. [{DOMAIN_KR.get(item['domain'], item['domain'])}·{item['level']}]\n"
+        f"문제: {item['question']}\n"
+        f"정답: {item['correct']} / 내 선택: {item.get('chosen', '?')}\n"
+        f"기본 설명: {item.get('explanation', '')}"
+        for i, item in enumerate(wrong_items[:5])
+    )
+
+    prompt = f"""당신은 한국인 비즈니스 영어 학습자를 가르치는 전문 영어 강사입니다.
+학습자가 어제 틀린 문제에 대해 상세하고 깊이 있는 학습 피드백을 제공하세요.
+
+[오답 목록]
+{items_text}
+
+각 오답에 대해 반드시 아래 5가지를 모두 작성하세요:
+1. 핵심 개념: 기초부터 단계별 설명. 한국인이 헷갈리는 이유 명시
+2. 문법/어휘 규칙: 정확한 규칙, 예외 사항 포함
+3. 예시 3개 이상: 영어 예문 + 한국어 해석 (비즈니스 맥락 포함)
+4. 한국인 실수 패턴: 비슷하게 틀리는 유사 패턴과 비교
+5. 암기팁: 기억하기 쉬운 규칙 또는 연상법
+
+작성 지침:
+- 한국어 위주, 영어 예문은 그대로 포함
+- 각 항목당 충분히 길고 상세하게 (이해 완결성 우선)
+- 학습 당일에 이것만 읽어도 이해될 수준
+
+JSON으로 반환 (다른 텍스트 없이):
+{{
+  "items": [
+    {{
+      "q_num": 1,
+      "domain": "문법",
+      "summary": "문제 한줄 요약",
+      "concept": "핵심 개념 설명 (상세)",
+      "rule": "문법/어휘 규칙",
+      "examples": ["영어 예문 1 — 한국어 해석", "예문 2 — 해석", "예문 3 — 해석"],
+      "common_mistakes": "한국인 실수 패턴 비교",
+      "tip": "암기팁"
+    }}
+  ]
+}}"""
+
+    try:
+        resp = _client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw   = resp.content[0].text.strip()
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        data  = json.loads(raw[start:end])
+        items = data.get("items", [])
+    except Exception as e:
+        log.warning(f"detailed_wrong_analysis 생성 실패: {e}")
+        return {"html": "", "telegram": ""}
+
+    # HTML 버전 (페이지용)
+    html_parts = []
+    for item in items:
+        ex_html = "".join(
+            f'<div class="detail-ex">• {ex}</div>'
+            for ex in item.get("examples", [])
+        )
+        html_parts.append(f"""<div class="detail-item">
+  <div class="detail-q-label">Q{item.get('q_num', '')}. [{item.get('domain', '')}] {item.get('summary', '')}</div>
+  <div class="detail-section"><b>📌 핵심 개념</b><p>{item.get('concept', '')}</p></div>
+  <div class="detail-section"><b>📐 규칙</b><p>{item.get('rule', '')}</p></div>
+  <div class="detail-section"><b>💬 예시</b>{ex_html}</div>
+  <div class="detail-section"><b>⚠️ 한국인 실수 패턴</b><p>{item.get('common_mistakes', '')}</p></div>
+  <div class="detail-tip">🧠 암기팁: {item.get('tip', '')}</div>
+</div>""")
+    html = "\n".join(html_parts)
+
+    # Telegram 텍스트 버전
+    tg_parts = []
+    for item in items:
+        ex_lines = "\n".join(f"  • {ex}" for ex in item.get("examples", []))
+        tg_parts.append(
+            f"<b>Q{item.get('q_num', '')}. [{item.get('domain', '')}] {item.get('summary', '')}</b>\n\n"
+            f"📌 <b>핵심 개념</b>\n{item.get('concept', '')}\n\n"
+            f"📐 <b>규칙</b>\n{item.get('rule', '')}\n\n"
+            f"💬 <b>예시</b>\n{ex_lines}\n\n"
+            f"⚠️ <b>실수 패턴</b>\n{item.get('common_mistakes', '')}\n\n"
+            f"🧠 <b>암기팁</b>\n{item.get('tip', '')}"
+        )
+    telegram = "\n\n" + "─" * 30 + "\n\n".join(tg_parts)
+
+    return {"html": html, "telegram": telegram}
+
+
 # ── 영역별 문제 생성 ─────────────────────────────────────────────────────────
 
 async def _gen_content_questions(domain: str, content_item: dict, mix: list) -> list[dict]:
-    """듣기 / 독해: 수집된 텍스트 기반 문제 생성."""
     domain_kr   = DOMAIN_KR[domain]
     text        = content_item.get("text", "") or "(텍스트 없음)"
     source_name = content_item.get("source", "")
@@ -136,7 +263,6 @@ JSON 배열만 반환 (다른 텍스트 없이):
 
 
 async def _gen_grammar(grammar_info: dict, mix: list) -> list[dict]:
-    """문법: 커리큘럼 주제 기반 문제 생성."""
     topic    = grammar_info["topic"]
     topic_kr = grammar_info["korean"]
     total_q  = sum(n for _, n in mix)
@@ -169,7 +295,6 @@ JSON 배열만 반환:
 
 
 async def _gen_speaking(content_item: dict, mix: list) -> list[dict]:
-    """말하기: 쉐도잉 스크립트 + 발음·표현 문제 3개 생성."""
     text        = content_item.get("text", "") or ""
     source_name = content_item.get("source", "")
     total_q     = sum(n for _, n in mix)
@@ -188,7 +313,7 @@ async def _gen_speaking(content_item: dict, mix: list) -> list[dict]:
 3. 쉐도잉 스크립트 빈칸 채우기 (level: {top_level})
 
 첫 번째 문제에 반드시 아래 필드 추가:
-- "shadowing_script": 오늘 쉐도잉용 2~3문장 영어 스크립트 (비즈니스 맥락)
+- "shadowing_script": 오늘 쉐도잉용 2~3문장 영어 스크립트 (비즈니스 맥락, 자연스러운 구어체)
 - "pronunciation_tip": 발음 팁 한국어 1줄 (예: 연음, 강세 주의점)
 
 JSON 배열만 반환:
@@ -221,35 +346,7 @@ JSON 배열만 반환:
     return _call_and_parse(prompt, mix)
 
 
-# ── 공통 헬퍼 ────────────────────────────────────────────────────────────────
-
-def _call_and_parse(prompt: str, mix: list) -> list[dict]:
-    resp = _client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=1800,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    raw = resp.content[0].text.strip()
-    return _parse_json(raw, mix)
-
-
-def _parse_json(raw: str, mix: list) -> list[dict]:
-    try:
-        start = raw.find("[")
-        end   = raw.rfind("]") + 1
-        if start == -1:
-            raise ValueError("JSON 배열 없음")
-        items = json.loads(raw[start:end])
-        # level 누락 시 mix 순서로 보완
-        levels_flat = [l for l, n in mix for _ in range(n)]
-        for i, item in enumerate(items):
-            if "level" not in item:
-                item["level"] = levels_flat[i] if i < len(levels_flat) else mix[0][0]
-        return items
-    except Exception as e:
-        log.warning(f"JSON 파싱 실패: {e} | 원본 앞 200자: {raw[:200]}")
-        return _fallback_questions("unknown")
-
+# ── Daily Lesson ─────────────────────────────────────────────────────────────
 
 async def generate_daily_lesson(
     grammar_topic: str,
@@ -258,7 +355,6 @@ async def generate_daily_lesson(
     current_levels: dict,
     day_number: int,
 ) -> dict:
-    """오늘의 학습 포인트를 Claude가 선택·생성. 문법/표현/어휘/발음/전략 중 최적 1개."""
     avg_level = max(
         ["A2", "B1", "B2", "C1"],
         key=lambda l: sum(1 for v in current_levels.values() if v >= l)
@@ -300,15 +396,14 @@ Return ONLY valid JSON (no markdown, no extra text):
             max_tokens=600,
             messages=[{"role": "user", "content": prompt}],
         )
-        raw = resp.content[0].text.strip()
+        raw   = resp.content[0].text.strip()
         start = raw.find("{")
         end   = raw.rfind("}") + 1
         return json.loads(raw[start:end])
     except Exception as e:
         log.warning(f"daily_lesson 생성 실패: {e}")
         return {
-            "type": "EXPRESSION",
-            "icon": "💼",
+            "type": "EXPRESSION", "icon": "💼",
             "title": "Business English of the Day",
             "subtitle": "오늘의 비즈니스 표현",
             "key_point": "\"Let's circle back\" means to return to a topic later.",
@@ -320,6 +415,35 @@ Return ONLY valid JSON (no markdown, no extra text):
             "tip": "회의에서 화제를 잠시 보류할 때 자연스럽게 쓸 수 있는 표현입니다.",
             "remember": "circle back = 나중에 다시 돌아오다",
         }
+
+
+# ── 공통 헬퍼 ────────────────────────────────────────────────────────────────
+
+def _call_and_parse(prompt: str, mix: list) -> list[dict]:
+    resp = _client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=1800,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    raw = resp.content[0].text.strip()
+    return _parse_json(raw, mix)
+
+
+def _parse_json(raw: str, mix: list) -> list[dict]:
+    try:
+        start = raw.find("[")
+        end   = raw.rfind("]") + 1
+        if start == -1:
+            raise ValueError("JSON 배열 없음")
+        items = json.loads(raw[start:end])
+        levels_flat = [l for l, n in mix for _ in range(n)]
+        for i, item in enumerate(items):
+            if "level" not in item:
+                item["level"] = levels_flat[i] if i < len(levels_flat) else mix[0][0]
+        return items
+    except Exception as e:
+        log.warning(f"JSON 파싱 실패: {e} | 원본 앞 200자: {raw[:200]}")
+        return _fallback_questions("unknown")
 
 
 def _fallback_questions(domain: str) -> list[dict]:

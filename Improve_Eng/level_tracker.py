@@ -44,25 +44,38 @@ class LevelTracker:
     # ── Public API ────────────────────────────────────────────────────────────
 
     def save_today_questions(self, today: date, questions: dict) -> None:
-        """오늘 생성된 문제를 Questions 시트에 저장 (내일 채점에 사용)."""
+        """오늘 생성된 문제를 Questions 시트에 저장 (내일 채점에 사용).
+        듣기는 [{"audio": {...}, "questions": [...]}] 구조 처리."""
         rows  = []
         q_num = 1
-        for domain in DOMAINS:
+
+        # 듣기: 그룹 구조에서 펼치기
+        for group in questions.get("listening", []):
+            for q in group.get("questions", []):
+                opts = q.get("options", {})
+                rows.append([
+                    str(today), "listening", str(q_num),
+                    q.get("level", "B1"), q.get("question", ""),
+                    opts.get("A",""), opts.get("B",""),
+                    opts.get("C",""), opts.get("D",""),
+                    q.get("correct","A"), q.get("explanation",""), "",
+                ])
+                q_num += 1
+
+        # 나머지 도메인
+        for domain in ["grammar", "reading", "speaking"]:
             for q in questions.get(domain, []):
                 opts = q.get("options", {})
                 rows.append([
-                    str(today),
-                    domain,
-                    str(q_num),
-                    q.get("level", "B1"),
-                    q.get("question", ""),
-                    opts.get("A", ""), opts.get("B", ""),
-                    opts.get("C", ""), opts.get("D", ""),
-                    q.get("correct", "A"),
-                    q.get("explanation", ""),
-                    q.get("shadowing_script", ""),
+                    str(today), domain, str(q_num),
+                    q.get("level", "B1"), q.get("question", ""),
+                    opts.get("A",""), opts.get("B",""),
+                    opts.get("C",""), opts.get("D",""),
+                    q.get("correct","A"), q.get("explanation",""),
+                    q.get("shadowing_script",""),
                 ])
                 q_num += 1
+
         self._append(SH_QUESTIONS, rows)
         log.info(f"문제 {len(rows)}개 저장 완료 ({today})")
 

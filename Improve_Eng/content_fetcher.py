@@ -1,7 +1,11 @@
 """
 Improve_Eng/content_fetcher.py
-BBC / VOA RSS에서 일일 학습 콘텐츠를 수집합니다.
-날짜 기반 순환으로 매일 다른 소스를 사용합니다.
+BBC / VOA / ESL RSS에서 일일 학습 콘텐츠를 수집합니다.
+
+듣기 3-티어 구조:
+  SHORT  (~1-3분): BBC News Minute, BBC The English We Speak, VOA Learning English
+  MEDIUM (~4-7분): BBC 6 Minute English, BBC 6 Minute Grammar, BBC Lingohack
+  LONG   (~8-15분): BBC English At Work, ESL Podcast, All Ears English
 """
 import feedparser
 import requests
@@ -11,22 +15,70 @@ from datetime import date
 
 log = logging.getLogger(__name__)
 
-# ── 소스 정의 (도메인별, 순환 사용) ──────────────────────────────────────────
+AUDIO_EXTS = (".mp3", ".m4a", ".aac", ".ogg", ".wav", ".opus")
 
-LISTENING_SOURCES = [
-    {
-        "name": "BBC 6 Minute English",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9pj.rss",
-    },
+# ── 듣기 소스 (3-티어) ───────────────────────────────────────────────────────
+
+LISTENING_SHORT = [  # ~1-3분
     {
         "name": "BBC The English We Speak",
         "rss":  "https://podcasts.files.bbci.co.uk/p02pc9s3.rss",
+        "duration_hint": "약 3분",
     },
+    {
+        "name": "BBC Global News Minute",
+        "rss":  "https://podcasts.files.bbci.co.uk/p0bf37qw.rss",
+        "duration_hint": "약 1분",
+    },
+    {
+        "name": "VOA Learning English News",
+        "rss":  "https://learningenglish.voanews.com/api/zovijqmz_q",
+        "duration_hint": "약 2분",
+    },
+]
+
+LISTENING_MEDIUM = [  # ~4-7분
+    {
+        "name": "BBC 6 Minute English",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9pj.rss",
+        "duration_hint": "약 6분",
+    },
+    {
+        "name": "BBC 6 Minute Grammar",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9v1.rss",
+        "duration_hint": "약 6분",
+    },
+    {
+        "name": "BBC Lingohack",
+        "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml",
+        "duration_hint": "약 3분",
+    },
+    {
+        "name": "BBC Learning English Conversations",
+        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9zn.rss",
+        "duration_hint": "약 5분",
+    },
+]
+
+LISTENING_LONG = [  # ~8-15분
     {
         "name": "BBC English At Work",
         "rss":  "https://podcasts.files.bbci.co.uk/p02pc9qx.rss",
+        "duration_hint": "약 12분",
+    },
+    {
+        "name": "ESL Podcast",
+        "rss":  "https://www.eslpod.com/eslpod_feed.xml",
+        "duration_hint": "약 15분",
+    },
+    {
+        "name": "All Ears English",
+        "rss":  "https://www.allearsenglish.com/feed/podcast",
+        "duration_hint": "약 10분",
     },
 ]
+
+# ── 독해 소스 ────────────────────────────────────────────────────────────────
 
 READING_SOURCES = [
     {
@@ -38,6 +90,8 @@ READING_SOURCES = [
         "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml",
     },
 ]
+
+# ── 말하기 소스 ──────────────────────────────────────────────────────────────
 
 SPEAKING_SOURCES = [
     {
@@ -71,18 +125,26 @@ GRAMMAR_CURRICULUM = [
 # ── 메인 진입점 ──────────────────────────────────────────────────────────────
 
 async def fetch_daily_content(today: date) -> dict:
-    """날짜 기반으로 4개 영역 콘텐츠를 각각 다른 소스에서 수집."""
-    idx       = today.toordinal()
-    week_idx  = (idx // 7) % len(GRAMMAR_CURRICULUM)
+    """날짜 기반으로 콘텐츠 수집. 듣기는 3-티어(short/medium/long) 리스트로 반환."""
+    idx      = today.toordinal()
+    week_idx = (idx // 7) % len(GRAMMAR_CURRICULUM)
 
-    listening = _fetch_from_source(LISTENING_SOURCES[idx % len(LISTENING_SOURCES)])
-    reading   = _fetch_from_source(READING_SOURCES[idx % len(READING_SOURCES)])
-    speaking  = _fetch_from_source(SPEAKING_SOURCES[idx % len(SPEAKING_SOURCES)])
+    # 3-티어 듣기: 각 티어마다 날짜 기반 소스 순환
+    short_src  = LISTENING_SHORT[idx % len(LISTENING_SHORT)]
+    medium_src = LISTENING_MEDIUM[idx % len(LISTENING_MEDIUM)]
+    long_src   = LISTENING_LONG[idx % len(LISTENING_LONG)]
+
+    ls = _fetch_from_source(short_src);  ls["tier"] = "short";  ls["duration_hint"] = short_src["duration_hint"]
+    lm = _fetch_from_source(medium_src); lm["tier"] = "medium"; lm["duration_hint"] = medium_src["duration_hint"]
+    ll = _fetch_from_source(long_src);   ll["tier"] = "long";   ll["duration_hint"] = long_src["duration_hint"]
+
+    reading  = _fetch_from_source(READING_SOURCES[idx % len(READING_SOURCES)])
+    speaking = _fetch_from_source(SPEAKING_SOURCES[idx % len(SPEAKING_SOURCES)])
 
     topic, level, topic_kr = GRAMMAR_CURRICULUM[week_idx]
 
     return {
-        "listening": listening,
+        "listening": [ls, lm, ll],
         "reading":   reading,
         "speaking":  speaking,
         "grammar": {
@@ -110,7 +172,6 @@ def _fetch_from_source(source: dict) -> dict:
         summary = entry.get("summary", entry.get("description", ""))
         text    = _clean_html(summary)
 
-        # 요약이 너무 짧으면 본문 페이지 추가 수집
         if len(text) < 200 and link:
             scraped = _scrape_article(link)
             if scraped:
@@ -128,19 +189,39 @@ def _fetch_from_source(source: dict) -> dict:
 
     except Exception as e:
         log.warning(f"[{source['name']}] 수집 실패: {e} → Claude가 자체 생성")
-        return {"source": source["name"], "title": "Daily Practice", "url": "", "text": ""}
+        return {"source": source["name"], "title": "Daily Practice", "url": "", "audio_url": "", "text": ""}
 
 
 def _extract_audio_url(entry) -> str:
-    """RSS 항목에서 MP3/오디오 URL을 추출."""
-    # enclosures 필드 (BBC, VOA 표준)
+    """RSS 항목에서 오디오 URL을 추출. mp3/m4a/aac/ogg 등 모든 형식 지원."""
+    # enclosures 필드 (BBC, VOA, ESL 표준)
     for enc in getattr(entry, "enclosures", []):
-        if "audio" in enc.get("type", "") or enc.get("href", "").endswith(".mp3"):
-            return enc.get("href", "")
+        href = enc.get("href", enc.get("url", ""))
+        mime = enc.get("type", "")
+        if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
+            return href
+
     # links 필드 (일부 피드)
     for lnk in getattr(entry, "links", []):
-        if "audio" in lnk.get("type", "") or lnk.get("href", "").endswith(".mp3"):
-            return lnk.get("href", "")
+        href = lnk.get("href", "")
+        mime = lnk.get("type", "")
+        if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
+            return href
+
+    # media_content 필드 (일부 피드)
+    media = getattr(entry, "media_content", [])
+    for m in (media if isinstance(media, list) else []):
+        href = m.get("url", "")
+        mime = m.get("type", "")
+        if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
+            return href
+
+    # itunes:new-feed-url 같은 확장 필드에서 직접 mp3 링크 탐색
+    for key in vars(entry):
+        val = getattr(entry, key, "")
+        if isinstance(val, str) and any(val.lower().endswith(ext) for ext in AUDIO_EXTS):
+            return val
+
     return ""
 
 
