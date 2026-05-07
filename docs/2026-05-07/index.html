@@ -10,17 +10,11 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  background: #f0f2f5;
-  color: #1a1a2e;
-  line-height: 1.6;
+  background: #f0f2f5; color: #1a1a2e; line-height: 1.6;
 }
 
 /* HEADER */
-header {
-  background: linear-gradient(135deg, #1a1a2e, #0f3460);
-  padding: 24px 20px 20px;
-  color: #fff;
-}
+header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20px 20px; color: #fff; }
 .hdr-top { display: flex; justify-content: space-between; align-items: center;
            font-size: 11px; color: #8899bb; letter-spacing: 1.5px;
            text-transform: uppercase; margin-bottom: 10px; }
@@ -28,8 +22,7 @@ header {
 .hdr-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
 .hdr-meta { font-size: 12px; color: #8899bb; margin-bottom: 14px; }
 .lv-badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px;
-            border-radius: 20px; color: #1a1a2e; }
+.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; color: #1a1a2e; }
 
 /* CONTAINER */
 .container { max-width: 680px; margin: 0 auto; padding: 16px 12px 40px; }
@@ -42,6 +35,21 @@ header {
 .analysis-card { border-left: 4px solid #f97316; background: #fff7ed; }
 .card-label { font-size: 11px; font-weight: 700; color: #c2410c;
               text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* DETAILED ANALYSIS */
+.detail-card { border-left: 4px solid #6366f1; background: #f5f3ff; }
+.detail-card .card-label { color: #4338ca; }
+.detail-intro { font-size: 13px; color: #4b5563; margin-bottom: 16px; }
+.detail-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+               padding: 16px; margin-bottom: 14px; }
+.detail-q-label { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 12px;
+                  padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+.detail-section { margin-bottom: 10px; }
+.detail-section b { font-size: 12px; color: #6366f1; display: block; margin-bottom: 4px; }
+.detail-section p { font-size: 13px; color: #374151; line-height: 1.7; }
+.detail-ex { font-size: 13px; color: #374151; padding: 4px 0; }
+.detail-tip { font-size: 13px; font-weight: 600; color: #4338ca;
+              background: #eef2ff; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
 
 /* LESSON */
 .lesson-card { border: 1.5px solid; }
@@ -78,6 +86,8 @@ header {
                      display: flex; align-items: center; justify-content: center;
                      font-size: 18px; flex-shrink: 0; }
 .section-title { font-size: 15px; font-weight: 700; }
+.duration-badge { font-size: 10px; background: #e0f2fe; color: #0369a1;
+                  padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 600; }
 .section-source { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 .src-link { color: #9ca3af; text-decoration: none; }
 .src-link:hover { color: #6b7280; }
@@ -85,6 +95,8 @@ header {
 /* AUDIO */
 .audio-box { background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px;
              padding: 14px 16px; margin-bottom: 16px; }
+.audio-box-warn { background: #fef9c3; border-color: #fde047; }
+.audio-box-warn .audio-hint { color: #854d0e; }
 .audio-hint { font-size: 12px; color: #0369a1; margin-bottom: 8px; }
 .audio-link-btn { display: inline-block; background: #0ea5e9; color: #fff;
                   font-size: 14px; font-weight: 600; padding: 10px 20px;
@@ -102,8 +114,37 @@ header {
               padding: 14px 16px; margin-bottom: 16px; }
 .shadow-label { font-size: 11px; font-weight: 700; color: #a16207;
                 text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; }
-.shadow-tip { font-size: 12px; color: #92400e; margin-top: 8px; font-style: italic; }
+.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; margin-bottom: 12px; }
+.shadow-tip { font-size: 12px; color: #92400e; margin-bottom: 12px; font-style: italic; }
+
+/* RECORDING */
+.record-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px;
+              padding: 14px 16px; margin-top: 8px; }
+.record-title { font-size: 13px; font-weight: 700; color: #0369a1; margin-bottom: 6px; }
+.record-hint { font-size: 12px; color: #0369a1; margin-bottom: 10px; }
+.record-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.btn-record { background: #0ea5e9; color: #fff; border: none; border-radius: 8px;
+              padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-record:hover { background: #0284c7; }
+.rec-status { font-size: 12px; color: #6b7280; }
+.rec-transcript-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+                      padding: 10px 12px; margin-bottom: 10px; min-height: 40px; }
+.rec-label { font-size: 11px; font-weight: 700; color: #9ca3af;
+             text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+.rec-text-output { font-size: 14px; color: #374151; font-style: italic; }
+.rec-feedback { font-size: 13px; }
+.rec-perfect { color: #16a34a; font-weight: 700; padding: 10px; background: #dcfce7;
+               border-radius: 8px; text-align: center; }
+.rec-warn { color: #9a3412; background: #fff7ed; padding: 8px 12px; border-radius: 8px; }
+.rec-score { font-size: 15px; margin-bottom: 10px; padding: 8px 12px;
+             background: #f9fafb; border-radius: 8px; }
+.rec-missed { background: #fff; border: 1px solid #fca5a5; border-radius: 8px;
+              padding: 12px; margin-bottom: 8px; }
+.rec-missed ul { list-style: none; padding: 0; margin-top: 6px; }
+.rec-missed li { padding: 4px 0; font-size: 13px; }
+.rec-tip { font-size: 12px; color: #6b7280; font-style: italic; }
+.rec-advice { font-size: 13px; color: #374151; background: #fffbeb;
+              border: 1px solid #fde68a; padding: 8px 12px; border-radius: 8px; }
 
 /* QUESTIONS */
 .question { margin-bottom: 20px; padding: 14px; border-radius: 10px;
@@ -138,8 +179,7 @@ header {
 .submit-hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
 .btn-submit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff;
               font-size: 16px; font-weight: 700; padding: 14px 40px;
-              border-radius: 12px; border: none; cursor: pointer;
-              transition: opacity .2s; }
+              border-radius: 12px; border: none; cursor: pointer; transition: opacity .2s; }
 .btn-submit:hover { opacity: .85; }
 .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
 
@@ -179,17 +219,17 @@ header {
     <span class="hdr-date">May 07, 2026</span>
   </div>
   <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
-  <p class="hdr-meta">4개 영역 · 4 섹션 · 약 20분</p>
+  <p class="hdr-meta">4개 영역 · 듣기 3클립 포함 · 약 25분</p>
   <div class="lv-badges"><span class="lv-badge" style="background:#6ee7b7">🎧 듣기: A2</span><span class="lv-badge" style="background:#6ee7b7">✏️ 문법: A2</span><span class="lv-badge" style="background:#c4b5fd">📖 독해: B2</span><span class="lv-badge" style="background:#c4b5fd">🗣️ 말하기: B2</span></div>
 </header>
 
 <div class="container">
 
   <div class="card analysis-card">
-  <div class="card-label">🔍 어제 오답 분석</div>
-  <div class="wi"><span class="tag">[문법·B1]</span> <b>핵심</b>: If절에 would 금지! 가정법 과거완료는 반드시 'If + had p.p., would have p.p.' 구조. If절엔 had만 사용.</div>
-<div class="wi"><span class="tag">[문법·B2]</span> <b>핵심</b>: 가정법 과거완료는 두 절 모두 과거완료 형태 유지. If절 had p.p. + 주절 would have p.p. 세트로 암기.</div>
-<div class="wi"><span class="tag">[말하기·B2]</span> <b>핵심</b>: pick up = 자연스럽게 습득하다. look up(검색), bring up(제기)과 혼동 주의. 문맥으로 구동사 의미 구별 필수.</div>
+  <div class="card-label">🔍 어제 오답 요약</div>
+  <div class="wi"><span class="tag">[문법·B1]</span> <b>핵심</b>: If절에 would 금지! 가정법 과거완료는 반드시 'If + had p.p, would have p.p' 구조를 써야 합니다.</div>
+<div class="wi"><span class="tag">[문법·B2]</span> <b>핵심</b>: 두 절 모두 과거완료 형태 유지! If절(had p.p)과 주절(would have p.p)을 함께 써야 반사실적 과거를 정확히 표현합니다.</div>
+<div class="wi"><span class="tag">[말하기·B2]</span> <b>핵심</b>: 'pick up'은 '자연스럽게 습득하다'는 의미! look up(찾다), bring up(제기하다)과 혼동하지 말고 문맥으로 구동사를 구별하세요.</div>
 </div>
 
   <div class="card lesson-card" style="background:#fff7ed;border-color:#fb923c">
@@ -197,27 +237,27 @@ header {
     <span class="lesson-type-badge" style="background:#c2410c;color:#fff">EXPRESSION</span>
     <span class="lesson-icon">💼</span>
   </div>
-  <h2 class="lesson-title" style="color:#c2410c">Say 'Move Forward' Like a Pro</h2>
-  <p class="lesson-subtitle">비즈니스에서 '진행하다/추진하다'를 자연스럽게 표현하는 법</p>
-  <div class="lesson-keypoint">Korean speakers often say 'proceed' or 'go' in business English, but native speakers prefer 'move forward with' to sound confident and professional. It signals action and momentum.</div>
+  <h2 class="lesson-title" style="color:#c2410c">Say 'No' Politely in Business English</h2>
+  <p class="lesson-subtitle">비즈니스에서 거절할 때 쓰는 자연스러운 표현 3가지</p>
+  <div class="lesson-keypoint">In English business culture, a direct 'No' sounds rude. Instead, use softening phrases like 'I'm afraid...' or 'Unfortunately...' before the refusal. This shows respect while still being clear.</div>
   <div class="lesson-examples"><div class="lesson-ex">
-      <div class="lesson-ex-text">"Let's move forward with the proposal after the meeting."</div>
-      <div class="lesson-ex-note">'제안서를 추진하자' — proceed보다 훨씬 자연스럽고 능동적인 표현</div>
+      <div class="lesson-ex-text">"I'm afraid we won't be able to meet that deadline."</div>
+      <div class="lesson-ex-note">'I'm afraid'는 '유감이지만'의 뜻 — 거절 전에 붙이면 훨씬 부드럽게 들림</div>
     </div><div class="lesson-ex">
-      <div class="lesson-ex-text">"We can't move forward until the budget is approved."</div>
-      <div class="lesson-ex-note">조건이 충족될 때까지 진행 불가 — 이메일에서 자주 쓰는 패턴</div>
+      <div class="lesson-ex-text">"Unfortunately, that's outside our budget at the moment."</div>
+      <div class="lesson-ex-note">'Unfortunately'로 시작하면 상대방을 탓하지 않고 상황을 설명하는 느낌을 줌</div>
     </div><div class="lesson-ex">
-      <div class="lesson-ex-text">"I'd like to move forward with your team on this project."</div>
-      <div class="lesson-ex-note">'your team on this' — 협업 제안 시 정중하고 전문적으로 들림</div>
+      <div class="lesson-ex-text">"That sounds interesting, but it's not something we can commit to right now."</div>
+      <div class="lesson-ex-note">먼저 긍정('sounds interesting')을 말하고 'but'으로 거절 — 관계를 유지하는 전형적인 비즈니스 패턴</div>
     </div></div>
-  <div class="lesson-tip">💡 이메일 마무리 문장으로 'Please let me know if you'd like to move forward.'를 외워두세요. 어떤 상황에서도 쓸 수 있는 만능 비즈니스 마무리입니다.</div>
-  <div class="lesson-remember" style="border-color:#fb923c;color:#c2410c">🧠 'move forward with + 명사' = 한국어 '~을 추진하다/진행하다' — proceed 대신 이걸 쓰면 바로 프로처럼 들린다!</div>
+  <div class="lesson-tip">💡 이 세 가지 표현을 이메일이나 회의에서 바로 써보세요. 특히 'I'm afraid + 주어 + won't/can't' 구조를 소리 내어 3번 연습하면 입에 붙습니다.</div>
+  <div class="lesson-remember" style="border-color:#fb923c;color:#c2410c">🧠 거절할 땐 'No' 대신 → I'm afraid / Unfortunately / That sounds interesting, but...</div>
 </div>
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
       <span>진행률</span>
-      <span id="progressText">0 / 12 문항</span>
+      <span id="progressText">0 / 15 문항</span>
     </div>
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -226,79 +266,178 @@ header {
 
   <div class="card section-card">
   <div class="section-header">
-    <div class="section-icon-wrap" style="background:#e0f2fe">🎧</div>
+    <div class="section-icon-wrap" style="background:#e0f2fe">⚡</div>
     <div>
-      <div class="section-title" style="color:#0ea5e9">Section · Listening</div>
-      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0ngg0p5">BBC 6 Minute English</a> · The News Quiz: Ep2. The art of vetting</div>
+      <div class="section-title" style="color:#0ea5e9">
+        Listening · Short
+        <span class="duration-badge">약 3분</span>
+      </div>
+      <div class="section-source"><span>BBC The English We Speak</span></div>
     </div>
   </div>
-  <div class="audio-box">
-      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요</p>
-      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0ngg347.mp3" type="audio/mpeg">
-        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0ngg347.mp3" target="_blank">음성 링크 열기</a>
-      </audio>
+  <div class="audio-box audio-box-warn">
+      <p class="audio-hint">⚠️ 오디오 링크를 찾을 수 없습니다. 아래 문제는 텍스트 기반으로 풀어보세요.</p>
     </div>
   <div class="question" id="q0">
   <div class="q-text">
     <span class="q-num">1</span>
-    What is the main topic of this week's conversation show?
+    Listen to the conversation. What does 'break the ice' mean in this context?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
   <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Only about Peter Mandelson's problems</span>
+    <span class="opt-text">To actually break something made of ice</span>
   </button><button class="opt" data-q="0" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Several hot topics including school phones and robots</span>
+    <span class="opt-text">To make people feel comfortable and start conversation</span>
   </button><button class="opt" data-q="0" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Only about robots taking over the world</span>
+    <span class="opt-text">To take a break and drink something cold</span>
   </button><button class="opt" data-q="0" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Only about sports news</span>
+    <span class="opt-text">To end a conversation politely</span>
   </button></div>
-  <div class="expl" id="expl0" style="display:none">💬 텍스트에서 'Some hot topics of conversation this week include the ever evolving Peter Mandelson vetting saga, phones being banned in schools and robots who can take over sports'라고 여러 주제를 언급했습니다. A, C, D는 각각 하나의 주제만 다루므로 틀렸습니다.</div>
+  <div class="expl" id="expl0" style="display:none">💬 영어 표현 'break the ice'는 어색한 분위기를 부드럽게 만들거나 사람들이 편하게 느끼도록 시작하는 것을 의미합니다. A는 문자 그대로의 의미(틀림), C는 휴식 시간(문맥상 맞지 않음), D는 대화 종료(표현의 의미와 무관).</div>
 </div><div class="question" id="q1">
   <div class="q-text">
     <span class="q-num">2</span>
-    What can be inferred about the show's format based on the information provided?
-    <span class="q-level" style="background:#93c5fd">B1</span>
+    Listen to the dialogue. What is the main topic being discussed?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
   <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">It is a serious news program with only one host</span>
+    <span class="opt-text">How to pack things in a box</span>
   </button><button class="opt" data-q="1" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">It is a comedic discussion show with multiple panelists helping the main host</span>
+    <span class="opt-text">The importance of following company rules</span>
   </button><button class="opt" data-q="1" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">It is a radio drama with professional actors</span>
+    <span class="opt-text">Being creative and trying new, unconventional ideas</span>
   </button><button class="opt" data-q="1" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">It is a documentary series about technology</span>
+    <span class="opt-text">The location of a project office</span>
   </button></div>
-  <div class="expl" id="expl1" style="display:none">💬 'Helping Andy make sense of it all are Daliso Chaponda, Catherine Bohart, Hugo Rifkind and Ria Lina'라는 표현과 'Written by Andy Zaltzman'에서 패널 형식의 토크쇼임을 알 수 있습니다. 또한 로봇이 '세계를 장악할 수 있다'는 농담적 표현(sorry robots who can take over sports)이 유머 있는 프로그램임을 시사합니다.</div>
-</div><div class="question" id="q2">
+  <div class="expl" id="expl1" style="display:none">💬 'Think outside the box'는 관례적이지 않은 창의적 사고를 하라는 의미의 관용구입니다. A는 문자적 해석(틀림), B는 규칙 준수(표현의 의미와 반대), D는 장소(대화 내용과 무관).</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#bae6fd">🎵</div>
+    <div>
+      <div class="section-title" style="color:#0284c7">
+        Listening · Medium
+        <span class="duration-badge">약 5분</span>
+      </div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0njcp6n">BBC Learning English Conversations</a> · The English We Speak: Take it as a given</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 5분)</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0njcnkq.mp3" type="audio/mpeg">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0njcnkq.mp3" type="audio/mp4">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0njcnkq.mp3" target="_blank">음성 파일 직접 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q2">
   <div class="q-text">
     <span class="q-num">3</span>
-    Based on the production credits and structure described, what does this program most likely represent in the context of BBC radio broadcasting?
-    <span class="q-level" style="background:#c4b5fd">B2</span>
+    Listen to the conversation. What does the speaker mean by 'you can just assume to be true'?
+    <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">A live news bulletin with minimal editorial oversight</span>
+    <span class="opt-text">Things that are difficult to understand or verify</span>
   </button><button class="opt" data-q="2" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">A heavily produced comedy panel show with substantial creative and technical teams</span>
+    <span class="opt-text">Things that are generally accepted as facts without needing proof</span>
   </button><button class="opt" data-q="2" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">A documentary with interviews conducted by BBC reporters</span>
+    <span class="opt-text">Things that require careful investigation before accepting</span>
   </button><button class="opt" data-q="2" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">An independent podcast distributed by BBC Studios</span>
+    <span class="opt-text">Things that only experts can understand</span>
   </button></div>
-  <div class="expl" id="expl2" style="display:none">💬 프로듀서, 이그제큐티브 프로듀서, 프로덕션 코디네이터, 사운드 에디터 등 다양한 제작진이 참여했으며, 여러 명의 라이터가 콘텐츠를 작성했다는 점에서 고도로 제작된 엔터테인먼트 프로그램임을 알 수 있습니다. BBC Studios Production이라는 표기는 정규 방송 프로그램임을 나타냅니다.</div>
+  <div class="expl" id="expl2" style="display:none">💬 'assume to be true'는 증거 없이 일반적으로 참이라고 받아들이는 것을 의미합니다. 정답은 B입니다. A는 어렵고 검증이 필요한 것이므로 반대 의미이고, C는 조사가 필요하다는 뜻으로 틀렸으며, D는 표현의 의미와 맞지 않습니다.</div>
+</div><div class="question" id="q3">
+  <div class="q-text">
+    <span class="q-num">4</span>
+    According to the program description, what is the main purpose of 'The English We Speak' episode?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">To teach grammar rules and sentence structure</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">To introduce a specific English expression and demonstrate how to use it</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">To help learners prepare for business meetings</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">To provide pronunciation tips for difficult words</span>
+  </button></div>
+  <div class="expl" id="expl3" style="display:none">💬 프로그램 설명에서 'Learn how to use it expression with Feifei and Phil'이라고 명시되어 있습니다. 정답은 B입니다. A는 일반적인 문법이고, C는 별도의 Office English 시리즈 목적이므로 틀렸으며, D는 발음 연습에 중점을 두지 않습니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#7dd3fc">🎙️</div>
+    <div>
+      <div class="section-title" style="color:#0369a1">
+        Listening · Long
+        <span class="duration-badge">약 12분</span>
+      </div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0jfh3s3">BBC English At Work</a> · Stealing Power</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 12분)</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" type="audio/mpeg">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" type="audio/mp4">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0jfh36f.mp3" target="_blank">음성 파일 직접 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q4">
+  <div class="q-text">
+    <span class="q-num">5</span>
+    According to the passage, what is the primary reason for the recent sharp increase in energy theft cases?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">People are becoming more aware of how to tamper with meters</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">The cost of living crisis has driven more people to steal energy</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Energy companies have reduced their security measures</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">The government has made meter tampering legal in certain circumstances</span>
+  </button></div>
+  <div class="expl" id="expl4" style="display:none">💬 텍스트에서 'Energy theft is not a new phenomenon but the cost of living crisis seems to be the main reason for this sharp increase'라고 명시되어 있습니다. A는 텍스트에서 언급되지 않았고, C와 D는 텍스트 내용과 모순됩니다.</div>
+</div><div class="question" id="q5">
+  <div class="q-text">
+    <span class="q-num">6</span>
+    What does the case of George Hinds illustrate about meter tampering?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">It shows how easy it is to tamper with meters without getting caught</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">It demonstrates the tragic consequences that can result from energy theft</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">It proves that gas engineers are responsible for most meter tampering incidents</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">It explains why the energy regulator Ofgem was created</span>
+  </button></div>
+  <div class="expl" id="expl5" style="display:none">💬 George Hinds의 사례는 2세 어린이가 이웃의 파이프 절단으로 인한 가스 폭발로 사망한 비극적 결과를 보여줍니다. 텍스트에서 'the consequences can be tragic'와 직결되는 사례입니다. A는 반대 의미이고, C와 D는 사례 내용과 맞지 않습니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -309,66 +448,66 @@ header {
     </div>
   </div>
   
-  <div class="question" id="q3">
+  <div class="question" id="q6">
   <div class="q-text">
-    <span class="q-num">4</span>
-    If you _____ the email yesterday, we wouldn't have missed the deadline.
+    <span class="q-num">7</span>
+    If you _____ the email yesterday, you would have known about the meeting cancellation.
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">send</span>
-  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-text">check</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">sent</span>
-  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-text">checked</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">had sent</span>
-  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-text">had checked</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">would send</span>
+    <span class="opt-text">would check</span>
   </button></div>
-  <div class="expl" id="expl3" style="display:none">💬 가정법 과거완료는 'If + had + 과거분사'의 형태입니다. 어제의 실제로 일어나지 않은 상황을 가정할 때 사용합니다.</div>
-</div><div class="question" id="q4">
+  <div class="expl" id="expl6" style="display:none">💬 가정법 과거완료는 'If + had + 과거분사'로 과거의 가정을 나타냅니다. 이미 지나간 일이므로 'had checked'가 올바른 형태입니다.</div>
+</div><div class="question" id="q7">
   <div class="q-text">
-    <span class="q-num">5</span>
-    우리 팀이 프로젝트 계획을 더 신중하게 했다면, 그런 문제들을 피했을 것이다. 이 문장으로 가장 적절한 것은?
+    <span class="q-num">8</span>
+    다음 문장에서 빈칸을 채우세요: If the client _____ our proposal earlier, we _____ able to start the project last month.
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">If our team planned the project more carefully, we would avoid those problems.</span>
-  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-text">approved / would be</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">If our team had planned the project more carefully, we would have avoided those problems.</span>
-  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-text">had approved / would have been</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">If our team would have planned the project more carefully, we would avoid those problems.</span>
-  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-text">had approved / would be</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">If our team had planned the project more carefully, we would avoid those problems.</span>
+    <span class="opt-text">would approve / would have been</span>
   </button></div>
-  <div class="expl" id="expl4" style="display:none">💬 가정법 과거완료에서는 조건절과 결과절 모두 완료형을 사용합니다: 'If + had + p.p., would + have + p.p.' 구조를 반드시 지켜야 합니다.</div>
-</div><div class="question" id="q5">
+  <div class="expl" id="expl7" style="display:none">💬 가정법 과거완료 구문에서 주절도 일관되게 'would have + 과거분사'를 사용합니다. 과거의 실현되지 않은 결과를 나타낼 때 양쪽 모두 완료형을 써야 합니다.</div>
+</div><div class="question" id="q8">
   <div class="q-text">
-    <span class="q-num">6</span>
-    The company _____ bankruptcy if the investors hadn't provided additional funding at the critical moment.
+    <span class="q-num">9</span>
+    올바른 문장을 고르세요.
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">would declare</span>
-  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-text">If we would have invested in that startup, we could make significant profits by now.</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">would have declared</span>
-  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-text">Had we not missed the deadline, the company would not have lost the contract.</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">had declared</span>
-  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-text">If you had submitted the report on time, the delay would not occur.</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">would declare</span>
+    <span class="opt-text">Unless the financial crisis wouldn't have happened, our budget would have been approved.</span>
   </button></div>
-  <div class="expl" id="expl5" style="display:none">💬 과거의 가상 상황에서 '~했을 것이다'는 결과절에 'would have + 과거분사'를 사용합니다. 한국인은 종종 결과절에서 단순형을 쓰는 실수를 하므로 주의가 필요합니다.</div>
+  <div class="expl" id="expl8" style="display:none">💬 가정법 과거완료에서는 조건절과 결과절 모두 완료형을 유지해야 하며, 'If'를 생략하고 도치 구문(Had we...)도 가능합니다. A는 'would have invested'로 정정, C는 'would not have occurred'로, D는 이중 부정 오류입니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -379,78 +518,66 @@ header {
     </div>
   </div>
   
-  <div class="question" id="q6">
+  <div class="question" id="q9">
   <div class="q-text">
-    <span class="q-num">7</span>
-    Read the text below and answer the question.
-
-John works at a coffee shop. He arrives at 7 AM every morning. He prepares the coffee machines and cleans the tables. At 8 AM, customers start coming in. John serves them coffee and snacks. He finishes work at 3 PM.
-
-What time does John start work?
+    <span class="q-num">10</span>
+    What time does Sarah open the coffee shop?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">3 PM</span>
-  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-text">6 AM</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
     <span class="opt-letter">B</span>
     <span class="opt-text">7 AM</span>
-  </button><button class="opt" data-q="6" data-l="C" type="button">
+  </button><button class="opt" data-q="9" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">8 AM</span>
-  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-text">2 PM</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">6 AM</span>
+    <span class="opt-text">5 PM</span>
   </button></div>
-  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 'He arrives at 7 AM every morning'이라고 명시되어 있습니다. A2 수준에서는 기본 정보를 직접 찾는 문제입니다. 3 PM은 퇴근 시간, 8 AM은 손님이 오는 시간입니다.</div>
-</div><div class="question" id="q7">
+  <div class="expl" id="expl9" style="display:none">💬 텍스트에서 'At 7 AM, the shop opens for customers'라고 명시되어 있습니다. Sarah는 6 AM에 도착하지만, 가게 오픈은 7 AM입니다. A는 그녀의 출근 시간, C는 퇴근 시간입니다.</div>
+</div><div class="question" id="q10">
   <div class="q-text">
-    <span class="q-num">8</span>
-    Read the text below and answer the question.
-
-Sarah is a project manager at a tech company. Last month, her team faced a tight deadline. Sarah organized daily meetings to keep everyone focused. She also provided extra coffee and snacks to boost morale. By working together efficiently, the team completed the project two days ahead of schedule. Sarah's manager was impressed with her leadership.
-
-Why was Sarah's manager impressed?
+    <span class="q-num">11</span>
+    According to the text, why do small businesses find digital marketing challenging?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Sarah organized daily meetings</span>
-  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-text">Because it reaches too broad an audience</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Sarah provided coffee and snacks</span>
-  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-text">Because they don't have enough technical knowledge or resources</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">The team finished the project ahead of schedule</span>
-  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-text">Because trends never change</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Sarah worked very hard herself</span>
+    <span class="opt-text">Because it is more expensive than traditional advertising</span>
   </button></div>
-  <div class="expl" id="expl7" style="display:none">💬 텍스트의 마지막 문장 'Sarah's manager was impressed with her leadership'과 그 앞의 결과인 'team completed the project two days ahead of schedule'를 연결하는 문제입니다. A, B는 과정일 뿐 인상의 직접적 원인이 아닙니다.</div>
-</div><div class="question" id="q8">
+  <div class="expl" id="expl10" style="display:none">💬 'Many small businesses struggle with this because they lack the technical expertise or resources'가 정답의 근거입니다. A는 디지털 마케팅의 장점을 역으로 설명한 것, C는 텍스트에 모순되며, D는 본문에서 언급하지 않습니다.</div>
+</div><div class="question" id="q11">
   <div class="q-text">
-    <span class="q-num">9</span>
-    Read the text below and answer the question.
-
-Remote work has transformed how companies operate. While flexibility appeals to employees, managers worry about productivity and team cohesion. Studies show mixed results: some workers are more productive at home, while others struggle with isolation. Tech companies like Microsoft have invested in virtual collaboration tools to address these challenges. However, critics argue that no technology can fully replicate the spontaneous interactions and creative energy of physical offices. This has led many companies to adopt a hybrid model—combining remote and in-office work.
-
-Which of the following best explains why companies are adopting hybrid models?
+    <span class="q-num">12</span>
+    What does the author suggest about current labor laws in the context of the gig economy?
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Remote work is completely ineffective and should be abandoned</span>
-  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-text">They provide adequate protection for gig workers</span>
+  </button><button class="opt" data-q="11" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Technology has made virtual collaboration unnecessary</span>
-  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-text">They were created specifically for flexible employment</span>
+  </button><button class="opt" data-q="11" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Neither pure remote work nor full office presence fully solves all workplace challenges</span>
-  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-text">They are inadequate because they were designed for traditional employment models</span>
+  </button><button class="opt" data-q="11" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Employees demand flexibility but technology prevents it</span>
+    <span class="opt-text">They need to be abolished entirely</span>
   </button></div>
-  <div class="expl" id="expl8" style="display:none">💬 B2 수준의 추론 문제입니다. 텍스트에서 원격근무의 장점('flexibility', 'more productive')과 단점('isolation', 'spontaneous interactions' 부족)을 모두 제시하고, 이 둘의 trade-off 때문에 hybrid model을 선택한다고 암시합니다. A는 극단적(텍스트에서 '혼합 결과'), B는 사실 왜곡, D는 부정확합니다.</div>
+  <div class="expl" id="expl11" style="display:none">💬 'existing labor laws, designed for permanent employment, are ill-equipped to address gig workers' vulnerabilities'는 노동법이 기존의 전통적 고용 모델을 기반으로 설계되었으므로 긱이코노미 상황에 맞지 않다는 의미입니다. A는 반대 주장, B는 잘못된 해석, D는 과도한 표현입니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -461,70 +588,87 @@ Which of the following best explains why companies are adopting hybrid models?
     </div>
   </div>
   <div class="shadow-box">
-      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트 (3회 반복)</div>
-      <p class="shadow-text">You can just assume that all our clients understand the company policy. There are some things you can take for granted in business.</p>
-      <p class="shadow-tip">🔊 take for granted에서 'take'와 'for'가 연음되어 '테이크퍼 그란티드' 처럼 들립니다.</p>
+      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트</div>
+      <p class="shadow-text" id="shadowScript0">You can just assume that the report will be ready by Friday. It's something you can take for granted in our company.</p>
+      <p class="shadow-tip">🔊 'assume'는 어두에 강세가 있고, 'take for granted'는 연음되어 '테이크포:그란티드' 처럼 들립니다.</p>
+
+      <div class="record-box">
+        <div class="record-title">🎙️ 발음 녹음 & 체크</div>
+        <p class="record-hint">스크립트를 보며 따라 말하고, 녹음 버튼을 눌러보세요. Chrome/Edge에서 동작합니다.</p>
+        <div class="record-controls">
+          <button class="btn-record" id="recBtn0"
+            onclick="startSpeechRecognition('shadowScript0','recBtn0','recStatus0','recTranscript0','recFeedback0')">
+            🎤 녹음 시작
+          </button>
+          <span class="rec-status" id="recStatus0"></span>
+        </div>
+        <div class="rec-transcript-box">
+          <span class="rec-label">인식된 음성:</span>
+          <p id="recTranscript0" class="rec-text-output">—</p>
+        </div>
+        <div id="recFeedback0" class="rec-feedback"></div>
+      </div>
     </div>
-  <div class="question" id="q9">
+  <div class="question" id="q12">
   <div class="q-text">
-    <span class="q-num">10</span>
-    회의에서 새로운 팀원이 기본 업무 절차를 모릅니다. 어떻게 말하겠습니까?
+    <span class="q-num">13</span>
+    비즈니스 미팅에서 동료가 새 프로젝트 마감일에 대해 물어봅니다. 당신은 회사의 일반적인 관례로 그것을 확실하게 말하고 싶습니다. 어떤 표현을 사용하겠습니까?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="12" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">You can just assume everyone knows the process.</span>
-  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-text">You can just assume the deadline will be next month.</span>
+  </button><button class="opt" data-q="12" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">You can't just assume everyone knows the process.</span>
-  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-text">You must think the deadline will be next month.</span>
+  </button><button class="opt" data-q="12" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">You can just assume nobody knows the process.</span>
-  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-text">You should guess the deadline will be next month.</span>
+  </button><button class="opt" data-q="12" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">You can just forget about the process.</span>
+    <span class="opt-text">You have to believe the deadline will be next month.</span>
   </button></div>
-  <div class="expl" id="expl9" style="display:none">💬 'assume'은 '가정하다'는 뜻입니다. '모두가 절차를 안다고 가정할 수 없다'는 부정형이 맞습니다. 'can't just assume'은 '단순히 가정할 수 없다'는 의미로 실제 상황을 확인해야 한다는 뜻입니다.</div>
-</div><div class="question" id="q10">
+  <div class="expl" id="expl12" style="display:none">💬 'assume to be true'는 '~라고 당연하게 생각하다' 또는 '~라고 가정하다'는 의미입니다. 비즈니스 상황에서 명백하거나 일반적으로 받아들여지는 사실을 표현할 때 사용됩니다. B, C, D는 이 맥락에서 적절하지 않습니다.</div>
+</div><div class="question" id="q13">
   <div class="q-text">
-    <span class="q-num">11</span>
-    'There are some things that you can just assume to be true'를 자연스럽게 발음할 때 주의할 점은?
+    <span class="q-num">14</span>
+    다음 문장을 읽을 때 강세가 어디에 있는지 고르세요: 'In a professional environment, you can just ASSUME the meeting will start on time.'
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="13" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">assume을 강하게 발음하고, 'to be'는 빠르게 발음합니다.</span>
-  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-text">'can'에 강세</span>
+  </button><button class="opt" data-q="13" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">assume의 두 번째 음절에 강세를 두고, 'just assume'에서 연음이 일어납니다.</span>
-  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-text">'ASSUME'에 강세</span>
+  </button><button class="opt" data-q="13" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">true의 'r' 발음을 강조하고, assume은 약하게 발음합니다.</span>
-  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-text">'just'에 강세</span>
+  </button><button class="opt" data-q="13" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">모든 단어를 동일한 강도로 또렷하게 발음합니다.</span>
+    <span class="opt-text">'start'에 강세</span>
   </button></div>
-  <div class="expl" id="expl10" style="display:none">💬 'assume'은 /əˈsuːm/ 로 두 번째 음절 'sume'에 강세가 있습니다. 'just assume'에서 't'와 'a'가 연음되어 '저스타슈움' 처럼 들립니다. 또한 'to be'는 /tə bi/ 로 빠르고 약하게 발음됩니다.</div>
-</div><div class="question" id="q11">
+  <div class="expl" id="expl13" style="display:none">💬 이 문장에서 핵심 동사인 'assume'에 주요 강세가 있습니다. 청자의 주의를 끌기 위해 '가정하다'는 행동 자체를 강조합니다. 특히 'can just assume'에서 'assume'이 가장 중요한 동사이므로 강세를 받습니다.</div>
+</div><div class="question" id="q14">
   <div class="q-text">
-    <span class="q-num">12</span>
-    다음 비즈니스 상황의 대화에서 빈칸을 채우세요: 'In professional settings, there are some things that you ______ just ______ to be true without asking for confirmation.'
+    <span class="q-num">15</span>
+    다음 비즈니스 대화를 완성하세요. Feifei: 'When you work with new clients, what can you _____ about their expectations?' Phil: 'Well, you can just assume they'll want clear communication and regular updates.'
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="14" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">should / assume</span>
-  </button><button class="opt" data-q="11" data-l="B" type="button">
+    <span class="opt-text">take for granted</span>
+  </button><button class="opt" data-q="14" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">can / assume</span>
-  </button><button class="opt" data-q="11" data-l="C" type="button">
+    <span class="opt-text">assume to be true</span>
+  </button><button class="opt" data-q="14" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">must / consider</span>
-  </button><button class="opt" data-q="11" data-l="D" type="button">
+    <span class="opt-text">figure out</span>
+  </button><button class="opt" data-q="14" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">ought to / trust</span>
+    <span class="opt-text">rely on being</span>
   </button></div>
-  <div class="expl" id="expl11" style="display:none">💬 'can assume'은 '가정할 수 있다'는 뜻으로, 일반적으로 받아들여지는 사실이나 당연한 것들을 나타냅니다. 'should assume'은 '~해야 한다'는 의무를 나타내므로 문맥에 맞지 않습니다. 이 표현은 'There are some things you can (just) assume to be true'의 형태로 자주 사용됩니다.</div>
+  <div class="expl" id="expl14" style="display:none">💬 'assume to be true'는 '당연히 참이라고 생각하다' 또는 '~라고 가정하다'는 의미로, 비즈니스 맥락에서 객관적 사실이나 명확한 가정을 표현합니다. 'take for granted'도 유사하지만, 원문의 'assume'과 정확히 대응하는 표현은 'assume to be true'입니다. 이는 BBC 학습 교재의 핵심 표현입니다.</div>
 </div>
 </div>
 
@@ -535,24 +679,22 @@ Which of the following best explains why companies are adopting hybrid models?
     </button>
   </div>
 
-  <div class="results-panel" id="resultsPanel" style="display:none">
-  </div>
+  <div class="results-panel" id="resultsPanel" style="display:none"></div>
 
 </div>
 
 <script>
-const CORRECT   = ["B", "B", "B", "C", "B", "B", "B", "C", "C", "B", "B", "B"];
-const EXPLS     = ["텍스트에서 'Some hot topics of conversation this week include the ever evolving Peter Mandelson vetting saga, phones being banned in schools and robots who can take over sports'라고 여러 주제를 언급했습니다. A, C, D는 각각 하나의 주제만 다루므로 틀렸습니다.", "'Helping Andy make sense of it all are Daliso Chaponda, Catherine Bohart, Hugo Rifkind and Ria Lina'라는 표현과 'Written by Andy Zaltzman'에서 패널 형식의 토크쇼임을 알 수 있습니다. 또한 로봇이 '세계를 장악할 수 있다'는 농담적 표현(sorry robots who can take over sports)이 유머 있는 프로그램임을 시사합니다.", "프로듀서, 이그제큐티브 프로듀서, 프로덕션 코디네이터, 사운드 에디터 등 다양한 제작진이 참여했으며, 여러 명의 라이터가 콘텐츠를 작성했다는 점에서 고도로 제작된 엔터테인먼트 프로그램임을 알 수 있습니다. BBC Studios Production이라는 표기는 정규 방송 프로그램임을 나타냅니다.", "가정법 과거완료는 'If + had + 과거분사'의 형태입니다. 어제의 실제로 일어나지 않은 상황을 가정할 때 사용합니다.", "가정법 과거완료에서는 조건절과 결과절 모두 완료형을 사용합니다: 'If + had + p.p., would + have + p.p.' 구조를 반드시 지켜야 합니다.", "과거의 가상 상황에서 '~했을 것이다'는 결과절에 'would have + 과거분사'를 사용합니다. 한국인은 종종 결과절에서 단순형을 쓰는 실수를 하므로 주의가 필요합니다.", "텍스트에서 'He arrives at 7 AM every morning'이라고 명시되어 있습니다. A2 수준에서는 기본 정보를 직접 찾는 문제입니다. 3 PM은 퇴근 시간, 8 AM은 손님이 오는 시간입니다.", "텍스트의 마지막 문장 'Sarah's manager was impressed with her leadership'과 그 앞의 결과인 'team completed the project two days ahead of schedule'를 연결하는 문제입니다. A, B는 과정일 뿐 인상의 직접적 원인이 아닙니다.", "B2 수준의 추론 문제입니다. 텍스트에서 원격근무의 장점('flexibility', 'more productive')과 단점('isolation', 'spontaneous interactions' 부족)을 모두 제시하고, 이 둘의 trade-off 때문에 hybrid model을 선택한다고 암시합니다. A는 극단적(텍스트에서 '혼합 결과'), B는 사실 왜곡, D는 부정확합니다.", "'assume'은 '가정하다'는 뜻입니다. '모두가 절차를 안다고 가정할 수 없다'는 부정형이 맞습니다. 'can't just assume'은 '단순히 가정할 수 없다'는 의미로 실제 상황을 확인해야 한다는 뜻입니다.", "'assume'은 /əˈsuːm/ 로 두 번째 음절 'sume'에 강세가 있습니다. 'just assume'에서 't'와 'a'가 연음되어 '저스타슈움' 처럼 들립니다. 또한 'to be'는 /tə bi/ 로 빠르고 약하게 발음됩니다.", "'can assume'은 '가정할 수 있다'는 뜻으로, 일반적으로 받아들여지는 사실이나 당연한 것들을 나타냅니다. 'should assume'은 '~해야 한다'는 의무를 나타내므로 문맥에 맞지 않습니다. 이 표현은 'There are some things you can (just) assume to be true'의 형태로 자주 사용됩니다."];
-const DNAMES    = ["listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
-const TOTAL     = 12;
-const TODAY     = "2026-05-07";
-const AS_URL    = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
+const CORRECT  = ["B", "C", "B", "B", "B", "B", "C", "B", "B", "B", "B", "C", "A", "B", "B"];
+const EXPLS    = ["영어 표현 'break the ice'는 어색한 분위기를 부드럽게 만들거나 사람들이 편하게 느끼도록 시작하는 것을 의미합니다. A는 문자 그대로의 의미(틀림), C는 휴식 시간(문맥상 맞지 않음), D는 대화 종료(표현의 의미와 무관).", "'Think outside the box'는 관례적이지 않은 창의적 사고를 하라는 의미의 관용구입니다. A는 문자적 해석(틀림), B는 규칙 준수(표현의 의미와 반대), D는 장소(대화 내용과 무관).", "'assume to be true'는 증거 없이 일반적으로 참이라고 받아들이는 것을 의미합니다. 정답은 B입니다. A는 어렵고 검증이 필요한 것이므로 반대 의미이고, C는 조사가 필요하다는 뜻으로 틀렸으며, D는 표현의 의미와 맞지 않습니다.", "프로그램 설명에서 'Learn how to use it expression with Feifei and Phil'이라고 명시되어 있습니다. 정답은 B입니다. A는 일반적인 문법이고, C는 별도의 Office English 시리즈 목적이므로 틀렸으며, D는 발음 연습에 중점을 두지 않습니다.", "텍스트에서 'Energy theft is not a new phenomenon but the cost of living crisis seems to be the main reason for this sharp increase'라고 명시되어 있습니다. A는 텍스트에서 언급되지 않았고, C와 D는 텍스트 내용과 모순됩니다.", "George Hinds의 사례는 2세 어린이가 이웃의 파이프 절단으로 인한 가스 폭발로 사망한 비극적 결과를 보여줍니다. 텍스트에서 'the consequences can be tragic'와 직결되는 사례입니다. A는 반대 의미이고, C와 D는 사례 내용과 맞지 않습니다.", "가정법 과거완료는 'If + had + 과거분사'로 과거의 가정을 나타냅니다. 이미 지나간 일이므로 'had checked'가 올바른 형태입니다.", "가정법 과거완료 구문에서 주절도 일관되게 'would have + 과거분사'를 사용합니다. 과거의 실현되지 않은 결과를 나타낼 때 양쪽 모두 완료형을 써야 합니다.", "가정법 과거완료에서는 조건절과 결과절 모두 완료형을 유지해야 하며, 'If'를 생략하고 도치 구문(Had we...)도 가능합니다. A는 'would have invested'로 정정, C는 'would not have occurred'로, D는 이중 부정 오류입니다.", "텍스트에서 'At 7 AM, the shop opens for customers'라고 명시되어 있습니다. Sarah는 6 AM에 도착하지만, 가게 오픈은 7 AM입니다. A는 그녀의 출근 시간, C는 퇴근 시간입니다.", "'Many small businesses struggle with this because they lack the technical expertise or resources'가 정답의 근거입니다. A는 디지털 마케팅의 장점을 역으로 설명한 것, C는 텍스트에 모순되며, D는 본문에서 언급하지 않습니다.", "'existing labor laws, designed for permanent employment, are ill-equipped to address gig workers' vulnerabilities'는 노동법이 기존의 전통적 고용 모델을 기반으로 설계되었으므로 긱이코노미 상황에 맞지 않다는 의미입니다. A는 반대 주장, B는 잘못된 해석, D는 과도한 표현입니다.", "'assume to be true'는 '~라고 당연하게 생각하다' 또는 '~라고 가정하다'는 의미입니다. 비즈니스 상황에서 명백하거나 일반적으로 받아들여지는 사실을 표현할 때 사용됩니다. B, C, D는 이 맥락에서 적절하지 않습니다.", "이 문장에서 핵심 동사인 'assume'에 주요 강세가 있습니다. 청자의 주의를 끌기 위해 '가정하다'는 행동 자체를 강조합니다. 특히 'can just assume'에서 'assume'이 가장 중요한 동사이므로 강세를 받습니다.", "'assume to be true'는 '당연히 참이라고 생각하다' 또는 '~라고 가정하다'는 의미로, 비즈니스 맥락에서 객관적 사실이나 명확한 가정을 표현합니다. 'take for granted'도 유사하지만, 원문의 'assume'과 정확히 대응하는 표현은 'assume to be true'입니다. 이는 BBC 학습 교재의 핵심 표현입니다."];
+const DNAMES   = ["listening", "listening", "listening", "listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL    = 15;
+const TODAY    = "2026-05-07";
+const AS_URL   = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
 const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
 
 let answers   = new Array(TOTAL).fill(null);
 let submitted = false;
 
-// 답 선택
 document.querySelectorAll(".opt").forEach(btn => {
   btn.addEventListener("click", function() {
     if (submitted) return;
@@ -582,7 +724,6 @@ function submitAnswers() {
   document.getElementById("submitBtn").disabled = true;
   document.getElementById("submitBtn").textContent = "채점 중...";
 
-  // 채점
   let correct = 0;
   const domSc = {listening:{c:0,t:0},grammar:{c:0,t:0},reading:{c:0,t:0},speaking:{c:0,t:0}};
   const wrongItems = [];
@@ -595,7 +736,6 @@ function submitAnswers() {
     else { wrongItems.push({q:i+1, domain, chosen:ans, correct:ok, expl:EXPLS[i]}); }
     domSc[domain].t++;
 
-    // 문항 시각화
     const qEl = document.getElementById("q" + i);
     if (qEl) qEl.classList.add(isOk ? "q-correct" : "q-wrong");
     document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(b => {
@@ -633,27 +773,129 @@ function showResults(correct, domSc, wrongItems) {
     <div class="result-score" style="color:${color}">${emoji} ${pct}%</div>
     <div class="result-sub">${correct} / ${TOTAL} 정답</div>
     <div class="dom-scores">${domHtml}</div>
-    ${wrongItems.length > 0 ? '<div class="wrong-title">오답 분석</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
-    <div class="result-note">내일 아침 테스트 페이지에서 추가 피드백을 확인하세요.</div>
+    ${wrongItems.length > 0 ? '<div class="wrong-title">오늘의 오답</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
+    <div class="result-note">내일 아침 테스트 페이지에서 상세 피드백을 확인하세요.</div>
   `;
   panel.style.display = "block";
   panel.scrollIntoView({behavior: "smooth", block: "start"});
-
   document.getElementById("submitArea").style.display = "none";
 }
 
 function saveResults(answers, correct, domSc) {
   if (!AS_URL) return;
+  // 문항별 정오답: 정답이면 "O", 틀리면 "X"
+  const qResults = answers.map((ans, i) => (ans === CORRECT[i] ? "O" : "X")).join(",");
   const params = new URLSearchParams({
-    date: TODAY,
-    answers: answers.join(","),
-    correct,
+    date: TODAY, answers: answers.join(","), correct,
+    results: qResults,
     listening: domSc.listening.c + "/" + domSc.listening.t,
     grammar:   domSc.grammar.c   + "/" + domSc.grammar.t,
     reading:   domSc.reading.c   + "/" + domSc.reading.t,
     speaking:  domSc.speaking.c  + "/" + domSc.speaking.t,
   });
   fetch(AS_URL + "?" + params.toString(), {mode:"no-cors"}).catch(() => {});
+}
+
+// ── 말하기 음성 인식 ───────────────────────────────────────────────────────
+const TH_WORDS   = new Set(["the","this","that","these","those","think","thought","through","three","there","their","they","though","than","then","them","with","both","other","another","either"]);
+const RL_WORDS   = new Set(["really","result","role","rule","level","rely","rally","recall","roll","relate","rely","already","world","early","clearly","regularly","literally","carefully"]);
+const FINAL_CLUSTERS = new Set(["next","text","acts","helped","asked","mixed","worked","talked","jumped","changed","missed","fixed","asked","looked","passed"]);
+const SHORT_VOWELS   = new Set(["ship","sheet","hit","heat","sit","seat","bit","beat","live","leave","fill","feel","will","wheel","it","eat"]);
+
+function getPhonemeIssue(word) {
+  if (TH_WORDS.has(word))         return "th 발음 — 혀끝을 윗니에 살짝 대고 공기를 내뱉으세요 (예: /ð/ or /θ/)";
+  if (RL_WORDS.has(word))         return "r/l 구분 — r은 혀를 말아 올리고, l은 혀끝을 윗잇몸에";
+  if (FINAL_CLUSTERS.has(word))   return "어말 자음군 — 끝 자음 두 개를 모두 발음하세요";
+  if (SHORT_VOWELS.has(word))     return "모음 길이 — 짧은 소리와 긴 소리를 구분하세요";
+  if (word.endsWith("ed"))        return "-ed 발음 — /t/, /d/, /ɪd/ 중 올바른 발음 확인";
+  if (word.endsWith("s") || word.endsWith("es")) return "-s 발음 — /s/, /z/, /ɪz/ 중 올바른 발음";
+  if (word.includes("v"))         return "v 발음 — 윗니를 아랫입술에 대고 진동시키세요 (b와 구분)";
+  if (word.includes("f") && word.length > 2) return "f 발음 — 윗니를 아랫입술에 대고 공기를 내뱉으세요";
+  return "";
+}
+
+function startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId) {
+  const scriptEl = document.getElementById(scriptId);
+  const script   = scriptEl ? scriptEl.textContent.trim() : "";
+  const btn      = document.getElementById(btnId);
+  const statusEl = document.getElementById(statusId);
+  const transEl  = document.getElementById(transcriptId);
+  const feedEl   = document.getElementById(feedbackId);
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    statusEl.textContent = "⚠️ Chrome 또는 Edge에서 지원됩니다";
+    return;
+  }
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  btn.textContent = "⏹ 중지";
+  btn.onclick = () => rec.stop();
+  statusEl.textContent = "🔴 녹음 중...";
+  transEl.textContent = "";
+  feedEl.innerHTML = "";
+
+  let finalTranscript = "";
+
+  rec.onresult = e => {
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + " ";
+      else interim += e.results[i][0].transcript;
+    }
+    transEl.textContent = (finalTranscript + interim).trim();
+  };
+
+  rec.onend = () => {
+    btn.textContent = "🎤 다시 녹음";
+    btn.onclick = () => startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId);
+    statusEl.textContent = "✅ 녹음 완료";
+    analyzeSpeech(finalTranscript.trim(), script, feedEl);
+  };
+
+  rec.onerror = e => {
+    statusEl.textContent = "❌ 오류: " + e.error;
+    btn.textContent = "🎤 다시 시도";
+    btn.onclick = () => startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId);
+  };
+
+  rec.start();
+}
+
+function analyzeSpeech(spoken, expected, feedEl) {
+  if (!spoken) { feedEl.innerHTML = '<div class="rec-warn">음성이 감지되지 않았습니다. 다시 시도해 주세요.</div>'; return; }
+
+  const normalize = s => s.toLowerCase().replace(/[^a-z'\s]/g,"").split(/\s+/).filter(Boolean);
+  const expWords = normalize(expected);
+  const spkSet   = new Set(normalize(spoken));
+
+  const missed = expWords.filter(w => !spkSet.has(w));
+  const score  = Math.round((1 - missed.length / Math.max(expWords.length, 1)) * 100);
+
+  if (missed.length === 0) {
+    feedEl.innerHTML = '<div class="rec-perfect">🌟 완벽합니다! 모든 단어가 인식되었어요.</div>';
+    return;
+  }
+
+  let html = `<div class="rec-score">정확도: <b style="color:${score>=80?'#22c55e':score>=60?'#f59e0b':'#ef4444'}">${score}%</b> (${expWords.length - missed.length}/${expWords.length} 단어 인식)</div>`;
+  html += '<div class="rec-missed"><b>인식되지 않은 단어:</b><ul>';
+  missed.forEach(w => {
+    const tip = getPhonemeIssue(w);
+    html += `<li><b>${w}</b>${tip ? ' <span class="rec-tip">→ ' + tip + '</span>' : ''}</li>`;
+  });
+  html += '</ul></div>';
+
+  if (score < 70) {
+    html += '<div class="rec-advice">💡 천천히 또렷하게 다시 말해보세요. 속도보다 정확성이 중요합니다.</div>';
+  } else if (score < 90) {
+    html += '<div class="rec-advice">👍 거의 다 됐어요! 위 단어들을 집중 연습해 보세요.</div>';
+  }
+
+  feedEl.innerHTML = html;
 }
 </script>
 </body>
