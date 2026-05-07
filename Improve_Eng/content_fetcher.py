@@ -3,13 +3,16 @@ Improve_Eng/content_fetcher.py
 BBC / VOA / ESL RSS에서 일일 학습 콘텐츠를 수집합니다.
 
 듣기 3-티어 구조:
-  SHORT  (~1-3분): BBC News Minute, BBC The English We Speak, VOA Learning English
-  MEDIUM (~4-7분): BBC 6 Minute English, BBC 6 Minute Grammar, BBC Lingohack
-  LONG   (~8-15분): BBC English At Work, ESL Podcast, All Ears English
+  SHORT  (~1-3분): 5개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
+  MEDIUM (~4-7분): 6개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
+  LONG   (~8-15분): 5개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
+
+오디오를 못 가져올 경우: 에피소드 페이지 URL 링크 버튼으로 대체.
 """
 import feedparser
 import requests
 import logging
+import random
 from bs4 import BeautifulSoup
 from datetime import date
 
@@ -19,63 +22,29 @@ AUDIO_EXTS = (".mp3", ".m4a", ".aac", ".ogg", ".wav", ".opus")
 
 # ── 듣기 소스 (3-티어) ───────────────────────────────────────────────────────
 
-LISTENING_SHORT = [  # ~1-3분
-    {
-        "name": "BBC The English We Speak",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9s3.rss",
-        "duration_hint": "약 3분",
-    },
-    {
-        "name": "BBC Global News Minute",
-        "rss":  "https://podcasts.files.bbci.co.uk/p0bf37qw.rss",
-        "duration_hint": "약 1분",
-    },
-    {
-        "name": "VOA Learning English News",
-        "rss":  "https://learningenglish.voanews.com/api/zovijqmz_q",
-        "duration_hint": "약 2분",
-    },
+LISTENING_SHORT = [  # ~1-3분: 5개 소스 풀
+    {"name": "BBC The English We Speak",    "rss": "https://podcasts.files.bbci.co.uk/p02pc9s3.rss"},
+    {"name": "BBC Global News Minute",      "rss": "https://podcasts.files.bbci.co.uk/p0bf37qw.rss"},
+    {"name": "BBC Learning English Stories","rss": "https://podcasts.files.bbci.co.uk/p02pc9s1.rss"},
+    {"name": "VOA Learning English",        "rss": "https://learningenglish.voanews.com/api/zovijqmz_q"},
+    {"name": "BBC Lingohack",               "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
 ]
 
-LISTENING_MEDIUM = [  # ~4-7분
-    {
-        "name": "BBC 6 Minute English",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9pj.rss",
-        "duration_hint": "약 6분",
-    },
-    {
-        "name": "BBC 6 Minute Grammar",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9v1.rss",
-        "duration_hint": "약 6분",
-    },
-    {
-        "name": "BBC Lingohack",
-        "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml",
-        "duration_hint": "약 3분",
-    },
-    {
-        "name": "BBC Learning English Conversations",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9zn.rss",
-        "duration_hint": "약 5분",
-    },
+LISTENING_MEDIUM = [  # ~4-7분: 6개 소스 풀
+    {"name": "BBC 6 Minute English",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9pj.rss"},
+    {"name": "BBC 6 Minute Grammar",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9v1.rss"},
+    {"name": "BBC Learning English Conversations","rss": "https://podcasts.files.bbci.co.uk/p02pc9zn.rss"},
+    {"name": "BBC Business Daily",                "rss": "https://podcasts.files.bbci.co.uk/p002vsnb.rss"},
+    {"name": "BBC Lingohack",                     "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
+    {"name": "ESL Podcast",                       "rss": "https://www.eslpod.com/eslpod_feed.xml"},
 ]
 
-LISTENING_LONG = [  # ~8-15분
-    {
-        "name": "BBC English At Work",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9qx.rss",
-        "duration_hint": "약 12분",
-    },
-    {
-        "name": "ESL Podcast",
-        "rss":  "https://www.eslpod.com/eslpod_feed.xml",
-        "duration_hint": "약 15분",
-    },
-    {
-        "name": "All Ears English",
-        "rss":  "https://www.allearsenglish.com/feed/podcast",
-        "duration_hint": "약 10분",
-    },
+LISTENING_LONG = [  # ~8-15분: 5개 소스 풀
+    {"name": "BBC English At Work",               "rss": "https://podcasts.files.bbci.co.uk/p02pc9qx.rss"},
+    {"name": "ESL Podcast",                       "rss": "https://www.eslpod.com/eslpod_feed.xml"},
+    {"name": "All Ears English",                  "rss": "https://www.allearsenglish.com/feed/podcast"},
+    {"name": "BBC 6 Minute English",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9pj.rss"},
+    {"name": "BBC Learning English Conversations","rss": "https://podcasts.files.bbci.co.uk/p02pc9zn.rss"},
 ]
 
 # ── 독해 소스 ────────────────────────────────────────────────────────────────
@@ -129,14 +98,14 @@ async def fetch_daily_content(today: date) -> dict:
     idx      = today.toordinal()
     week_idx = (idx // 7) % len(GRAMMAR_CURRICULUM)
 
-    # 3-티어 듣기: 각 티어마다 날짜 기반 소스 순환
-    short_src  = LISTENING_SHORT[idx % len(LISTENING_SHORT)]
-    medium_src = LISTENING_MEDIUM[idx % len(LISTENING_MEDIUM)]
-    long_src   = LISTENING_LONG[idx % len(LISTENING_LONG)]
+    # 3-티어 듣기: 날짜 시드 셔플 후 오디오 있는 소스 우선 선택
+    ls = _pick_with_audio(LISTENING_SHORT,  seed=idx * 10 + 1)
+    lm = _pick_with_audio(LISTENING_MEDIUM, seed=idx * 10 + 2)
+    ll = _pick_with_audio(LISTENING_LONG,   seed=idx * 10 + 3)
 
-    ls = _fetch_from_source(short_src);  ls["tier"] = "short";  ls["duration_hint"] = short_src["duration_hint"]
-    lm = _fetch_from_source(medium_src); lm["tier"] = "medium"; lm["duration_hint"] = medium_src["duration_hint"]
-    ll = _fetch_from_source(long_src);   ll["tier"] = "long";   ll["duration_hint"] = long_src["duration_hint"]
+    ls["tier"] = "short";  ls["duration_hint"] = "약 1-3분"
+    lm["tier"] = "medium"; lm["duration_hint"] = "약 4-7분"
+    ll["tier"] = "long";   ll["duration_hint"] = "약 8-15분"
 
     reading  = _fetch_from_source(READING_SOURCES[idx % len(READING_SOURCES)])
     speaking = _fetch_from_source(SPEAKING_SOURCES[idx % len(SPEAKING_SOURCES)])
@@ -158,6 +127,37 @@ async def fetch_daily_content(today: date) -> dict:
 
 
 # ── 내부 헬퍼 ────────────────────────────────────────────────────────────────
+
+def _pick_with_audio(sources: list, seed: int) -> dict:
+    """날짜 시드로 소스 셔플 후 오디오 URL이 있는 첫 번째 결과 반환.
+    오디오 없으면 페이지 URL이라도 있는 결과, 그것도 없으면 첫 번째 결과."""
+    rng = random.Random(seed)
+    order = list(range(len(sources)))
+    rng.shuffle(order)
+
+    first = None
+    best_with_url = None
+
+    for i in order:
+        result = _fetch_from_source(sources[i])
+        if first is None:
+            first = result
+        if result.get("audio_url"):
+            log.info(f"  오디오 확보: [{sources[i]['name']}]")
+            return result
+        if result.get("url") and best_with_url is None:
+            best_with_url = result
+            log.info(f"  오디오 없음, 페이지 URL 보관: [{sources[i]['name']}]")
+        else:
+            log.info(f"  오디오·URL 없음, 다음 소스 시도: [{sources[i]['name']}]")
+
+    if best_with_url:
+        log.warning("  전체 소스 오디오 없음 — 페이지 링크 버튼으로 대체")
+        return best_with_url
+
+    log.warning("  전체 소스 실패 — 텍스트 전용 반환")
+    return first or {}
+
 
 def _fetch_from_source(source: dict) -> dict:
     """RSS 피드에서 최신 항목 1개의 텍스트를 추출."""
