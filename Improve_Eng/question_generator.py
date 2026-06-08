@@ -148,18 +148,20 @@ async def generate_daily_learning(
     listening_item: dict,
     listening_script: dict,
     etymology: dict,
+    pronunciation: dict,
     current_levels: dict,
     day_number: int,
 ) -> dict:
-    """5영역 학습 콘텐츠 생성 (학습 연구 기반 설계).
+    """7영역 학습 콘텐츠 생성 (학습 연구 기반 설계).
 
     설계 원칙:
     - Spaced Repetition (Ebbinghaus): 새 내용 소개 후 다음 날 퀴즈로 회상
-    - Interleaved Practice (Kornell & Bjork 2008): 매일 다른 문법 카테고리
-    - Input Hypothesis (Krashen): 현재 레벨 +1 수준의 입력 (comprehensible input)
+    - Interleaved Practice (Kornell & Bjork 2008): 매일 다른 문법/발음 카테고리
+    - Input Hypothesis (Krashen): 현재 레벨 +1 수준의 입력
     - Elaborative Interrogation: 왜 그런지 설명 포함 (어원, 규칙 이유)
+    - Collocation-based Vocabulary (Nation 2001): 문맥+연어로 어휘 학습
 
-    Returns: {grammar, listening, business, reading, etymology} 각 섹션 dict
+    Returns: {grammar, listening, business, reading, pronunciation, vocabulary, etymology_lesson}
     """
     avg_level = "B1"
     if current_levels:
@@ -171,61 +173,106 @@ async def generate_daily_learning(
     grammar_topic_kr = grammar_info.get("korean", "")
     listen_title     = listening_item.get("title", "")
     listen_source    = listening_item.get("source", "")
+    pron_focus       = pronunciation.get("focus", "")
+    pron_rule        = pronunciation.get("rule", "")
+    pron_examples    = pronunciation.get("examples", [])
 
     prompt = f"""You are an expert English coach for Korean business professionals.
 Current level: ~{avg_level} | Day: {day_number}
-Today's grammar topic: {grammar_topic} ({grammar_topic_kr})
-Today's listening: "{listen_title}" from {listen_source}
-Etymology word: {etymology.get('word', '')} (from {etymology.get('origin', '')})
+Grammar topic today: {grammar_topic} ({grammar_topic_kr})
+Pronunciation focus today: {pron_focus}
+Etymology word: {etymology.get('word', '')}
 
-Generate concise learning content for 5 areas. Keep each section SHORT and actionable.
-Return ONLY valid JSON:
+Generate detailed learning content. Grammar and pronunciation MUST be thorough.
+Return ONLY valid JSON (no markdown):
 {{
   "grammar": {{
     "topic_en": "{grammar_topic}",
     "topic_kr": "{grammar_topic_kr}",
-    "core_rule": "핵심 규칙을 1-2문장으로 (한국어)",
-    "example_en": "Example sentence in English",
-    "example_kr": "위 문장의 한국어 번역",
-    "contrast_en": "Contrasting/wrong example in English (what NOT to say)",
-    "contrast_kr": "위 틀린 예문 설명 (한국어)",
-    "remember": "외우기 쉬운 한 줄 요약 (한국어, 15자 이내)"
+    "core_rule": "핵심 규칙 3-4문장 충분히 설명 (한국어) — 언제, 왜, 어떻게 쓰는지 포함",
+    "when_to_use": "구체적으로 어떤 상황에서 사용하나 (한국어, 2-3문장)",
+    "examples": [
+      {{"en": "비즈니스 예문 1", "kr": "한국어 번역"}},
+      {{"en": "비즈니스 예문 2", "kr": "한국어 번역"}},
+      {{"en": "일상 예문 3", "kr": "한국어 번역"}}
+    ],
+    "contrast_en": "❌ 틀리기 쉬운 예문 (영어)",
+    "contrast_kr": "왜 틀렸는지 설명 (한국어)",
+    "common_mistakes": "한국인이 자주 틀리는 패턴 2-3가지 (한국어)",
+    "remember": "외우기 쉬운 한 줄 기억법 (한국어, 20자 이내)"
   }},
   "business": {{
-    "expression": "Business English expression (4-6 words)",
+    "expression": "Business English expression",
     "meaning_kr": "한국어 의미",
-    "example_en": "Natural sentence using this expression",
+    "example_en": "자연스러운 비즈니스 예문",
     "example_kr": "한국어 번역",
-    "when_to_use": "어떤 상황에서 쓰나 (한국어, 1줄)"
+    "when_to_use": "어떤 상황에서 쓰나 (한국어 1줄)"
   }},
   "reading": {{
-    "strategy": "Reading strategy name (Korean OK)",
-    "how_to": "어떻게 적용하나 (한국어, 2-3문장)",
-    "why_effective": "왜 효과적인가 (연구 근거 언급, 한국어 1-2문장)"
+    "strategy": "독해 전략 이름 (한국어 OK)",
+    "how_to": "적용 방법 (한국어, 2-3문장)",
+    "why_effective": "연구 근거 포함 효과 설명 (한국어 1-2문장)",
+    "example_passage": "3-4 sentence English passage (B1-B2 level, business or general topic)",
+    "example_application": "위 지문에 이 전략을 어떻게 적용하나 (한국어, 2-3문장)"
   }},
+  "pronunciation": {{
+    "focus": "{pron_focus}",
+    "rule": "{pron_rule}",
+    "examples": {json.dumps(pron_examples, ensure_ascii=False)},
+    "common_error": "한국인이 이 발음을 틀리는 방식과 이유 (한국어)",
+    "practice_sentence": "이 발음을 연습할 수 있는 영어 문장 1개",
+    "tip": "발음 교정 팁 (한국어, 1-2문장)"
+  }},
+  "vocabulary": [
+    {{
+      "word": "영단어1",
+      "level": "B1 또는 B2",
+      "meaning_kr": "한국어 뜻",
+      "collocation": "자주 함께 쓰는 단어 조합 (영어, 2-3개)",
+      "example_en": "자연스러운 예문",
+      "example_kr": "한국어 번역"
+    }},
+    {{
+      "word": "영단어2",
+      "level": "B1 또는 B2",
+      "meaning_kr": "한국어 뜻",
+      "collocation": "자주 함께 쓰는 단어 조합 (영어, 2-3개)",
+      "example_en": "자연스러운 예문",
+      "example_kr": "한국어 번역"
+    }},
+    {{
+      "word": "영단어3",
+      "level": "B2",
+      "meaning_kr": "한국어 뜻",
+      "collocation": "자주 함께 쓰는 단어 조합 (영어, 2-3개)",
+      "example_en": "자연스러운 예문",
+      "example_kr": "한국어 번역"
+    }}
+  ],
   "etymology_lesson": {{
     "word": "{etymology.get('word', '')}",
     "origin": "{etymology.get('origin', '')}",
     "story_kr": "{etymology.get('story', '')}",
     "meaning_kr": "{etymology.get('meaning', '')}",
-    "memory_tip": "이 어원 스토리로 단어를 기억하는 팁 (한국어, 1줄)"
+    "memory_tip": "어원 스토리로 단어를 기억하는 팁 (한국어, 1줄)"
   }}
 }}"""
 
     try:
         resp = _client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=900,
+            max_tokens=2000,
             messages=[{"role": "user", "content": prompt}],
         )
         raw   = resp.content[0].text.strip()
         start = raw.find("{")
         end   = raw.rfind("}") + 1
         data  = json.loads(raw[start:end])
-        # 듣기 스크립트는 별도로 생성된 것을 합침
         data["listening"] = {
             "title":     listen_title,
             "source":    listen_source,
+            "audio_url": listening_item.get("audio_url", ""),
+            "page_url":  listening_item.get("url", ""),
             "script_en": listening_script.get("script_en", ""),
             "script_kr": listening_script.get("script_kr", ""),
             "key_vocab": listening_script.get("key_vocab", ""),
@@ -233,24 +280,31 @@ Return ONLY valid JSON:
         return data
     except Exception as e:
         log.warning(f"daily_learning 생성 실패: {e}")
-        return _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology)
+        return _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology, pronunciation)
 
 
-def _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology) -> dict:
+def _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology, pronunciation={}) -> dict:
     return {
         "grammar": {
-            "topic_en":    grammar_topic,
-            "topic_kr":    grammar_topic_kr,
-            "core_rule":   "오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.",
-            "example_en":  "I have worked here for five years.",
-            "example_kr":  "나는 여기서 5년간 일했다 (지금도 재직 중).",
-            "contrast_en": "I worked here for five years. (implies no longer working)",
-            "contrast_kr": "이미 그만뒀을 때 사용.",
-            "remember":    "경험·결과 → 현재완료",
+            "topic_en":       grammar_topic,
+            "topic_kr":       grammar_topic_kr,
+            "core_rule":      "오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.",
+            "when_to_use":    "퀴즈를 풀며 맥락을 파악하세요.",
+            "examples": [
+                {"en": "I have worked here for five years.", "kr": "5년간 일해왔다 (지금도 재직 중)"},
+                {"en": "She has already finished the report.", "kr": "그녀는 이미 보고서를 끝냈다"},
+                {"en": "We have never met before.", "kr": "우리는 전에 만난 적이 없다"},
+            ],
+            "contrast_en":    "I worked here for five years.",
+            "contrast_kr":    "단순과거 → 이미 그만뒀을 때 사용.",
+            "common_mistakes": "① '어제' 같은 과거 시점과 현재완료 혼용 ② have+동사원형 실수",
+            "remember":       "경험·결과·지속 → 현재완료",
         },
         "listening": {
             "title":     listening_item.get("title", ""),
             "source":    listening_item.get("source", ""),
+            "audio_url": listening_item.get("audio_url", ""),
+            "page_url":  listening_item.get("url", ""),
             "script_en": listening_script.get("script_en", ""),
             "script_kr": listening_script.get("script_kr", ""),
             "key_vocab": listening_script.get("key_vocab", ""),
@@ -263,10 +317,30 @@ def _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listenin
             "when_to_use": "회의 중 결론을 잠시 보류할 때",
         },
         "reading": {
-            "strategy":      "Topic Sentence 스캔",
-            "how_to":        "각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.",
-            "why_effective": "인지심리학 연구에 따르면 '스키마(schema)' 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.",
+            "strategy":            "Topic Sentence 스캔",
+            "how_to":              "각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.",
+            "why_effective":       "스키마(schema) 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.",
+            "example_passage":     "The global economy has shown signs of recovery. Consumer spending increased by 3% last quarter. However, inflation remains a concern for policymakers.",
+            "example_application": "첫 문장 'The global economy has shown signs of recovery'에서 주제를 파악한 후 나머지를 읽으면 세부 내용이 자연스럽게 연결됩니다.",
         },
+        "pronunciation": {
+            "focus":            pronunciation.get("focus", ""),
+            "rule":             pronunciation.get("rule", ""),
+            "examples":         pronunciation.get("examples", []),
+            "common_error":     "한국어 발음 습관이 영향을 미칩니다.",
+            "practice_sentence":"Please feel free to call me if you have any questions.",
+            "tip":              "거울 앞에서 입 모양을 확인하며 연습하세요.",
+        },
+        "vocabulary": [
+            {
+                "word":       "allocate",
+                "level":      "B2",
+                "meaning_kr": "할당하다, 배정하다",
+                "collocation": "allocate resources / allocate time / allocate budget",
+                "example_en": "We need to allocate more resources to the marketing team.",
+                "example_kr": "마케팅팀에 더 많은 자원을 배정해야 합니다.",
+            },
+        ],
         "etymology_lesson": {
             "word":       etymology.get("word", ""),
             "origin":     etymology.get("origin", ""),

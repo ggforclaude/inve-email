@@ -418,29 +418,55 @@ def _prev_analysis_html(short_html: Optional[str], detailed_html: Optional[str])
 
 
 def _learning_html(learning: dict) -> str:
-    """5영역 학습 콘텐츠 카드 (문법/듣기/비즈니스/독해/어원)."""
+    """7영역 학습 콘텐츠 카드."""
     grammar  = learning.get("grammar", {})
     listen   = learning.get("listening", {})
     business = learning.get("business", {})
     reading  = learning.get("reading", {})
+    pron     = learning.get("pronunciation", {})
+    vocab    = learning.get("vocabulary", [])
     etym     = learning.get("etymology_lesson", {})
 
-    # 문법 섹션
+    # 문법 섹션 — 예문 3개 + 실수 패턴
+    ex_html = "".join(
+        f'<div class="learn-ex learn-ex-ok">✅ <b>{ex.get("en","")}</b>'
+        f'<span class="learn-ex-kr">{ex.get("kr","")}</span></div>'
+        for ex in grammar.get("examples", [])
+    )
     grammar_html = f"""<div class="learn-section" style="border-left-color:#8b5cf6">
   <div class="learn-tag" style="background:#8b5cf6">🔤 문법</div>
   <div class="learn-topic">{grammar.get('topic_en','')} <span class="learn-topic-kr">({grammar.get('topic_kr','')})</span></div>
   <div class="learn-rule">{grammar.get('core_rule','')}</div>
+  <div class="learn-when">📌 언제: {grammar.get('when_to_use','')}</div>
   <div class="learn-examples">
-    <div class="learn-ex learn-ex-ok">✅ {grammar.get('example_en','')}<span class="learn-ex-kr">{grammar.get('example_kr','')}</span></div>
-    <div class="learn-ex learn-ex-bad">❌ {grammar.get('contrast_en','')}<span class="learn-ex-kr">{grammar.get('contrast_kr','')}</span></div>
+    {ex_html}
+    <div class="learn-ex learn-ex-bad">❌ <b>{grammar.get('contrast_en','')}</b>
+      <span class="learn-ex-kr">{grammar.get('contrast_kr','')}</span></div>
   </div>
+  <div class="learn-mistake">⚠️ {grammar.get('common_mistakes','')}</div>
   <div class="learn-remember">💡 {grammar.get('remember','')}</div>
 </div>"""
 
-    # 듣기 스크립트 섹션
+    # 듣기 섹션 — 오디오 플레이어(있는 경우) + TTS 버튼 + 스크립트
+    audio_url = listen.get("audio_url", "")
+    page_url  = listen.get("page_url", "")
+    script_en = listen.get("script_en", "").replace("'", "&#39;").replace('"', "&quot;")
+
+    if audio_url:
+        audio_ctrl = f"""<audio controls style="width:100%;border-radius:8px;margin:8px 0">
+    <source src="{audio_url}" type="audio/mpeg">
+    <a href="{audio_url}" target="_blank">🎧 오디오 직접 열기</a>
+  </audio>"""
+    elif page_url:
+        audio_ctrl = f'<a class="audio-link-btn" href="{page_url}" target="_blank">🎧 {listen.get("source","")} 에서 듣기</a>'
+    else:
+        audio_ctrl = ""
+
     listen_html = f"""<div class="learn-section" style="border-left-color:#0ea5e9">
-  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기 스크립트</div>
+  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기</div>
   <div class="learn-topic">{listen.get('source','')} <span class="learn-topic-kr">— {listen.get('title','')[:50]}</span></div>
+  {audio_ctrl}
+  <button class="tts-btn" onclick="speakText('{script_en}')">🔊 스크립트 읽어주기 (TTS)</button>
   <div class="learn-script">
     <div class="learn-script-en">🇬🇧 {listen.get('script_en','')}</div>
     <div class="learn-script-kr">🇰🇷 {listen.get('script_kr','')}</div>
@@ -453,17 +479,56 @@ def _learning_html(learning: dict) -> str:
   <div class="learn-tag" style="background:#f59e0b">💼 비즈니스</div>
   <div class="learn-topic">"{business.get('expression','')}" <span class="learn-topic-kr">— {business.get('meaning_kr','')}</span></div>
   <div class="learn-examples">
-    <div class="learn-ex learn-ex-ok">💬 {business.get('example_en','')}<span class="learn-ex-kr">{business.get('example_kr','')}</span></div>
+    <div class="learn-ex learn-ex-ok">💬 <b>{business.get('example_en','')}</b>
+      <span class="learn-ex-kr">{business.get('example_kr','')}</span></div>
   </div>
   <div class="learn-remember">📌 {business.get('when_to_use','')}</div>
 </div>"""
 
-    # 독해 전략 섹션
+    # 발음 섹션
+    pron_ex_html = " &nbsp;|&nbsp; ".join(f"<code>{e}</code>" for e in pron.get("examples", []))
+    pron_sent = pron.get("practice_sentence", "").replace("'", "&#39;").replace('"', "&quot;")
+    pron_html = f"""<div class="learn-section" style="border-left-color:#ec4899">
+  <div class="learn-tag" style="background:#ec4899">🔊 발음</div>
+  <div class="learn-topic">{pron.get('focus','')}</div>
+  <div class="learn-rule">{pron.get('rule','')}</div>
+  <div class="learn-pron-ex">{pron_ex_html}</div>
+  <div class="learn-mistake">⚠️ {pron.get('common_error','')}</div>
+  <div class="learn-pron-practice">
+    연습 문장: <i>{pron.get('practice_sentence','')}</i>
+    <button class="tts-btn tts-sm" onclick="speakText('{pron_sent}')">🔊</button>
+  </div>
+  <div class="learn-remember">💡 {pron.get('tip','')}</div>
+</div>"""
+
+    # 어휘 섹션 — 3단어 + 콜로케이션
+    vocab_items = ""
+    for v in vocab:
+        vocab_items += f"""<div class="vocab-item">
+  <span class="vocab-word">{v.get('word','')}</span>
+  <span class="vocab-level">{v.get('level','')}</span>
+  <span class="vocab-meaning">{v.get('meaning_kr','')}</span>
+  <div class="vocab-col">연어: <i>{v.get('collocation','')}</i></div>
+  <div class="learn-ex learn-ex-ok" style="margin-top:5px">
+    {v.get('example_en','')} <span class="learn-ex-kr">{v.get('example_kr','')}</span>
+  </div>
+</div>"""
+    vocab_html = f"""<div class="learn-section" style="border-left-color:#6366f1">
+  <div class="learn-tag" style="background:#6366f1">📝 어휘</div>
+  {vocab_items}
+</div>"""
+
+    # 독해 전략 섹션 — 예시 지문 포함
     read_html = f"""<div class="learn-section" style="border-left-color:#22c55e">
   <div class="learn-tag" style="background:#22c55e">📖 독해 전략</div>
   <div class="learn-topic">{reading.get('strategy','')}</div>
   <div class="learn-rule">{reading.get('how_to','')}</div>
   <div class="learn-remember">📊 {reading.get('why_effective','')}</div>
+  <div class="learn-passage">
+    <div class="learn-passage-label">📄 예시 지문</div>
+    <div class="learn-passage-text">{reading.get('example_passage','')}</div>
+    <div class="learn-passage-apply">▶ 적용: {reading.get('example_application','')}</div>
+  </div>
 </div>"""
 
     # 어원 섹션
@@ -477,15 +542,26 @@ def _learning_html(learning: dict) -> str:
 
     return f"""<div class="card learning-card">
   <div class="learning-header">
-    <span class="learning-badge">📚 오늘의 레슨</span>
+    <span class="learning-badge">📚 오늘의 레슨 — 7영역</span>
     <span class="learning-sub">퀴즈 전에 읽고 내용을 기억해보세요</span>
   </div>
   {grammar_html}
   {listen_html}
   {biz_html}
+  {pron_html}
+  {vocab_html}
   {read_html}
   {etym_html}
-</div>"""
+</div>
+<script>
+function speakText(text) {{
+  if (!window.speechSynthesis) {{ alert("이 브라우저는 TTS를 지원하지 않습니다."); return; }}
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US"; u.rate = 0.85; u.pitch = 1.0;
+  window.speechSynthesis.speak(u);
+}}
+</script>"""
 
 
 def _listening_group_html(audio_item: dict, questions: list, start_num: int) -> str:
@@ -705,6 +781,30 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 .learn-script-kr { font-size: 12px; color: #6b7280; line-height: 1.6; padding: 6px 0; }
 .learn-vocab { font-size: 12px; color: #374151; background: #e0f2fe; padding: 6px 10px;
                border-radius: 6px; margin-top: 6px; }
+.learn-when { font-size: 12px; color: #4b5563; background: #ede9fe; padding: 5px 9px;
+              border-radius: 6px; margin-bottom: 8px; }
+.learn-mistake { font-size: 12px; color: #92400e; background: #fef3c7; padding: 6px 9px;
+                 border-radius: 6px; margin: 6px 0; }
+.learn-pron-ex { font-size: 13px; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.learn-pron-practice { font-size: 13px; color: #374151; margin: 6px 0;
+                       display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tts-btn { background: #0ea5e9; color: #fff; border: none; border-radius: 6px;
+           padding: 6px 12px; font-size: 13px; cursor: pointer; margin: 6px 0; }
+.tts-btn:hover { background: #0284c7; }
+.tts-sm { padding: 3px 8px; font-size: 12px; margin: 0; }
+.vocab-item { background: #f0f0ff; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.vocab-word { font-size: 16px; font-weight: 700; color: #4338ca; margin-right: 6px; }
+.vocab-level { font-size: 10px; background: #c7d2fe; color: #3730a3; padding: 2px 6px;
+               border-radius: 10px; font-weight: 700; margin-right: 6px; }
+.vocab-meaning { font-size: 13px; color: #374151; }
+.vocab-col { font-size: 12px; color: #6b7280; margin-top: 4px; }
+.learn-passage { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;
+                 padding: 10px 12px; margin-top: 10px; }
+.learn-passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.learn-passage-text { font-size: 13px; color: #1a1a2e; line-height: 1.7; font-style: italic; margin-bottom: 8px; }
+.learn-passage-apply { font-size: 12px; color: #166534; background: #dcfce7;
+                       padding: 6px 8px; border-radius: 6px; }
 
 /* PROGRESS */
 .progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;

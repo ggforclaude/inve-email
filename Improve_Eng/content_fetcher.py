@@ -106,6 +106,41 @@ GRAMMAR_CURRICULUM = [
     ("Noun Clauses and Embedded Questions", "B2", "명사절과 간접의문문"),
 ]
 
+# ── 발음 커리큘럼 (15개, 일별 순환) ─────────────────────────────────────────
+# 한국인이 특히 취약한 발음 포인트 — 매일 1가지 집중
+PRONUNCIATION_CURRICULUM = [
+    ("r vs l 구분",          "r은 혀를 말아 입천장에 닿지 않게, l은 혀끝을 윗잇몸에 확실히 댐",
+     ["really /ríːli/", "rally /réli/", "river /rívər/", "liver /lívər/"]),
+    ("f vs p 구분",          "f는 윗니를 아랫입술에 대고 바람, p는 두 입술로 터뜨림",
+     ["food /fuːd/", "pool /puːl/", "fee /fiː/", "pea /piː/"]),
+    ("v vs b 구분",          "v는 윗니를 아랫입술에 대고 진동, b는 두 입술로 막아 터뜨림",
+     ["very /véri/", "berry /béri/", "vest /vest/", "best /best/"]),
+    ("th 유성음 /ð/",        "혀끝을 윗니 사이에 살짝 내밀고 목소리 진동",
+     ["the /ðə/", "this /ðɪs/", "that /ðæt/", "mother /mʌðər/"]),
+    ("th 무성음 /θ/",        "혀끝을 윗니 사이에 살짝 내밀고 바람만 내보냄",
+     ["think /θɪŋk/", "three /θriː/", "health /helθ/", "month /mʌnθ/"]),
+    ("짧은 모음 vs 긴 모음",  "ship /ɪ/ vs sheep /iː/ — 입 모양과 길이 모두 다름",
+     ["ship /ʃɪp/", "sheep /ʃiːp/", "hit /hɪt/", "heat /hiːt/"]),
+    ("어말 자음 탈락 방지",   "한국어는 받침 뒤 모음을 붙이는 경향 — 마지막 자음만 닫고 끝내기",
+     ["fact /fækt/", "next /nekst/", "helped /helpt/", "asked /æskt/"]),
+    ("단어 강세: 2음절 명사", "명사는 보통 첫 음절 강세 — REcord, PROtest, PERmit",
+     ["REcord", "PROtest", "PERmit", "CONtent"]),
+    ("단어 강세: 2음절 동사", "동사는 보통 두 번째 음절 강세 — reCORD, proTEST, perMIT",
+     ["reCORD", "proTEST", "perMIT", "conTENT"]),
+    ("-ed 어미 발음 3가지",   "/t/: 무성음 뒤 | /d/: 유성음 뒤 | /ɪd/: t·d로 끝날 때",
+     ["worked /wɜːrkt/", "called /kɔːld/", "wanted /wɒntɪd/", "needed /niːdɪd/"]),
+    ("-s/-es 어미 발음 3가지","/ s/: 무성음 뒤 | /z/: 유성음 뒤 | /ɪz/: s·z·ch·sh로 끝날 때",
+     ["books /bʊks/", "dogs /dɒgz/", "watches /wɒtʃɪz/", "buses /bʌsɪz/"]),
+    ("연음 (Linking)",       "자음으로 끝나는 단어 + 모음으로 시작하는 단어는 이어서 발음",
+     ["pick it up → pi-ki-tup", "turn it on → tur-ni-ton", "look at it → loo-ka-tit"]),
+    ("약화 (Reduction)",     "기능어(of·to·for·and·at)는 빠르게 약화 — /ə/ 로 줄어듦",
+     ["cup of tea → cupə tea", "a lot of → ə lɒtə", "want to → wanna"]),
+    ("문장 강세와 리듬",      "내용어(명사·동사·형용사)는 강하게, 기능어(관사·전치사)는 약하게",
+     ["I WANT to GO to the STORE", "She's WORKING on a NEW project"]),
+    ("억양: 의문문",         "Yes/No 질문은 끝이 올라가고 ↗, Wh- 질문은 끝이 내려감 ↘",
+     ["Are you READY? ↗", "Where are you GOING? ↘", "Did you SEE it? ↗"]),
+]
+
 # ── 어원 커리큘럼 (30개, 일별 순환) ─────────────────────────────────────────
 # (단어, 원어, 어원 설명 한국어, 현대 의미)
 ETYMOLOGY_CURRICULUM = [
@@ -163,7 +198,9 @@ async def fetch_daily_content(today: date) -> dict:
     speaking = _fetch_from_source(SPEAKING_SOURCES[idx % len(SPEAKING_SOURCES)])
 
     topic, level, topic_kr = GRAMMAR_CURRICULUM[day_idx]
-    etym = ETYMOLOGY_CURRICULUM[etym_idx]
+    etym  = ETYMOLOGY_CURRICULUM[etym_idx]
+    pron_idx = idx % len(PRONUNCIATION_CURRICULUM)
+    pron  = PRONUNCIATION_CURRICULUM[pron_idx]
 
     return {
         "listening": listening,      # 단일 dict (리스트 아님)
@@ -181,6 +218,11 @@ async def fetch_daily_content(today: date) -> dict:
             "origin":  etym[1],
             "story":   etym[2],
             "meaning": etym[3],
+        },
+        "pronunciation": {
+            "focus":    pron[0],
+            "rule":     pron[1],
+            "examples": pron[2],
         },
     }
 

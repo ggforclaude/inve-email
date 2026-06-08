@@ -81,17 +81,19 @@ async def main() -> None:
     listening_script = await generate_listening_script(content["listening"])
     log.info(f"  스크립트 생성 완료: {len(listening_script.get('script_en', ''))}자")
 
-    # ⑤ 5영역 학습 콘텐츠 생성
-    log.info("[5] 5영역 학습 콘텐츠 생성 (Claude)...")
+    # ⑤ 7영역 학습 콘텐츠 생성
+    log.info("[5] 7영역 학습 콘텐츠 생성 (Claude)...")
     grammar_info  = content.get("grammar", {})
     etymology     = content.get("etymology", {})
+    pronunciation = content.get("pronunciation", {})
     daily_learning = await generate_daily_learning(
-        grammar_info    = grammar_info,
-        listening_item  = content["listening"],
+        grammar_info     = grammar_info,
+        listening_item   = content["listening"],
         listening_script = listening_script,
-        etymology       = etymology,
-        current_levels  = current_levels,
-        day_number      = day_number,
+        etymology        = etymology,
+        pronunciation    = pronunciation,
+        current_levels   = current_levels,
+        day_number       = day_number,
     )
     log.info(f"  학습 콘텐츠 생성 완료: 문법={grammar_info.get('topic', '')[:30]}")
 
