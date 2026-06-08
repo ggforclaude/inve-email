@@ -76,6 +76,30 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 .learn-script-kr { font-size: 12px; color: #6b7280; line-height: 1.6; padding: 6px 0; }
 .learn-vocab { font-size: 12px; color: #374151; background: #e0f2fe; padding: 6px 10px;
                border-radius: 6px; margin-top: 6px; }
+.learn-when { font-size: 12px; color: #4b5563; background: #ede9fe; padding: 5px 9px;
+              border-radius: 6px; margin-bottom: 8px; }
+.learn-mistake { font-size: 12px; color: #92400e; background: #fef3c7; padding: 6px 9px;
+                 border-radius: 6px; margin: 6px 0; }
+.learn-pron-ex { font-size: 13px; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.learn-pron-practice { font-size: 13px; color: #374151; margin: 6px 0;
+                       display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tts-btn { background: #0ea5e9; color: #fff; border: none; border-radius: 6px;
+           padding: 6px 12px; font-size: 13px; cursor: pointer; margin: 6px 0; }
+.tts-btn:hover { background: #0284c7; }
+.tts-sm { padding: 3px 8px; font-size: 12px; margin: 0; }
+.vocab-item { background: #f0f0ff; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.vocab-word { font-size: 16px; font-weight: 700; color: #4338ca; margin-right: 6px; }
+.vocab-level { font-size: 10px; background: #c7d2fe; color: #3730a3; padding: 2px 6px;
+               border-radius: 10px; font-weight: 700; margin-right: 6px; }
+.vocab-meaning { font-size: 13px; color: #374151; }
+.vocab-col { font-size: 12px; color: #6b7280; margin-top: 4px; }
+.learn-passage { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;
+                 padding: 10px 12px; margin-top: 10px; }
+.learn-passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.learn-passage-text { font-size: 13px; color: #1a1a2e; line-height: 1.7; font-style: italic; margin-bottom: 8px; }
+.learn-passage-apply { font-size: 12px; color: #166534; background: #dcfce7;
+                       padding: 6px 8px; border-radius: 6px; }
 
 /* PROGRESS */
 .progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
@@ -235,41 +259,79 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 
   <div class="card learning-card">
   <div class="learning-header">
-    <span class="learning-badge">📚 오늘의 레슨</span>
+    <span class="learning-badge">📚 오늘의 레슨 — 7영역</span>
     <span class="learning-sub">퀴즈 전에 읽고 내용을 기억해보세요</span>
   </div>
   <div class="learn-section" style="border-left-color:#8b5cf6">
   <div class="learn-tag" style="background:#8b5cf6">🔤 문법</div>
   <div class="learn-topic">Noun Clauses and Embedded Questions <span class="learn-topic-kr">(명사절과 간접의문문)</span></div>
   <div class="learn-rule">오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.</div>
+  <div class="learn-when">📌 언제: 퀴즈를 풀며 맥락을 파악하세요.</div>
   <div class="learn-examples">
-    <div class="learn-ex learn-ex-ok">✅ I have worked here for five years.<span class="learn-ex-kr">나는 여기서 5년간 일했다 (지금도 재직 중).</span></div>
-    <div class="learn-ex learn-ex-bad">❌ I worked here for five years. (implies no longer working)<span class="learn-ex-kr">이미 그만뒀을 때 사용.</span></div>
+    <div class="learn-ex learn-ex-ok">✅ <b>I have worked here for five years.</b><span class="learn-ex-kr">5년간 일해왔다 (지금도 재직 중)</span></div><div class="learn-ex learn-ex-ok">✅ <b>She has already finished the report.</b><span class="learn-ex-kr">그녀는 이미 보고서를 끝냈다</span></div><div class="learn-ex learn-ex-ok">✅ <b>We have never met before.</b><span class="learn-ex-kr">우리는 전에 만난 적이 없다</span></div>
+    <div class="learn-ex learn-ex-bad">❌ <b>I worked here for five years.</b>
+      <span class="learn-ex-kr">단순과거 → 이미 그만뒀을 때 사용.</span></div>
   </div>
-  <div class="learn-remember">💡 경험·결과 → 현재완료</div>
+  <div class="learn-mistake">⚠️ ① '어제' 같은 과거 시점과 현재완료 혼용 ② have+동사원형 실수</div>
+  <div class="learn-remember">💡 경험·결과·지속 → 현재완료</div>
 </div>
   <div class="learn-section" style="border-left-color:#0ea5e9">
-  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기 스크립트</div>
+  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기</div>
   <div class="learn-topic">Merriam-Webster Word of the Day <span class="learn-topic-kr">— MacGyver</span></div>
+  <audio controls style="width:100%;border-radius:8px;margin:8px 0">
+    <source src="https://rss.art19.com/episodes/a0c27d7d-0872-421f-b935-4a38bdaf3f31.mp3" type="audio/mpeg">
+    <a href="https://rss.art19.com/episodes/a0c27d7d-0872-421f-b935-4a38bdaf3f31.mp3" target="_blank">🎧 오디오 직접 열기</a>
+  </audio>
+  <button class="tts-btn" onclick="speakText('Hey, did you see that video online? Someone MacGyvered a phone stand using just a pen and some tape. It&#39;s amazing what people can improvise these days. My coworker does this all the time at the office—she&#39;ll fix broken equipment with whatever materials she finds around her desk.')">🔊 스크립트 읽어주기 (TTS)</button>
   <div class="learn-script">
-    <div class="learn-script-en">🇬🇧 Hey, did you see that video where someone MacGyvered a phone stand from just a paperclip and a pencil? It's actually pretty clever. My coworker does this all the time at the office—she'll improvise solutions with whatever materials she finds nearby instead of buying new things. I think it's a smart way to be resourceful and save money.</div>
-    <div class="learn-script-kr">🇰🇷 저기, 누군가가 클립과 연필만으로 휴대폰 거치대를 만든 영상 봤어? 정말 똑똑한데. 우리 동료는 사무실에서 항상 이렇게 해—새로운 물건을 사는 대신 주변에 있는 재료로 해결책을 즉흥적으로 만들어. 나는 이게 자원을 잘 활용하고 돈을 절약하는 똑똑한 방법이라고 생각해.</div>
+    <div class="learn-script-en">🇬🇧 Hey, did you see that video online? Someone MacGyvered a phone stand using just a pen and some tape. It's amazing what people can improvise these days. My coworker does this all the time at the office—she'll fix broken equipment with whatever materials she finds around her desk.</div>
+    <div class="learn-script-kr">🇰🇷 야, 그 온라인 영상 봤어? 누군가 펜과 테이프만 가지고 휴대폰 스탠드를 만들었어. 요즘 사람들이 즉흥적으로 만들 수 있는 것들이 정말 놀라워. 우리 회사 동료도 자주 이런 식으로 해—탁자 주변에 있는 것들로 고장난 기계를 고쳐.</div>
   </div>
-  <div class="learn-vocab">📝 핵심 어휘: MacGyver — 즉흥적으로 만들다, 응급으로 해결하다; improvise — 즉흥적으로 하다, 급할 때 대처하다</div>
+  <div class="learn-vocab">📝 핵심 어휘: improvise — 즉흥적으로 하다, 임시방편으로 대처하다; equipment — 장비, 기구</div>
 </div>
   <div class="learn-section" style="border-left-color:#f59e0b">
   <div class="learn-tag" style="background:#f59e0b">💼 비즈니스</div>
   <div class="learn-topic">"Let's circle back" <span class="learn-topic-kr">— 나중에 다시 돌아오다</span></div>
   <div class="learn-examples">
-    <div class="learn-ex learn-ex-ok">💬 Let's circle back on the budget after the Q2 data arrives.<span class="learn-ex-kr">Q2 데이터가 나오면 예산 건으로 다시 돌아오죠.</span></div>
+    <div class="learn-ex learn-ex-ok">💬 <b>Let's circle back on the budget after the Q2 data arrives.</b>
+      <span class="learn-ex-kr">Q2 데이터가 나오면 예산 건으로 다시 돌아오죠.</span></div>
   </div>
   <div class="learn-remember">📌 회의 중 결론을 잠시 보류할 때</div>
+</div>
+  <div class="learn-section" style="border-left-color:#ec4899">
+  <div class="learn-tag" style="background:#ec4899">🔊 발음</div>
+  <div class="learn-topic">짧은 모음 vs 긴 모음</div>
+  <div class="learn-rule">ship /ɪ/ vs sheep /iː/ — 입 모양과 길이 모두 다름</div>
+  <div class="learn-pron-ex"><code>ship /ʃɪp/</code> &nbsp;|&nbsp; <code>sheep /ʃiːp/</code> &nbsp;|&nbsp; <code>hit /hɪt/</code> &nbsp;|&nbsp; <code>heat /hiːt/</code></div>
+  <div class="learn-mistake">⚠️ 한국어 발음 습관이 영향을 미칩니다.</div>
+  <div class="learn-pron-practice">
+    연습 문장: <i>Please feel free to call me if you have any questions.</i>
+    <button class="tts-btn tts-sm" onclick="speakText('Please feel free to call me if you have any questions.')">🔊</button>
+  </div>
+  <div class="learn-remember">💡 거울 앞에서 입 모양을 확인하며 연습하세요.</div>
+</div>
+  <div class="learn-section" style="border-left-color:#6366f1">
+  <div class="learn-tag" style="background:#6366f1">📝 어휘</div>
+  <div class="vocab-item">
+  <span class="vocab-word">allocate</span>
+  <span class="vocab-level">B2</span>
+  <span class="vocab-meaning">할당하다, 배정하다</span>
+  <div class="vocab-col">연어: <i>allocate resources / allocate time / allocate budget</i></div>
+  <div class="learn-ex learn-ex-ok" style="margin-top:5px">
+    We need to allocate more resources to the marketing team. <span class="learn-ex-kr">마케팅팀에 더 많은 자원을 배정해야 합니다.</span>
+  </div>
+</div>
 </div>
   <div class="learn-section" style="border-left-color:#22c55e">
   <div class="learn-tag" style="background:#22c55e">📖 독해 전략</div>
   <div class="learn-topic">Topic Sentence 스캔</div>
   <div class="learn-rule">각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.</div>
-  <div class="learn-remember">📊 인지심리학 연구에 따르면 '스키마(schema)' 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.</div>
+  <div class="learn-remember">📊 스키마(schema) 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.</div>
+  <div class="learn-passage">
+    <div class="learn-passage-label">📄 예시 지문</div>
+    <div class="learn-passage-text">The global economy has shown signs of recovery. Consumer spending increased by 3% last quarter. However, inflation remains a concern for policymakers.</div>
+    <div class="learn-passage-apply">▶ 적용: 첫 문장 'The global economy has shown signs of recovery'에서 주제를 파악한 후 나머지를 읽으면 세부 내용이 자연스럽게 연결됩니다.</div>
+  </div>
 </div>
   <div class="learn-section" style="border-left-color:#10b981">
   <div class="learn-tag" style="background:#10b981">🌱 어원</div>
@@ -279,6 +341,15 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   <div class="learn-remember">💡 어원 스토리를 이미지로 상상하면 오래 기억됩니다.</div>
 </div>
 </div>
+<script>
+function speakText(text) {
+  if (!window.speechSynthesis) { alert("이 브라우저는 TTS를 지원하지 않습니다."); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US"; u.rate = 0.85; u.pitch = 1.0;
+  window.speechSynthesis.speak(u);
+}
+</script>
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
@@ -312,43 +383,43 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   <div class="question" id="q0">
   <div class="q-text">
     <span class="q-num">1</span>
-    Listen to the conversation between two coworkers about fixing a broken printer. What does Sarah suggest doing?
+    Listen to the conversation between two coworkers. What does Mark decide to do about his broken desk lamp?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Call the IT department immediately</span>
+    <span class="opt-text">He will ask his manager to buy him a new lamp</span>
   </button><button class="opt" data-q="0" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Try to repair it using available materials before calling for help</span>
+    <span class="opt-text">He will use materials he found to fix it himself</span>
   </button><button class="opt" data-q="0" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Buy new equipment to replace the broken printer</span>
+    <span class="opt-text">He will order a lamp online</span>
   </button><button class="opt" data-q="0" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Ask Tom to find the instruction manual</span>
+    <span class="opt-text">He will ask Sarah to help him buy a replacement</span>
   </button></div>
-  <div class="expl" id="expl0" style="display:none">💬 Sarah가 'MacGyver something'을 하겠다고 하며 자신의 책상에 있는 낡은 케이블과 테이프를 사용하려고 한다. MacGyver는 손에 있는 편리한 재료로 무언가를 수리하는 것을 의미하므로 정답은 B. A는 Sarah가 먼저 시도해보겠다고 했으므로 틀림. C와 D는 대화 내용과 맞지 않음.</div>
+  <div class="expl" id="expl0" style="display:none">💬 정답 B: Mark가 'MacGyver it'이라고 명확히 말했으며, 서랍에서 찾은 테이프와 USB 케이블을 사용하겠다고 했음. MacGyver는 주변에 있는 재료로 무언가를 수리한다는 의미. A는 예산이 없다고 했으므로 틀림. C, D도 대사에서 언급되지 않음.</div>
 </div><div class="question" id="q1">
   <div class="q-text">
     <span class="q-num">2</span>
-    Listen to a description of how a student solved a problem during a camping trip. What was the student trying to do?
+    Listen to the radio interview. Why does the expert say people should consider MacGyvering before calling a professional?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Find a new tent to replace the broken one</span>
+    <span class="opt-text">Professional repairs are never effective</span>
   </button><button class="opt" data-q="1" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Create a quick fix for the broken tent zipper using items he had with him</span>
+    <span class="opt-text">It saves money, develops skills, and is environmentally friendly</span>
   </button><button class="opt" data-q="1" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Call someone to bring repair tools from home</span>
+    <span class="opt-text">Professional services are too complicated to understand</span>
   </button><button class="opt" data-q="1" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Sleep outside without using a tent</span>
+    <span class="opt-text">It makes expensive equipment work better than new ones</span>
   </button></div>
-  <div class="expl" id="expl1" style="display:none">💬 아들이 텐트 지퍼를 'MacGyver'했으며, 백팩에 있던 안전핀과 로프를 사용해서 문제를 해결했다. MacGyver는 주변에 있는 물건으로 빠르게 수리하는 것을 의미하므로 정답은 B. A는 텐트를 교체하는 것이 아니고, C는 집에서 도구를 가져오지 않았으며, D는 텐트를 사용했으므로 모두 틀림.</div>
+  <div class="expl" id="expl1" style="display:none">💬 정답 B: 전문가가 세 가지 이유를 명확히 제시함 - 비용 절감(saves money), 문제해결 능력 개발(teaches problem-solving skills), 환경친화적(better for the environment). A는 극단적이고 대사에서 언급 안 됨. C는 역으로 전문가 부름을 말하므로 틀림. D는 새 것보다 낫다는 말이 없음.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -362,7 +433,8 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   <div class="question" id="q2">
   <div class="q-text">
     <span class="q-num">3</span>
-    I need to know _______ the meeting starts tomorrow.
+    빈칸에 알맞은 표현을 고르세요.
+I need to know _____ the meeting starts tomorrow.
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
   <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
@@ -370,55 +442,57 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
     <span class="opt-text">what time</span>
   </button><button class="opt" data-q="2" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">what</span>
+    <span class="opt-text">what time that</span>
   </button><button class="opt" data-q="2" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">which time</span>
+    <span class="opt-text">that what time</span>
   </button><button class="opt" data-q="2" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">when time</span>
+    <span class="opt-text">when that</span>
   </button></div>
-  <div class="expl" id="expl2" style="display:none">💬 간접의문문에서 '몇 시에'는 'what time'으로 표현합니다. 'when time'은 문법적으로 틀렸고, 'what'만으로는 시간을 명확히 물을 수 없습니다.</div>
+  <div class="expl" id="expl2" style="display:none">💬 간접의문문에서는 의문사(what time, where, when 등)가 문장을 이끌며, 그 뒤에 주어+동사 순서로 이어집니다. 'that'은 간접의문문에서 사용하지 않습니다.</div>
 </div><div class="question" id="q3">
   <div class="q-text">
     <span class="q-num">4</span>
-    Could you explain _______ the deadline was missed by the project team?
+    빈칸에 알맞은 표현을 고르세요.
+Could you clarify _____ we should submit the report by email or in person?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">why</span>
+    <span class="opt-text">whether</span>
   </button><button class="opt" data-q="3" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">that why</span>
+    <span class="opt-text">if</span>
   </button><button class="opt" data-q="3" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">the reason why</span>
+    <span class="opt-text">that</span>
   </button><button class="opt" data-q="3" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">what why</span>
+    <span class="opt-text">A와 B 모두 가능</span>
   </button></div>
-  <div class="expl" id="expl3" style="display:none">💬 간접의문문에서 단순히 'why'만 사용하면 됩니다. 'that why'는 문법적 오류이며, 'the reason why'를 사용하면 'the reason that' 구문이 되어 중복입니다.</div>
+  <div class="expl" id="expl3" style="display:none">💬 두 선택지 중 하나를 묻는 간접의문문에서는 'whether'와 'if'를 모두 사용할 수 있습니다. 다만 공식적인 문맥에서는 'whether'가 더 선호됩니다.</div>
 </div><div class="question" id="q4">
   <div class="q-text">
     <span class="q-num">5</span>
-    The HR department is investigating _______ the employee's contract was terminated without proper notification, which may have violated company policy.
+    다음 문장 중 문법적으로 올바른 것은?
+(간접의문문 구조 비교)
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
   <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">how come</span>
+    <span class="opt-text">I'm not sure what does the manager expect from us.</span>
   </button><button class="opt" data-q="4" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">the way</span>
+    <span class="opt-text">I'm not sure what the manager expects from us.</span>
   </button><button class="opt" data-q="4" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">how that</span>
+    <span class="opt-text">I'm not sure about what does the manager expect from us.</span>
   </button><button class="opt" data-q="4" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">in what manner</span>
+    <span class="opt-text">I'm not sure that what the manager expects from us.</span>
   </button></div>
-  <div class="expl" id="expl4" style="display:none">💬 'How come'은 비즈니스 문맥에서 '왜'의 의미로 간접의문문에 사용됩니다. 'how that'은 부정확하며, 'the way'나 'in what manner'는 '방식'을 묻는 표현으로 맥락에 맞지 않습니다.</div>
+  <div class="expl" id="expl4" style="display:none">💬 간접의문문은 '의문사+주어+동사' 어순을 유지하며, 의문사가 주어나 목적어 역할을 하면 도움동사(do/does)가 나타나지 않습니다(A는 틀린 어순). 또한 'about that'과 같은 중복 표현(C, D)도 피해야 합니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -432,63 +506,63 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   <div class="question" id="q5">
   <div class="q-text">
     <span class="q-num">6</span>
-    What time does Sarah arrive at the coffee shop?
+    Why do customers come back to Sarah's coffee shop every day?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
   <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">At 5 AM</span>
+    <span class="opt-text">Because the coffee shop is very big</span>
   </button><button class="opt" data-q="5" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">At 6 AM</span>
+    <span class="opt-text">Because Sarah is friendly and provides good service</span>
   </button><button class="opt" data-q="5" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">At 7 AM</span>
+    <span class="opt-text">Because the shop opens at 6:00 AM</span>
   </button><button class="opt" data-q="5" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">At 8 AM</span>
+    <span class="opt-text">Because they like to arrange tables</span>
   </button></div>
-  <div class="expl" id="expl5" style="display:none">💬 텍스트에서 'Every morning, she arrives at 6 AM'이라고 명시되어 있습니다. A, C, D는 모두 텍스트에 없는 시간입니다.</div>
+  <div class="expl" id="expl5" style="display:none">💬 본문에서 'Sarah is friendly and always smiles at them. Most customers love her service and come back every day'라고 명시되어 있습니다. A는 건물 크기에 대한 언급이 없고, C는 영업 시간일 뿐 재방문 이유가 아니며, D는 고객들이 하는 일이 아닙니다.</div>
 </div><div class="question" id="q6">
   <div class="q-text">
     <span class="q-num">7</span>
-    According to the text, what is a disadvantage of flexible work hours?
+    What is mentioned as a potential disadvantage of remote work according to the text?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Employees become less productive</span>
+    <span class="opt-text">Employees have less flexibility in their schedules</span>
   </button><button class="opt" data-q="6" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">It cannot be applied to all types of jobs</span>
+    <span class="opt-text">It increases the company's office rental costs</span>
   </button><button class="opt" data-q="6" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Workers don't like to choose their own schedule</span>
+    <span class="opt-text">Managers are concerned about reduced team communication and company culture</span>
   </button><button class="opt" data-q="6" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Companies lose money by offering this benefit</span>
+    <span class="opt-text">Video meetings are difficult to organize</span>
   </button></div>
-  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 'not all jobs allow this flexibility, especially in customer service and retail sectors'라고 명시되어 있습니다. A는 반대로 65%가 더 생산적이라고 했고, C는 근거가 없으며, D도 제시되지 않았습니다.</div>
+  <div class="expl" id="expl6" style="display:none">💬 본문에서 'some managers worry that remote work reduces team communication and company culture'라고 명확히 나와있습니다. A는 오히려 장점으로 언급되고, B는 비용 감소를 의미하므로 틀렸으며, D는 해결책으로 제시된 활동입니다.</div>
 </div><div class="question" id="q7">
   <div class="q-text">
     <span class="q-num">8</span>
-    What does the author suggest companies should do to address the negative effects of remote work?
+    Based on the passage, why are some companies implementing a hybrid approach to customer service?
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
   <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Return to traditional office-based work entirely</span>
+    <span class="opt-text">To completely replace human workers with AI technology</span>
   </button><button class="opt" data-q="7" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Reduce the number of employees working remotely</span>
+    <span class="opt-text">To leverage the strengths of both AI and human agents according to the complexity of customer issues</span>
   </button><button class="opt" data-q="7" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Establish communication protocols and schedule regular video meetings</span>
+    <span class="opt-text">To reduce customer satisfaction rates and operational efficiency</span>
   </button><button class="opt" data-q="7" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Allow employees to work whenever and wherever they want</span>
+    <span class="opt-text">To prove that AI is superior to human customer service</span>
   </button></div>
-  <div class="expl" id="expl7" style="display:none">💬 텍스트 마지막 문장에서 'Companies must therefore strike a balance by implementing clear communication protocols and encouraging regular video meetings'이라고 명시되어 있습니다. A는 완전한 복귀를 제시하는데 텍스트는 균형을 강조하고, B는 직원 수 감소에 대한 언급이 없으며, D는 오리엔테이션이 없다는 점과 모순됩니다.</div>
+  <div class="expl" id="expl7" style="display:none">💬 본문의 마지막 문장 'using AI to filter and categorize inquiries before routing them to appropriate human representatives'와 앞선 '고객들이 복잡한 문제는 인간 상호작용을 선호하고 단순 질문은 AI로 처리된다'는 내용이 하이브리드 접근법의 근거입니다. A는 인간 직원을 완전히 제거하자는 의도가 아니고, C는 반대의 의미이며, D는 본문 전체의 뉘앙스와 맞지 않습니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -500,8 +574,8 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   </div>
   <div class="shadow-box">
       <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트</div>
-      <p class="shadow-text" id="shadowScript0">I think she's a moth to the flame when it comes to that new project. She's completely drawn to it, even though it might not be the best idea for her career.</p>
-      <p class="shadow-tip">🔊 'drawn to'를 '드론투'로 발음하되, 'to'의 t를 약하게 발음하여 연음 효과를 주세요.</p>
+      <p class="shadow-text" id="shadowScript0">I'm like a moth to a flame when it comes to new projects. I just can't help getting drawn into them, even when I'm already busy.</p>
+      <p class="shadow-tip">🔊 moth to a flame에서 'moth'는 입술을 붙였다 떼면서 /mɔːθ/로 발음하세요.</p>
 
       <div class="record-box">
         <div class="record-title">🎙️ 발음 녹음 & 체크</div>
@@ -523,63 +597,63 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
   <div class="question" id="q8">
   <div class="q-text">
     <span class="q-num">9</span>
-    비즈니스 미팅에서 동료가 위험한 프로젝트에 계속 끌려가는 상황을 설명하고 싶습니다. 가장 적절한 표현은?
+    당신의 동료가 새로운 기회에 자꾸 끌려가는 경향이 있다고 말하고 싶습니다. 어떤 표현이 가장 적절할까요?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
   <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">He's a moth to the flame about that risky investment.</span>
+    <span class="opt-text">He's like a moth to a flame when it comes to new opportunities.</span>
   </button><button class="opt" data-q="8" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">He's a butterfly to the flower about that risky investment.</span>
+    <span class="opt-text">He's like a butterfly to a light.</span>
   </button><button class="opt" data-q="8" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">He's a bee to the honey about that risky investment.</span>
+    <span class="opt-text">He's like a bird to a tree.</span>
   </button><button class="opt" data-q="8" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">He's a fish to the water about that risky investment.</span>
+    <span class="opt-text">He's like a fish to water.</span>
   </button></div>
-  <div class="expl" id="expl8" style="display:none">💬 'moth to the flame'은 나방이 불빛에 끌려가는 습성처럼, 위험한 것임을 알면서도 계속 끌려가는 사람을 비유하는 표현입니다. 비즈니스 상황에서 누군가가 좋지 않은 결정에 계속 유혹되는 모습을 설명할 때 자주 사용됩니다.</div>
+  <div class="expl" id="expl8" style="display:none">💬 'Moth to a flame'은 나방이 불빛에 끌려가는 습성처럼, 사람이 무언가에 자신도 모르게 끌려가는 모습을 표현하는 관용구입니다. 비즈니스 상황에서 누군가의 습관적인 행동 패턴을 설명할 때 자주 사용됩니다.</div>
 </div><div class="question" id="q9">
   <div class="q-text">
     <span class="q-num">10</span>
-    다음 문장에서 자연스러운 발음·억양을 위해 강세가 들어가야 할 단어는?
+    'attracted to'를 자연스럽게 발음할 때, 다음 중 올바른 설명은?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">'attracted'에만 강세</span>
+    <span class="opt-text">/əˈtræktəd tuː/ - 각 단어를 분명하게 발음</span>
   </button><button class="opt" data-q="9" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">'LIGHT'와 'ATTRACTED'에 강세</span>
+    <span class="opt-text">/əˈtræktɪd tə/ - 'to'의 /u:/가 약화되어 /ə/로 발음되고 연음</span>
   </button><button class="opt" data-q="9" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">'to'에만 강세</span>
+    <span class="opt-text">/æˈtræktɪd təː/ - 'attracted'의 강세가 첫 음절에 있음</span>
   </button><button class="opt" data-q="9" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">'sources'에만 강세</span>
+    <span class="opt-text">/əˈtræktəd təu/ - 'to'가 항상 /tuː/로 발음됨</span>
   </button></div>
-  <div class="expl" id="expl9" style="display:none">💬 'Moths are attracted to light sources'에서 핵심 의미 단어인 'LIGHT'와 'ATTRACTED'에 강세를 주면 자연스럽습니다. 특히 비유적 의미로 사용할 때 'light'(유혹/매력)의 강세가 중요하여 청자의 주의를 끌 수 있습니다.</div>
+  <div class="expl" id="expl9" style="display:none">💬 자연스러운 영어 회화에서 'attracted to'는 'to'의 모음이 약화되어(/ə/) 발음되고, 'd'와 't'가 연음되어 /əˈtræktɪd tə/처럼 들립니다. 강세는 두 번째 음절 'trac'에 있습니다.</div>
 </div><div class="question" id="q10">
   <div class="q-text">
     <span class="q-num">11</span>
-    다음 쉐도잉 스크립트의 빈칸을 채우세요. "When someone is _____ to the flame, they find it difficult to resist something attractive but potentially _____ to them."
+    다음 쉐도잉 스크립트의 빈칸을 채우세요: 'So the idea is that you're _____ to something you shouldn't really be attracted to, like a moth _____ to a flame. And it's usually something negative, like bad habits or unhealthy relationships.'
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
   <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">attracted / harmful</span>
+    <span class="opt-text">attracted / flying</span>
   </button><button class="opt" data-q="10" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">drawn / dangerous</span>
+    <span class="opt-text">drawn / going</span>
   </button><button class="opt" data-q="10" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">pulled / destructive</span>
+    <span class="opt-text">pulled / coming</span>
   </button><button class="opt" data-q="10" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">magnetized / negative</span>
+    <span class="opt-text">dragged / moving</span>
   </button></div>
-  <div class="expl" id="expl10" style="display:none">💬 'drawn to the flame'은 비유적으로 사용되는 정형화된 표현으로, 첫 번째 빈칸에는 'drawn'이 정확합니다. 'dangerous'는 flame의 위험성을 나타내며, 'harmful'보다 즉각적인 위험을 강조하는 'dangerous'가 더 자연스럽습니다. 이 표현은 비즈니스에서 위험한 거래나 결정에 끌려가는 상황을 설명할 때 자주 사용됩니다.</div>
+  <div class="expl" id="expl10" style="display:none">💬 'attracted to'는 '끌린다'는 기본 의미이며, 'a moth to a flame'은 관용구로 나방이 불빛으로 끌려가는 모습을 표현합니다. 이 표현은 보통 부정적인 습관이나 관계에 자신도 모르게 끌려가는 상황을 설명할 때 사용됩니다.</div>
 </div>
 </div>
 
@@ -595,8 +669,8 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 </div>
 
 <script>
-const CORRECT  = ["B", "B", "A", "A", "A", "B", "B", "C", "A", "B", "B"];
-const EXPLS    = ["Sarah가 'MacGyver something'을 하겠다고 하며 자신의 책상에 있는 낡은 케이블과 테이프를 사용하려고 한다. MacGyver는 손에 있는 편리한 재료로 무언가를 수리하는 것을 의미하므로 정답은 B. A는 Sarah가 먼저 시도해보겠다고 했으므로 틀림. C와 D는 대화 내용과 맞지 않음.", "아들이 텐트 지퍼를 'MacGyver'했으며, 백팩에 있던 안전핀과 로프를 사용해서 문제를 해결했다. MacGyver는 주변에 있는 물건으로 빠르게 수리하는 것을 의미하므로 정답은 B. A는 텐트를 교체하는 것이 아니고, C는 집에서 도구를 가져오지 않았으며, D는 텐트를 사용했으므로 모두 틀림.", "간접의문문에서 '몇 시에'는 'what time'으로 표현합니다. 'when time'은 문법적으로 틀렸고, 'what'만으로는 시간을 명확히 물을 수 없습니다.", "간접의문문에서 단순히 'why'만 사용하면 됩니다. 'that why'는 문법적 오류이며, 'the reason why'를 사용하면 'the reason that' 구문이 되어 중복입니다.", "'How come'은 비즈니스 문맥에서 '왜'의 의미로 간접의문문에 사용됩니다. 'how that'은 부정확하며, 'the way'나 'in what manner'는 '방식'을 묻는 표현으로 맥락에 맞지 않습니다.", "텍스트에서 'Every morning, she arrives at 6 AM'이라고 명시되어 있습니다. A, C, D는 모두 텍스트에 없는 시간입니다.", "텍스트에서 'not all jobs allow this flexibility, especially in customer service and retail sectors'라고 명시되어 있습니다. A는 반대로 65%가 더 생산적이라고 했고, C는 근거가 없으며, D도 제시되지 않았습니다.", "텍스트 마지막 문장에서 'Companies must therefore strike a balance by implementing clear communication protocols and encouraging regular video meetings'이라고 명시되어 있습니다. A는 완전한 복귀를 제시하는데 텍스트는 균형을 강조하고, B는 직원 수 감소에 대한 언급이 없으며, D는 오리엔테이션이 없다는 점과 모순됩니다.", "'moth to the flame'은 나방이 불빛에 끌려가는 습성처럼, 위험한 것임을 알면서도 계속 끌려가는 사람을 비유하는 표현입니다. 비즈니스 상황에서 누군가가 좋지 않은 결정에 계속 유혹되는 모습을 설명할 때 자주 사용됩니다.", "'Moths are attracted to light sources'에서 핵심 의미 단어인 'LIGHT'와 'ATTRACTED'에 강세를 주면 자연스럽습니다. 특히 비유적 의미로 사용할 때 'light'(유혹/매력)의 강세가 중요하여 청자의 주의를 끌 수 있습니다.", "'drawn to the flame'은 비유적으로 사용되는 정형화된 표현으로, 첫 번째 빈칸에는 'drawn'이 정확합니다. 'dangerous'는 flame의 위험성을 나타내며, 'harmful'보다 즉각적인 위험을 강조하는 'dangerous'가 더 자연스럽습니다. 이 표현은 비즈니스에서 위험한 거래나 결정에 끌려가는 상황을 설명할 때 자주 사용됩니다."];
+const CORRECT  = ["B", "B", "A", "D", "B", "B", "C", "B", "A", "B", "A"];
+const EXPLS    = ["정답 B: Mark가 'MacGyver it'이라고 명확히 말했으며, 서랍에서 찾은 테이프와 USB 케이블을 사용하겠다고 했음. MacGyver는 주변에 있는 재료로 무언가를 수리한다는 의미. A는 예산이 없다고 했으므로 틀림. C, D도 대사에서 언급되지 않음.", "정답 B: 전문가가 세 가지 이유를 명확히 제시함 - 비용 절감(saves money), 문제해결 능력 개발(teaches problem-solving skills), 환경친화적(better for the environment). A는 극단적이고 대사에서 언급 안 됨. C는 역으로 전문가 부름을 말하므로 틀림. D는 새 것보다 낫다는 말이 없음.", "간접의문문에서는 의문사(what time, where, when 등)가 문장을 이끌며, 그 뒤에 주어+동사 순서로 이어집니다. 'that'은 간접의문문에서 사용하지 않습니다.", "두 선택지 중 하나를 묻는 간접의문문에서는 'whether'와 'if'를 모두 사용할 수 있습니다. 다만 공식적인 문맥에서는 'whether'가 더 선호됩니다.", "간접의문문은 '의문사+주어+동사' 어순을 유지하며, 의문사가 주어나 목적어 역할을 하면 도움동사(do/does)가 나타나지 않습니다(A는 틀린 어순). 또한 'about that'과 같은 중복 표현(C, D)도 피해야 합니다.", "본문에서 'Sarah is friendly and always smiles at them. Most customers love her service and come back every day'라고 명시되어 있습니다. A는 건물 크기에 대한 언급이 없고, C는 영업 시간일 뿐 재방문 이유가 아니며, D는 고객들이 하는 일이 아닙니다.", "본문에서 'some managers worry that remote work reduces team communication and company culture'라고 명확히 나와있습니다. A는 오히려 장점으로 언급되고, B는 비용 감소를 의미하므로 틀렸으며, D는 해결책으로 제시된 활동입니다.", "본문의 마지막 문장 'using AI to filter and categorize inquiries before routing them to appropriate human representatives'와 앞선 '고객들이 복잡한 문제는 인간 상호작용을 선호하고 단순 질문은 AI로 처리된다'는 내용이 하이브리드 접근법의 근거입니다. A는 인간 직원을 완전히 제거하자는 의도가 아니고, C는 반대의 의미이며, D는 본문 전체의 뉘앙스와 맞지 않습니다.", "'Moth to a flame'은 나방이 불빛에 끌려가는 습성처럼, 사람이 무언가에 자신도 모르게 끌려가는 모습을 표현하는 관용구입니다. 비즈니스 상황에서 누군가의 습관적인 행동 패턴을 설명할 때 자주 사용됩니다.", "자연스러운 영어 회화에서 'attracted to'는 'to'의 모음이 약화되어(/ə/) 발음되고, 'd'와 't'가 연음되어 /əˈtræktɪd tə/처럼 들립니다. 강세는 두 번째 음절 'trac'에 있습니다.", "'attracted to'는 '끌린다'는 기본 의미이며, 'a moth to a flame'은 관용구로 나방이 불빛으로 끌려가는 모습을 표현합니다. 이 표현은 보통 부정적인 습관이나 관계에 자신도 모르게 끌려가는 상황을 설명할 때 사용됩니다."];
 const DNAMES   = ["listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
 const TOTAL    = 11;
 const TODAY    = "2026-06-08";
