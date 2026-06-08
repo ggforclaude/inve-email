@@ -54,6 +54,7 @@ async def main() -> None:
         send_daily_notification,
         send_detailed_feedback,
     )
+    from learning_tracker import save_learning_log
 
     today      = datetime.now(KST).date()
     tracker    = LevelTracker()
@@ -135,6 +136,11 @@ async def main() -> None:
     # ⑩ 오늘 문제 Sheets 저장
     tracker.save_today_questions(today, questions)
     log.info("[10] 문제 Sheets 저장 완료")
+
+    # ⑩-b 학습 이력 Excel 저장
+    log.info("[10-b] 학습 이력 Excel 저장...")
+    save_learning_log(today, day_number, daily_learning)
+    log.info("  Excel 저장 완료")
 
     # ⑪ 텔레그램: 학습 콘텐츠 (먼저 발송)
     log.info("[11] 텔레그램 학습 메시지 발송...")
