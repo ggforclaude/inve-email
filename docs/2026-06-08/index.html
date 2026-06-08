@@ -51,25 +51,31 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 .detail-tip { font-size: 13px; font-weight: 600; color: #4338ca;
               background: #eef2ff; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
 
-/* LESSON */
-.lesson-card { border: 1.5px solid; }
-.lesson-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.lesson-type-badge { font-size: 10px; font-weight: 700; padding: 2px 8px;
-                     border-radius: 4px; letter-spacing: 1px; }
-.lesson-icon { font-size: 20px; }
-.lesson-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.lesson-subtitle { font-size: 13px; color: #555; margin-bottom: 12px; }
-.lesson-keypoint { font-size: 14px; background: rgba(0,0,0,.04); padding: 10px 12px;
-                   border-radius: 8px; margin-bottom: 12px; }
-.lesson-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-.lesson-ex { border-left: 3px solid currentColor; padding: 8px 12px;
-             background: rgba(0,0,0,.03); border-radius: 0 6px 6px 0; }
-.lesson-ex-text { font-size: 14px; font-weight: 600; font-style: italic; margin-bottom: 3px; }
-.lesson-ex-note { font-size: 12px; color: #666; }
-.lesson-tip { font-size: 13px; color: #555; background: rgba(0,0,0,.04);
-              padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; }
-.lesson-remember { font-size: 13px; font-weight: 600; border: 1.5px solid;
-                   padding: 8px 12px; border-radius: 8px; }
+/* LEARNING CARD (5영역) */
+.learning-card { border: 1.5px solid #e5e7eb; }
+.learning-header { display: flex; align-items: center; justify-content: space-between;
+                   margin-bottom: 16px; }
+.learning-badge { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.learning-sub { font-size: 11px; color: #9ca3af; }
+.learn-section { border-left: 4px solid #e5e7eb; padding: 12px 14px; margin-bottom: 12px;
+                 background: #f9fafb; border-radius: 0 8px 8px 0; }
+.learn-tag { display: inline-block; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 8px; border-radius: 4px; margin-bottom: 7px; letter-spacing: 0.5px; }
+.learn-topic { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.learn-topic-kr { font-weight: 400; color: #6b7280; font-size: 13px; }
+.learn-rule { font-size: 13px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+.learn-examples { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.learn-ex { font-size: 13px; padding: 7px 10px; border-radius: 6px; line-height: 1.5; }
+.learn-ex-ok { background: #dcfce7; color: #166534; }
+.learn-ex-bad { background: #fee2e2; color: #991b1b; }
+.learn-ex-kr { display: block; font-size: 11px; color: #6b7280; margin-top: 2px; font-style: italic; }
+.learn-remember { font-size: 12px; font-weight: 600; color: #374151;
+                  background: rgba(0,0,0,.05); padding: 6px 10px; border-radius: 6px; }
+.learn-script { margin: 8px 0; }
+.learn-script-en { font-size: 13px; color: #1a1a2e; line-height: 1.6; padding: 6px 0; font-style: italic; }
+.learn-script-kr { font-size: 12px; color: #6b7280; line-height: 1.6; padding: 6px 0; }
+.learn-vocab { font-size: 12px; color: #374151; background: #e0f2fe; padding: 6px 10px;
+               border-radius: 6px; margin-top: 6px; }
 
 /* PROGRESS */
 .progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
@@ -219,7 +225,7 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
     <span class="hdr-date">Jun 08, 2026</span>
   </div>
   <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
-  <p class="hdr-meta">4개 영역 · 듣기 3클립 포함 · 약 25분</p>
+  <p class="hdr-meta">4개 영역 · 듣기 1클립 · 총 11문항 · 약 15분</p>
   <div class="lv-badges"><span class="lv-badge" style="background:#6ee7b7">🎧 듣기: A2</span><span class="lv-badge" style="background:#6ee7b7">✏️ 문법: A2</span><span class="lv-badge" style="background:#c4b5fd">📖 독해: B2</span><span class="lv-badge" style="background:#c4b5fd">🗣️ 말하기: B2</span></div>
 </header>
 
@@ -227,32 +233,57 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 
   
 
-  <div class="card lesson-card" style="background:#fff7ed;border-color:#fb923c">
-  <div class="lesson-header">
-    <span class="lesson-type-badge" style="background:#c2410c;color:#fff">EXPRESSION</span>
-    <span class="lesson-icon">💼</span>
+  <div class="card learning-card">
+  <div class="learning-header">
+    <span class="learning-badge">📚 오늘의 레슨</span>
+    <span class="learning-sub">퀴즈 전에 읽고 내용을 기억해보세요</span>
   </div>
-  <h2 class="lesson-title" style="color:#c2410c">Say 'Let's Move Forward' Like a Pro</h2>
-  <p class="lesson-subtitle">회의와 이메일에서 자주 쓰는 '진행하다' 표현 3가지</p>
-  <div class="lesson-keypoint">Korean speakers often say 'proceed' in every situation, but native English speakers use different phrases depending on context: 'move forward,' 'go ahead,' and 'take it from here' each carry a slightly different tone.</div>
-  <div class="lesson-examples"><div class="lesson-ex">
-      <div class="lesson-ex-text">"Let's move forward with the proposal and set a deadline for Friday."</div>
-      <div class="lesson-ex-note">'진행하자'는 가장 자연스러운 비즈니스 표현 — 이메일, 회의 모두 OK</div>
-    </div><div class="lesson-ex">
-      <div class="lesson-ex-text">"Please go ahead and send the contract to the client."</div>
-      <div class="lesson-ex-note">'허락을 주는' 뉘앙스 — 상대방에게 시작해도 좋다고 할 때 사용</div>
-    </div><div class="lesson-ex">
-      <div class="lesson-ex-text">"I'll take it from here — thank you for the update."</div>
-      <div class="lesson-ex-note">'제가 이어서 하겠습니다' — 책임을 넘겨받을 때 쓰는 자신감 있는 표현</div>
-    </div></div>
-  <div class="lesson-tip">💡 이 세 표현을 상황에 맞게 바꿔 쓰면 훨씬 자연스럽게 들립니다. 오늘 업무 이메일 한 통에 'move forward'를 한 번 써보세요!</div>
-  <div class="lesson-remember" style="border-color:#fb923c;color:#c2410c">🧠 '진행' = move forward (계획), go ahead (허락), take it from here (인수인계)</div>
+  <div class="learn-section" style="border-left-color:#8b5cf6">
+  <div class="learn-tag" style="background:#8b5cf6">🔤 문법</div>
+  <div class="learn-topic">Noun Clauses and Embedded Questions <span class="learn-topic-kr">(명사절과 간접의문문)</span></div>
+  <div class="learn-rule">오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.</div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">✅ I have worked here for five years.<span class="learn-ex-kr">나는 여기서 5년간 일했다 (지금도 재직 중).</span></div>
+    <div class="learn-ex learn-ex-bad">❌ I worked here for five years. (implies no longer working)<span class="learn-ex-kr">이미 그만뒀을 때 사용.</span></div>
+  </div>
+  <div class="learn-remember">💡 경험·결과 → 현재완료</div>
+</div>
+  <div class="learn-section" style="border-left-color:#0ea5e9">
+  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기 스크립트</div>
+  <div class="learn-topic">Merriam-Webster Word of the Day <span class="learn-topic-kr">— MacGyver</span></div>
+  <div class="learn-script">
+    <div class="learn-script-en">🇬🇧 Hey, did you see that video where someone MacGyvered a phone stand from just a paperclip and a pencil? It's actually pretty clever. My coworker does this all the time at the office—she'll improvise solutions with whatever materials she finds nearby instead of buying new things. I think it's a smart way to be resourceful and save money.</div>
+    <div class="learn-script-kr">🇰🇷 저기, 누군가가 클립과 연필만으로 휴대폰 거치대를 만든 영상 봤어? 정말 똑똑한데. 우리 동료는 사무실에서 항상 이렇게 해—새로운 물건을 사는 대신 주변에 있는 재료로 해결책을 즉흥적으로 만들어. 나는 이게 자원을 잘 활용하고 돈을 절약하는 똑똑한 방법이라고 생각해.</div>
+  </div>
+  <div class="learn-vocab">📝 핵심 어휘: MacGyver — 즉흥적으로 만들다, 응급으로 해결하다; improvise — 즉흥적으로 하다, 급할 때 대처하다</div>
+</div>
+  <div class="learn-section" style="border-left-color:#f59e0b">
+  <div class="learn-tag" style="background:#f59e0b">💼 비즈니스</div>
+  <div class="learn-topic">"Let's circle back" <span class="learn-topic-kr">— 나중에 다시 돌아오다</span></div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">💬 Let's circle back on the budget after the Q2 data arrives.<span class="learn-ex-kr">Q2 데이터가 나오면 예산 건으로 다시 돌아오죠.</span></div>
+  </div>
+  <div class="learn-remember">📌 회의 중 결론을 잠시 보류할 때</div>
+</div>
+  <div class="learn-section" style="border-left-color:#22c55e">
+  <div class="learn-tag" style="background:#22c55e">📖 독해 전략</div>
+  <div class="learn-topic">Topic Sentence 스캔</div>
+  <div class="learn-rule">각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.</div>
+  <div class="learn-remember">📊 인지심리학 연구에 따르면 '스키마(schema)' 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.</div>
+</div>
+  <div class="learn-section" style="border-left-color:#10b981">
+  <div class="learn-tag" style="background:#10b981">🌱 어원</div>
+  <div class="learn-topic">"company" <span class="learn-topic-kr">— 회사, 동료</span></div>
+  <div class="learn-rule">라틴어 com + panis (함께 빵을)</div>
+  <div class="learn-script"><div class="learn-script-kr">같이 빵을 나눠 먹는 동료에서 유래. companion(동료)과 동근</div></div>
+  <div class="learn-remember">💡 어원 스토리를 이미지로 상상하면 오래 기억됩니다.</div>
+</div>
 </div>
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
       <span>진행률</span>
-      <span id="progressText">0 / 15 문항</span>
+      <span id="progressText">0 / 11 문항</span>
     </div>
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -265,179 +296,59 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
     <div>
       <div class="section-title" style="color:#0ea5e9">
         Listening · Short
-        <span class="duration-badge">약 1-3분</span>
+        <span class="duration-badge">약 2-3분</span>
       </div>
-      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nq8ms9">BBC Learning English Stories</a> · Classic Stories: A Tale of Two Cities</div>
+      <div class="section-source"><a class="src-link" href="https://www.merriam-webster.com/word-of-the-day/macgyver-2026-06-07">Merriam-Webster Word of the Day</a> · MacGyver</div>
     </div>
   </div>
   <div class="audio-box">
-      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 1-3분)</p>
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 2-3분)</p>
       <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nq8lmp.mp3" type="audio/mpeg">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nq8lmp.mp3" type="audio/mp4">
-        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nq8lmp.mp3" target="_blank">음성 파일 직접 열기</a>
+        <source src="https://rss.art19.com/episodes/a0c27d7d-0872-421f-b935-4a38bdaf3f31.mp3" type="audio/mpeg">
+        <source src="https://rss.art19.com/episodes/a0c27d7d-0872-421f-b935-4a38bdaf3f31.mp3" type="audio/mp4">
+        <a href="https://rss.art19.com/episodes/a0c27d7d-0872-421f-b935-4a38bdaf3f31.mp3" target="_blank">음성 파일 직접 열기</a>
       </audio>
     </div>
   <div class="question" id="q0">
   <div class="q-text">
     <span class="q-num">1</span>
-    What does the speaker say about learning English through stories?
-    <span class="q-level" style="background:#6ee7b7">A2</span>
+    Listen to the conversation between two coworkers about fixing a broken printer. What does Sarah suggest doing?
+    <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Stories are too difficult for beginners</span>
+    <span class="opt-text">Call the IT department immediately</span>
   </button><button class="opt" data-q="0" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">Stories help you learn English in a fun and enjoyable way</span>
+    <span class="opt-text">Try to repair it using available materials before calling for help</span>
   </button><button class="opt" data-q="0" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">You should only learn English from textbooks</span>
+    <span class="opt-text">Buy new equipment to replace the broken printer</span>
   </button><button class="opt" data-q="0" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Stories are not useful for learning vocabulary</span>
+    <span class="opt-text">Ask Tom to find the instruction manual</span>
   </button></div>
-  <div class="expl" id="expl0" style="display:none">💬 텍스트에서 'Enjoy a classic story in English'라고 시작하며, BBC Learning English가 이야기를 통해 영어를 즐겁게 배우도록 권장하고 있습니다. A는 반대 의견, C와 D는 문맥상 틀린 주장입니다.</div>
+  <div class="expl" id="expl0" style="display:none">💬 Sarah가 'MacGyver something'을 하겠다고 하며 자신의 책상에 있는 낡은 케이블과 테이프를 사용하려고 한다. MacGyver는 손에 있는 편리한 재료로 무언가를 수리하는 것을 의미하므로 정답은 B. A는 Sarah가 먼저 시도해보겠다고 했으므로 틀림. C와 D는 대화 내용과 맞지 않음.</div>
 </div><div class="question" id="q1">
   <div class="q-text">
     <span class="q-num">2</span>
-    How many uses of 'time' can you learn from this story according to the material?
-    <span class="q-level" style="background:#6ee7b7">A2</span>
+    Listen to a description of how a student solved a problem during a camping trip. What was the student trying to do?
+    <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
   <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">10 uses</span>
+    <span class="opt-text">Find a new tent to replace the broken one</span>
   </button><button class="opt" data-q="1" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">12 uses</span>
+    <span class="opt-text">Create a quick fix for the broken tent zipper using items he had with him</span>
   </button><button class="opt" data-q="1" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">15 uses</span>
+    <span class="opt-text">Call someone to bring repair tools from home</span>
   </button><button class="opt" data-q="1" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">20 uses</span>
+    <span class="opt-text">Sleep outside without using a tent</span>
   </button></div>
-  <div class="expl" id="expl1" style="display:none">💬 텍스트에 명확히 'learn 15 uses of time'이라고 표시되어 있습니다. A, B, D는 모두 잘못된 숫자들입니다. 정확한 숫자를 찾는 기본 청취 이해력 문제입니다.</div>
-</div>
-</div><div class="card section-card">
-  <div class="section-header">
-    <div class="section-icon-wrap" style="background:#bae6fd">🎵</div>
-    <div>
-      <div class="section-title" style="color:#0284c7">
-        Listening · Medium
-        <span class="duration-badge">약 4-7분</span>
-      </div>
-      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/w3ct6yg7">BBC Business Daily</a> · How science got here, and where next</div>
-    </div>
-  </div>
-  <div class="audio-box">
-      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 4-7분)</p>
-      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0mcsf3v.mp3" type="audio/mpeg">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0mcsf3v.mp3" type="audio/mp4">
-        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0mcsf3v.mp3" target="_blank">음성 파일 직접 열기</a>
-      </audio>
-    </div>
-  <div class="question" id="q2">
-  <div class="q-text">
-    <span class="q-num">3</span>
-    What is the main concern discussed in this BBC Business Daily episode?
-    <span class="q-level" style="background:#93c5fd">B1</span>
-  </div>
-  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
-    <span class="opt-letter">A</span>
-    <span class="opt-text">How to improve funding for scientific research projects</span>
-  </button><button class="opt" data-q="2" data-l="B" type="button">
-    <span class="opt-letter">B</span>
-    <span class="opt-text">The challenge of maintaining evidence-based policy when anti-science sentiment is growing</span>
-  </button><button class="opt" data-q="2" data-l="C" type="button">
-    <span class="opt-letter">C</span>
-    <span class="opt-text">The differences between various scientific research methodologies</span>
-  </button><button class="opt" data-q="2" data-l="D" type="button">
-    <span class="opt-letter">D</span>
-    <span class="opt-text">Why scientists are leaving their jobs in large numbers</span>
-  </button></div>
-  <div class="expl" id="expl2" style="display:none">💬 참고 텍스트에서 'anti-science leaves research reeling'과 'evidence-based policy in a scientific society'라는 핵심 표현이 주제를 나타냅니다. A는 자금 문제만 언급되지 않음, C는 방법론 차이는 다루지 않음, D는 과장된 해석입니다.</div>
-</div><div class="question" id="q3">
-  <div class="q-text">
-    <span class="q-num">4</span>
-    According to the episode, what do the panelists aim to explore?
-    <span class="q-level" style="background:#93c5fd">B1</span>
-  </div>
-  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
-    <span class="opt-letter">A</span>
-    <span class="opt-text">The historical development of scientific organizations worldwide</span>
-  </button><button class="opt" data-q="3" data-l="B" type="button">
-    <span class="opt-letter">B</span>
-    <span class="opt-text">The sources and motivations behind the current anti-science sentiment</span>
-  </button><button class="opt" data-q="3" data-l="C" type="button">
-    <span class="opt-letter">C</span>
-    <span class="opt-text">Government policies that restrict scientific research activities</span>
-  </button><button class="opt" data-q="3" data-l="D" type="button">
-    <span class="opt-letter">D</span>
-    <span class="opt-text">The best universities for training future scientists</span>
-  </button></div>
-  <div class="expl" id="expl3" style="display:none">💬 텍스트에서 'discuss some of the sources and motivations that perhaps belie the current state of scientific affairs'로 명확히 명시되어 있습니다. A는 역사적 발전, C는 제한 정책, D는 대학 교육에 관한 것으로 실제 토론 주제와 맞지 않습니다.</div>
-</div>
-</div><div class="card section-card">
-  <div class="section-header">
-    <div class="section-icon-wrap" style="background:#7dd3fc">🎙️</div>
-    <div>
-      <div class="section-title" style="color:#0369a1">
-        Listening · Long
-        <span class="duration-badge">약 8-15분</span>
-      </div>
-      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nmv7k9">BBC 6 Minute English</a> · The News Quiz Ep7. Heat and NEETs</div>
-    </div>
-  </div>
-  <div class="audio-box">
-      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 8-15분)</p>
-      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0np2cjg.mp3" type="audio/mpeg">
-        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0np2cjg.mp3" type="audio/mp4">
-        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss/proto/http/vpid/p0np2cjg.mp3" target="_blank">음성 파일 직접 열기</a>
-      </audio>
-    </div>
-  <div class="question" id="q4">
-  <div class="q-text">
-    <span class="q-num">5</span>
-    What is the main purpose of Andy Zaltzman's panel show described in the text?
-    <span class="q-level" style="background:#c4b5fd">B2</span>
-  </div>
-  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
-    <span class="opt-letter">A</span>
-    <span class="opt-text">To provide serious political analysis and policy recommendations</span>
-  </button><button class="opt" data-q="4" data-l="B" type="button">
-    <span class="opt-letter">B</span>
-    <span class="opt-text">To use humor and satire to discuss and critique current political issues</span>
-  </button><button class="opt" data-q="4" data-l="C" type="button">
-    <span class="opt-letter">C</span>
-    <span class="opt-text">To interview politicians about their personal spending habits</span>
-  </button><button class="opt" data-q="4" data-l="D" type="button">
-    <span class="opt-letter">D</span>
-    <span class="opt-text">To educate young people about unemployment statistics</span>
-  </button></div>
-  <div class="expl" id="expl4" style="display:none">💬 텍스트에서 'panel of political satirists'와 'unpack the critical essays'라는 표현으로 보아, 정치적 풍자를 통해 현안들을 분석하는 것이 목적임. A는 너무 진지한 톤, C는 일부 주제일 뿐 전체 목적이 아님, D는 부분적 내용으로 주된 목적이 아님.</div>
-</div><div class="question" id="q5">
-  <div class="q-text">
-    <span class="q-num">6</span>
-    Based on the topics mentioned, which statement best reflects what the show covers?
-    <span class="q-level" style="background:#c4b5fd">B2</span>
-  </div>
-  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
-    <span class="opt-letter">A</span>
-    <span class="opt-text">Only economic issues related to the SNP and government spending</span>
-  </button><button class="opt" data-q="5" data-l="B" type="button">
-    <span class="opt-letter">B</span>
-    <span class="opt-text">A range of contemporary issues including politics, social concerns, and environmental matters</span>
-  </button><button class="opt" data-q="5" data-l="C" type="button">
-    <span class="opt-letter">C</span>
-    <span class="opt-text">Exclusively the personal financial records of political figures</span>
-  </button><button class="opt" data-q="5" data-l="D" type="button">
-    <span class="opt-letter">D</span>
-    <span class="opt-text">Detailed interviews with young unemployed people about their job search experiences</span>
-  </button></div>
-  <div class="expl" id="expl5" style="display:none">💬 텍스트에서 언급된 주제들(Tony Blair의 에세이, SNP 지출, 고온, 미디어 금지 제안, 청년 실업)을 보면 정치·사회·환경 등 다양한 현안을 다룸. A는 경제 이슈만 강조, C는 전체 내용의 극히 일부, D는 텍스트에 명시되지 않은 인터뷰 형식을 가정함.</div>
+  <div class="expl" id="expl1" style="display:none">💬 아들이 텐트 지퍼를 'MacGyver'했으며, 백팩에 있던 안전핀과 로프를 사용해서 문제를 해결했다. MacGyver는 주변에 있는 물건으로 빠르게 수리하는 것을 의미하므로 정답은 B. A는 텐트를 교체하는 것이 아니고, C는 집에서 도구를 가져오지 않았으며, D는 텐트를 사용했으므로 모두 틀림.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -448,66 +359,66 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
     </div>
   </div>
   
-  <div class="question" id="q6">
+  <div class="question" id="q2">
   <div class="q-text">
-    <span class="q-num">7</span>
-    If you _____ more attention in the meeting yesterday, you would understand the project now.
+    <span class="q-num">3</span>
+    I need to know _______ the meeting starts tomorrow.
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">paid</span>
-  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-text">what time</span>
+  </button><button class="opt" data-q="2" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">had paid</span>
-  </button><button class="opt" data-q="6" data-l="C" type="button">
+    <span class="opt-text">what</span>
+  </button><button class="opt" data-q="2" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">would pay</span>
-  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-text">which time</span>
+  </button><button class="opt" data-q="2" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">pay</span>
+    <span class="opt-text">when time</span>
   </button></div>
-  <div class="expl" id="expl6" style="display:none">💬 과거에 하지 않은 일(과거)이 현재 결과(현재)에 영향을 미치는 혼합 가정법입니다. 조건절은 과거완료(had + p.p.), 결과절은 현재 상태를 나타내는 would + 동사원형을 사용합니다.</div>
-</div><div class="question" id="q7">
+  <div class="expl" id="expl2" style="display:none">💬 간접의문문에서 '몇 시에'는 'what time'으로 표현합니다. 'when time'은 문법적으로 틀렸고, 'what'만으로는 시간을 명확히 물을 수 없습니다.</div>
+</div><div class="question" id="q3">
   <div class="q-text">
-    <span class="q-num">8</span>
-    If the company _____ invested in new technology five years ago, they wouldn't be struggling with outdated systems today.
+    <span class="q-num">4</span>
+    Could you explain _______ the deadline was missed by the project team?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">would have</span>
-  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-text">why</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">had</span>
-  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-text">that why</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">has</span>
-  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-text">the reason why</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">would</span>
+    <span class="opt-text">what why</span>
   </button></div>
-  <div class="expl" id="expl7" style="display:none">💬 혼합 가정법에서 과거 조건을 나타낼 때는 had + p.p. 형태를 사용합니다. 'had invested'로 조건절을 완성하면 현재의 부정적 결과('wouldn't be struggling')와 논리적으로 연결됩니다.</div>
-</div><div class="question" id="q8">
+  <div class="expl" id="expl3" style="display:none">💬 간접의문문에서 단순히 'why'만 사용하면 됩니다. 'that why'는 문법적 오류이며, 'the reason why'를 사용하면 'the reason that' 구문이 되어 중복입니다.</div>
+</div><div class="question" id="q4">
   <div class="q-text">
-    <span class="q-num">9</span>
-    Which sentence correctly expresses that a past action could have changed the current situation?
+    <span class="q-num">5</span>
+    The HR department is investigating _______ the employee's contract was terminated without proper notification, which may have violated company policy.
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">If they signed the contract earlier, they would face fewer problems now.</span>
-  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-text">how come</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">If they had signed the contract earlier, they would face fewer problems now.</span>
-  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-text">the way</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">If they would have signed the contract earlier, they would face fewer problems now.</span>
-  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-text">how that</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">If they had signed the contract earlier, they would have faced fewer problems now.</span>
+    <span class="opt-text">in what manner</span>
   </button></div>
-  <div class="expl" id="expl8" style="display:none">💬 혼합 가정법은 조건절(과거)과 결과절(현재)의 시제가 다릅니다. 'had signed'(과거완료)는 과거 행동, 'would face'(현재 상태)는 현재 결과를 나타냅니다. C는 불가능한 구조, D는 둘 다 과거를 나타내므로 혼합 가정법이 아닙니다.</div>
+  <div class="expl" id="expl4" style="display:none">💬 'How come'은 비즈니스 문맥에서 '왜'의 의미로 간접의문문에 사용됩니다. 'how that'은 부정확하며, 'the way'나 'in what manner'는 '방식'을 묻는 표현으로 맥락에 맞지 않습니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -518,78 +429,66 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
     </div>
   </div>
   
-  <div class="question" id="q9">
+  <div class="question" id="q5">
   <div class="q-text">
-    <span class="q-num">10</span>
-    Read the text and answer the question.
-
-'Sarah works at a coffee shop. She starts work at 8 AM every day. She makes coffee and serves customers. On weekends, she also cleans the shop. Sarah enjoys her job because she likes meeting new people.'
-
-What time does Sarah start work?
+    <span class="q-num">6</span>
+    What time does Sarah arrive at the coffee shop?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">7 AM</span>
-  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-text">At 5 AM</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">8 AM</span>
-  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-text">At 6 AM</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">9 AM</span>
-  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-text">At 7 AM</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">10 AM</span>
+    <span class="opt-text">At 8 AM</span>
   </button></div>
-  <div class="expl" id="expl9" style="display:none">💬 텍스트에 'She starts work at 8 AM every day'라고 명시되어 있습니다. A2 수준의 직접 정보 찾기 문제입니다.</div>
-</div><div class="question" id="q10">
+  <div class="expl" id="expl5" style="display:none">💬 텍스트에서 'Every morning, she arrives at 6 AM'이라고 명시되어 있습니다. A, C, D는 모두 텍스트에 없는 시간입니다.</div>
+</div><div class="question" id="q6">
   <div class="q-text">
-    <span class="q-num">11</span>
-    Read the text and answer the question.
-
-'Remote work has changed how companies operate. Many businesses now allow employees to work from home two or three days a week. This flexibility helps workers save time on commuting and spend more time with their families. However, some managers worry that employees may not be as productive at home. Despite these concerns, most companies have found that remote workers actually complete their tasks on time.'
-
-Why are some managers worried about remote work?
+    <span class="q-num">7</span>
+    According to the text, what is a disadvantage of flexible work hours?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">Employees spend too much time with their families</span>
-  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-text">Employees become less productive</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">They think employees might not work as effectively from home</span>
-  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-text">It cannot be applied to all types of jobs</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">Workers save too much time on commuting</span>
-  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-text">Workers don't like to choose their own schedule</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">Employees complete tasks too slowly</span>
+    <span class="opt-text">Companies lose money by offering this benefit</span>
   </button></div>
-  <div class="expl" id="expl10" style="display:none">💬 'managers worry that employees may not be as productive at home'에서 managers의 우려는 '생산성 저하 가능성'입니다. A는 가족 시간이 좋은 것이고, C는 장점, D는 실제와 맞지 않습니다.</div>
-</div><div class="question" id="q11">
+  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 'not all jobs allow this flexibility, especially in customer service and retail sectors'라고 명시되어 있습니다. A는 반대로 65%가 더 생산적이라고 했고, C는 근거가 없으며, D도 제시되지 않았습니다.</div>
+</div><div class="question" id="q7">
   <div class="q-text">
-    <span class="q-num">12</span>
-    Read the text and answer the question.
-
-'The rise of artificial intelligence in customer service has sparked debate in the business world. While AI chatbots can handle routine inquiries efficiently and reduce operational costs, critics argue that over-reliance on automation may erode the human touch that customers value. Some companies have found a middle ground by using AI to filter and categorize customer questions before directing complex issues to human agents. This hybrid approach maintains service quality while still improving efficiency.'
-
-What does the text suggest about the 'hybrid approach'?
+    <span class="q-num">8</span>
+    What does the author suggest companies should do to address the negative effects of remote work?
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="11" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">It completely eliminates the need for human customer service agents</span>
-  </button><button class="opt" data-q="11" data-l="B" type="button">
+    <span class="opt-text">Return to traditional office-based work entirely</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">It prioritizes customer satisfaction over cost reduction</span>
-  </button><button class="opt" data-q="11" data-l="C" type="button">
+    <span class="opt-text">Reduce the number of employees working remotely</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">It combines AI and human resources to balance efficiency with service quality</span>
-  </button><button class="opt" data-q="11" data-l="D" type="button">
+    <span class="opt-text">Establish communication protocols and schedule regular video meetings</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">It proves that AI chatbots are more effective than human agents</span>
+    <span class="opt-text">Allow employees to work whenever and wherever they want</span>
   </button></div>
-  <div class="expl" id="expl11" style="display:none">💬 텍스트의 마지막 문장 'maintains service quality while still improving efficiency'에서 hybrid approach가 효율성과 서비스 품질 두 가지를 동시에 달성함을 보여줍니다. A는 과장, B는 비용을 완전히 무시, D는 근거 없는 주장입니다.</div>
+  <div class="expl" id="expl7" style="display:none">💬 텍스트 마지막 문장에서 'Companies must therefore strike a balance by implementing clear communication protocols and encouraging regular video meetings'이라고 명시되어 있습니다. A는 완전한 복귀를 제시하는데 텍스트는 균형을 강조하고, B는 직원 수 감소에 대한 언급이 없으며, D는 오리엔테이션이 없다는 점과 모순됩니다.</div>
 </div>
 </div><div class="card section-card">
   <div class="section-header">
@@ -601,8 +500,8 @@ What does the text suggest about the 'hybrid approach'?
   </div>
   <div class="shadow-box">
       <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트</div>
-      <p class="shadow-text" id="shadowScript0">We're like moths to a flame when it comes to new technology. Everyone in the office is attracted to innovative solutions.</p>
-      <p class="shadow-tip">🔊 'attracted to'에서 /əˈtræktɪd tə/로 연음되니 'əˈtræktɪ tə'처럼 자연스럽게 읽으세요.</p>
+      <p class="shadow-text" id="shadowScript0">I think she's a moth to the flame when it comes to that new project. She's completely drawn to it, even though it might not be the best idea for her career.</p>
+      <p class="shadow-tip">🔊 'drawn to'를 '드론투'로 발음하되, 'to'의 t를 약하게 발음하여 연음 효과를 주세요.</p>
 
       <div class="record-box">
         <div class="record-title">🎙️ 발음 녹음 & 체크</div>
@@ -621,66 +520,66 @@ What does the text suggest about the 'hybrid approach'?
         <div id="recFeedback0" class="rec-feedback"></div>
       </div>
     </div>
-  <div class="question" id="q12">
+  <div class="question" id="q8">
   <div class="q-text">
-    <span class="q-num">13</span>
-    직장에서 동료가 새로운 프로젝트에 모두가 관심을 보이는 상황을 설명할 때, 'moth' 표현을 사용하여 무엇이라고 말할까요?
+    <span class="q-num">9</span>
+    비즈니스 미팅에서 동료가 위험한 프로젝트에 계속 끌려가는 상황을 설명하고 싶습니다. 가장 적절한 표현은?
     <span class="q-level" style="background:#6ee7b7">A2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="12" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">We're all like moths to a flame about this new project.</span>
-  </button><button class="opt" data-q="12" data-l="B" type="button">
+    <span class="opt-text">He's a moth to the flame about that risky investment.</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">We're all like light sources to this new project.</span>
-  </button><button class="opt" data-q="12" data-l="C" type="button">
+    <span class="opt-text">He's a butterfly to the flower about that risky investment.</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">We're all wings of the project.</span>
-  </button><button class="opt" data-q="12" data-l="D" type="button">
+    <span class="opt-text">He's a bee to the honey about that risky investment.</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">We're all attracted insects to this project.</span>
+    <span class="opt-text">He's a fish to the water about that risky investment.</span>
   </button></div>
-  <div class="expl" id="expl12" style="display:none">💬 'like moths to a flame'은 '불나방이 불빛에 끌리듯이'라는 관용구로, 무언가에 강하게 끌린다는 의미입니다. 이 표현은 긍정적 또는 중립적으로 사람들이 어떤 것에 자연스럽게 끌리는 상황을 설명할 때 사용됩니다.</div>
-</div><div class="question" id="q13">
+  <div class="expl" id="expl8" style="display:none">💬 'moth to the flame'은 나방이 불빛에 끌려가는 습성처럼, 위험한 것임을 알면서도 계속 끌려가는 사람을 비유하는 표현입니다. 비즈니스 상황에서 누군가가 좋지 않은 결정에 계속 유혹되는 모습을 설명할 때 자주 사용됩니다.</div>
+</div><div class="question" id="q9">
   <div class="q-text">
-    <span class="q-num">14</span>
-    'attracted to light sources' 문장에서 주로 강세가 들어가는 단어는 어디입니까?
+    <span class="q-num">10</span>
+    다음 문장에서 자연스러운 발음·억양을 위해 강세가 들어가야 할 단어는?
     <span class="q-level" style="background:#93c5fd">B1</span>
   </div>
-  <div class="opts"><button class="opt" data-q="13" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">AT-tracted to LIGHT sources</span>
-  </button><button class="opt" data-q="13" data-l="B" type="button">
+    <span class="opt-text">'attracted'에만 강세</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">attracted TO light SOURCES</span>
-  </button><button class="opt" data-q="13" data-l="C" type="button">
+    <span class="opt-text">'LIGHT'와 'ATTRACTED'에 강세</span>
+  </button><button class="opt" data-q="9" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">a-TRACTED to light sources</span>
-  </button><button class="opt" data-q="13" data-l="D" type="button">
+    <span class="opt-text">'to'에만 강세</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">attracted to LIGHT SOURCES</span>
+    <span class="opt-text">'sources'에만 강세</span>
   </button></div>
-  <div class="expl" id="expl13" style="display:none">💬 의미 있는 단어(content words)인 'AT-tracted'와 'LIGHT'에 강세가 들어갑니다. 전치사 'to'와 일반명사 'sources'는 약한 강세를 받습니다. 한국인 학습자는 종종 모든 단어를 균등하게 발음하는 경향이 있으니 주의하세요.</div>
-</div><div class="question" id="q14">
+  <div class="expl" id="expl9" style="display:none">💬 'Moths are attracted to light sources'에서 핵심 의미 단어인 'LIGHT'와 'ATTRACTED'에 강세를 주면 자연스럽습니다. 특히 비유적 의미로 사용할 때 'light'(유혹/매력)의 강세가 중요하여 청자의 주의를 끌 수 있습니다.</div>
+</div><div class="question" id="q10">
   <div class="q-text">
-    <span class="q-num">15</span>
-    다음 쉐도잉 스크립트의 빈칸을 채우세요: 'So when we describe someone who is obsessed with something, we can say they are like a moth ___(1)___ the light. In business, this metaphor ___(2)___ often used when people can't resist following ___(3)___ trends or opportunities.'
+    <span class="q-num">11</span>
+    다음 쉐도잉 스크립트의 빈칸을 채우세요. "When someone is _____ to the flame, they find it difficult to resist something attractive but potentially _____ to them."
     <span class="q-level" style="background:#c4b5fd">B2</span>
   </div>
-  <div class="opts"><button class="opt" data-q="14" data-l="A" type="button">
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
     <span class="opt-letter">A</span>
-    <span class="opt-text">(1) to (2) is (3) the latest</span>
-  </button><button class="opt" data-q="14" data-l="B" type="button">
+    <span class="opt-text">attracted / harmful</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
     <span class="opt-letter">B</span>
-    <span class="opt-text">(1) attracted to (2) are (3) newest</span>
-  </button><button class="opt" data-q="14" data-l="C" type="button">
+    <span class="opt-text">drawn / dangerous</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
     <span class="opt-letter">C</span>
-    <span class="opt-text">(1) to (2) is (3) after the</span>
-  </button><button class="opt" data-q="14" data-l="D" type="button">
+    <span class="opt-text">pulled / destructive</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
     <span class="opt-letter">D</span>
-    <span class="opt-text">(1) around (2) is being (3) the most</span>
+    <span class="opt-text">magnetized / negative</span>
   </button></div>
-  <div class="expl" id="expl14" style="display:none">💬 'like a moth to the light'은 고정 관용구이고, 'is'는 이 비유적 표현(metaphor)이 현재에 사용됨을 나타냅니다. 'the latest trends'는 '최신 트렌드'의 자연스러운 표현입니다. B2 수준에서는 관용구의 정확한 형태와 문법적 일관성을 파악하는 것이 중요합니다.</div>
+  <div class="expl" id="expl10" style="display:none">💬 'drawn to the flame'은 비유적으로 사용되는 정형화된 표현으로, 첫 번째 빈칸에는 'drawn'이 정확합니다. 'dangerous'는 flame의 위험성을 나타내며, 'harmful'보다 즉각적인 위험을 강조하는 'dangerous'가 더 자연스럽습니다. 이 표현은 비즈니스에서 위험한 거래나 결정에 끌려가는 상황을 설명할 때 자주 사용됩니다.</div>
 </div>
 </div>
 
@@ -696,10 +595,10 @@ What does the text suggest about the 'hybrid approach'?
 </div>
 
 <script>
-const CORRECT  = ["B", "C", "B", "B", "B", "B", "B", "B", "B", "B", "B", "C", "A", "A", "A"];
-const EXPLS    = ["텍스트에서 'Enjoy a classic story in English'라고 시작하며, BBC Learning English가 이야기를 통해 영어를 즐겁게 배우도록 권장하고 있습니다. A는 반대 의견, C와 D는 문맥상 틀린 주장입니다.", "텍스트에 명확히 'learn 15 uses of time'이라고 표시되어 있습니다. A, B, D는 모두 잘못된 숫자들입니다. 정확한 숫자를 찾는 기본 청취 이해력 문제입니다.", "참고 텍스트에서 'anti-science leaves research reeling'과 'evidence-based policy in a scientific society'라는 핵심 표현이 주제를 나타냅니다. A는 자금 문제만 언급되지 않음, C는 방법론 차이는 다루지 않음, D는 과장된 해석입니다.", "텍스트에서 'discuss some of the sources and motivations that perhaps belie the current state of scientific affairs'로 명확히 명시되어 있습니다. A는 역사적 발전, C는 제한 정책, D는 대학 교육에 관한 것으로 실제 토론 주제와 맞지 않습니다.", "텍스트에서 'panel of political satirists'와 'unpack the critical essays'라는 표현으로 보아, 정치적 풍자를 통해 현안들을 분석하는 것이 목적임. A는 너무 진지한 톤, C는 일부 주제일 뿐 전체 목적이 아님, D는 부분적 내용으로 주된 목적이 아님.", "텍스트에서 언급된 주제들(Tony Blair의 에세이, SNP 지출, 고온, 미디어 금지 제안, 청년 실업)을 보면 정치·사회·환경 등 다양한 현안을 다룸. A는 경제 이슈만 강조, C는 전체 내용의 극히 일부, D는 텍스트에 명시되지 않은 인터뷰 형식을 가정함.", "과거에 하지 않은 일(과거)이 현재 결과(현재)에 영향을 미치는 혼합 가정법입니다. 조건절은 과거완료(had + p.p.), 결과절은 현재 상태를 나타내는 would + 동사원형을 사용합니다.", "혼합 가정법에서 과거 조건을 나타낼 때는 had + p.p. 형태를 사용합니다. 'had invested'로 조건절을 완성하면 현재의 부정적 결과('wouldn't be struggling')와 논리적으로 연결됩니다.", "혼합 가정법은 조건절(과거)과 결과절(현재)의 시제가 다릅니다. 'had signed'(과거완료)는 과거 행동, 'would face'(현재 상태)는 현재 결과를 나타냅니다. C는 불가능한 구조, D는 둘 다 과거를 나타내므로 혼합 가정법이 아닙니다.", "텍스트에 'She starts work at 8 AM every day'라고 명시되어 있습니다. A2 수준의 직접 정보 찾기 문제입니다.", "'managers worry that employees may not be as productive at home'에서 managers의 우려는 '생산성 저하 가능성'입니다. A는 가족 시간이 좋은 것이고, C는 장점, D는 실제와 맞지 않습니다.", "텍스트의 마지막 문장 'maintains service quality while still improving efficiency'에서 hybrid approach가 효율성과 서비스 품질 두 가지를 동시에 달성함을 보여줍니다. A는 과장, B는 비용을 완전히 무시, D는 근거 없는 주장입니다.", "'like moths to a flame'은 '불나방이 불빛에 끌리듯이'라는 관용구로, 무언가에 강하게 끌린다는 의미입니다. 이 표현은 긍정적 또는 중립적으로 사람들이 어떤 것에 자연스럽게 끌리는 상황을 설명할 때 사용됩니다.", "의미 있는 단어(content words)인 'AT-tracted'와 'LIGHT'에 강세가 들어갑니다. 전치사 'to'와 일반명사 'sources'는 약한 강세를 받습니다. 한국인 학습자는 종종 모든 단어를 균등하게 발음하는 경향이 있으니 주의하세요.", "'like a moth to the light'은 고정 관용구이고, 'is'는 이 비유적 표현(metaphor)이 현재에 사용됨을 나타냅니다. 'the latest trends'는 '최신 트렌드'의 자연스러운 표현입니다. B2 수준에서는 관용구의 정확한 형태와 문법적 일관성을 파악하는 것이 중요합니다."];
-const DNAMES   = ["listening", "listening", "listening", "listening", "listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
-const TOTAL    = 15;
+const CORRECT  = ["B", "B", "A", "A", "A", "B", "B", "C", "A", "B", "B"];
+const EXPLS    = ["Sarah가 'MacGyver something'을 하겠다고 하며 자신의 책상에 있는 낡은 케이블과 테이프를 사용하려고 한다. MacGyver는 손에 있는 편리한 재료로 무언가를 수리하는 것을 의미하므로 정답은 B. A는 Sarah가 먼저 시도해보겠다고 했으므로 틀림. C와 D는 대화 내용과 맞지 않음.", "아들이 텐트 지퍼를 'MacGyver'했으며, 백팩에 있던 안전핀과 로프를 사용해서 문제를 해결했다. MacGyver는 주변에 있는 물건으로 빠르게 수리하는 것을 의미하므로 정답은 B. A는 텐트를 교체하는 것이 아니고, C는 집에서 도구를 가져오지 않았으며, D는 텐트를 사용했으므로 모두 틀림.", "간접의문문에서 '몇 시에'는 'what time'으로 표현합니다. 'when time'은 문법적으로 틀렸고, 'what'만으로는 시간을 명확히 물을 수 없습니다.", "간접의문문에서 단순히 'why'만 사용하면 됩니다. 'that why'는 문법적 오류이며, 'the reason why'를 사용하면 'the reason that' 구문이 되어 중복입니다.", "'How come'은 비즈니스 문맥에서 '왜'의 의미로 간접의문문에 사용됩니다. 'how that'은 부정확하며, 'the way'나 'in what manner'는 '방식'을 묻는 표현으로 맥락에 맞지 않습니다.", "텍스트에서 'Every morning, she arrives at 6 AM'이라고 명시되어 있습니다. A, C, D는 모두 텍스트에 없는 시간입니다.", "텍스트에서 'not all jobs allow this flexibility, especially in customer service and retail sectors'라고 명시되어 있습니다. A는 반대로 65%가 더 생산적이라고 했고, C는 근거가 없으며, D도 제시되지 않았습니다.", "텍스트 마지막 문장에서 'Companies must therefore strike a balance by implementing clear communication protocols and encouraging regular video meetings'이라고 명시되어 있습니다. A는 완전한 복귀를 제시하는데 텍스트는 균형을 강조하고, B는 직원 수 감소에 대한 언급이 없으며, D는 오리엔테이션이 없다는 점과 모순됩니다.", "'moth to the flame'은 나방이 불빛에 끌려가는 습성처럼, 위험한 것임을 알면서도 계속 끌려가는 사람을 비유하는 표현입니다. 비즈니스 상황에서 누군가가 좋지 않은 결정에 계속 유혹되는 모습을 설명할 때 자주 사용됩니다.", "'Moths are attracted to light sources'에서 핵심 의미 단어인 'LIGHT'와 'ATTRACTED'에 강세를 주면 자연스럽습니다. 특히 비유적 의미로 사용할 때 'light'(유혹/매력)의 강세가 중요하여 청자의 주의를 끌 수 있습니다.", "'drawn to the flame'은 비유적으로 사용되는 정형화된 표현으로, 첫 번째 빈칸에는 'drawn'이 정확합니다. 'dangerous'는 flame의 위험성을 나타내며, 'harmful'보다 즉각적인 위험을 강조하는 'dangerous'가 더 자연스럽습니다. 이 표현은 비즈니스에서 위험한 거래나 결정에 끌려가는 상황을 설명할 때 자주 사용됩니다."];
+const DNAMES   = ["listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL    = 11;
 const TODAY    = "2026-06-08";
 const AS_URL   = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
 const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
