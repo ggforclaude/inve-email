@@ -1,14 +1,14 @@
 """
 Improve_Eng/question_generator.py
-Claude API로 영역별 문제와 오답 분석을 생성합니다.
+Claude API로 영역별 문제와 학습 콘텐츠를 생성합니다.
 
-듣기 구조 변경:
-  content["listening"] = [short_item, medium_item, long_item]
-  questions["listening"] = [{"audio": item, "questions": [...]}, ...]  (각 2문항)
+듣기 구조: SHORT 클립 1개 × 2문항 (기존 3-티어 → 단일 클립으로 축소)
+문제 총합: 듣기 2 + 문법 3 + 독해 3 + 말하기 3 = 11문항
 
-피드백 구조:
-  generate_wrong_analysis()        → 당일 인라인 짧은 설명 (기존 유지)
-  generate_detailed_wrong_analysis() → 다음날 상세 피드백 (HTML for page + text for Telegram)
+신규 함수:
+  generate_listening_script()  → 듣기 영문 + 한글 스크립트
+  generate_daily_learning()    → 5영역 학습 콘텐츠 (문법/듣기/비즈니스/독해/어원)
+    - 학습 연구 기반: 분산학습(SRS) + 교차연습(Interleaving) + 회상훈련(Retrieval practice)
 """
 import anthropic
 import json
@@ -27,11 +27,9 @@ DOMAIN_KR = {
     "speaking":  "말하기",
 }
 
-TIER_LABEL = {"short": "Short (~3분)", "medium": "Medium (~6분)", "long": "Long (~15분)"}
-
 
 def _adaptive_mix(current_level: str, n: int = 2) -> list[tuple[str, int]]:
-    """현재 레벨 1문항 + 상위 레벨 n-1문항."""
+    """현재 레벨 1문항 + 상위 레벨 n-1문항 (i+1 Input Hypothesis)."""
     idx      = LEVEL_ORDER.index(current_level) if current_level in LEVEL_ORDER else 1
     next_lvl = LEVEL_ORDER[min(idx + 1, len(LEVEL_ORDER) - 1)]
     if n == 1:
@@ -43,7 +41,7 @@ BASELINE_MIX_3 = [("A2", 1), ("B1", 1), ("B2", 1)]
 BASELINE_MIX_2 = [("B1", 1), ("B2", 1)]
 
 
-# ── 메인 진입점 ──────────────────────────────────────────────────────────────
+# ── 메인: 문제 생성 ───────────────────────────────────────────────────────────
 
 async def generate_all_questions(
     content: dict,
@@ -51,28 +49,26 @@ async def generate_all_questions(
     is_baseline: bool,
     day_number: int,
 ) -> dict:
-    """4개 영역 문제 생성. 듣기는 3-티어 각 2문항, 나머지 각 3문항."""
+    """11문항 생성: 듣기 2 + 문법 3 + 독해 3 + 말하기 3.
+    content["listening"]은 단일 dict (리스트 아님).
+    """
     results = {}
 
-    # 듣기: 3개 오디오 각각 2문항
-    listening_groups = []
-    tier_levels = {"short": "A2", "medium": "B1", "long": "B2"} if is_baseline else {}
-    for audio_item in content.get("listening", []):
-        tier = audio_item.get("tier", "medium")
-        if is_baseline:
-            mix = [( tier_levels.get(tier, "B1"), 2)]
-        else:
-            lvl = current_levels.get("listening", "B1")
-            mix = _adaptive_mix(lvl, n=2)
-        try:
-            qs = await _gen_content_questions("listening", audio_item, mix)
-        except Exception as e:
-            log.error(f"[listening-{tier}] 문제 생성 실패: {e}")
-            qs = _fallback_questions("listening")[:2]
-        listening_groups.append({"audio": audio_item, "questions": qs})
-    results["listening"] = listening_groups
+    # 듣기: 단일 SHORT 클립 × 2문항
+    audio_item = content.get("listening", {})
+    if is_baseline:
+        listen_mix = [("B1", 2)]
+    else:
+        lvl = current_levels.get("listening", "B1")
+        listen_mix = _adaptive_mix(lvl, n=2)
+    try:
+        qs = await _gen_content_questions("listening", audio_item, listen_mix)
+    except Exception as e:
+        log.error(f"[listening] 문제 생성 실패: {e}")
+        qs = _fallback_questions("listening")[:2]
+    results["listening"] = {"audio": audio_item, "questions": qs}
 
-    # 문법 / 독해 / 말하기
+    # 문법 / 독해 / 말하기 (각 3문항)
     for domain in ["grammar", "reading", "speaking"]:
         mix = BASELINE_MIX_3 if is_baseline else _adaptive_mix(
             current_levels.get(domain, "B1"), n=3
@@ -91,7 +87,197 @@ async def generate_all_questions(
     return results
 
 
-# ── 오답 분석 ────────────────────────────────────────────────────────────────
+# ── 듣기 스크립트 생성 ────────────────────────────────────────────────────────
+
+async def generate_listening_script(audio_item: dict) -> dict:
+    """오디오 클립에 대한 영문 + 한글 스크립트 생성.
+    RSS 텍스트를 기반으로 2-4문장 스크립트를 만들고, 한글 번역을 제공.
+    Returns: {"script_en": str, "script_kr": str, "key_vocab": str}
+    """
+    title   = audio_item.get("title", "Daily English Practice")
+    source  = audio_item.get("source", "")
+    text    = audio_item.get("text", "")
+
+    prompt = f"""You are creating a listening comprehension script for a Korean adult learning English.
+
+Source: {source}
+Title: {title}
+Reference text (may be partial or empty):
+{text[:800] if text else "(No reference text — create an appropriate short script)"}
+
+Task: Write a SHORT listening script (2-4 sentences, ~60-80 words) that:
+1. Is natural spoken English (not formal writing)
+2. Contains 1-2 useful business or daily vocabulary words
+3. Is based on the reference text topic (if available)
+4. Is at B1-B2 level
+
+Return ONLY valid JSON:
+{{
+  "script_en": "Full English script here (2-4 sentences, natural spoken style)",
+  "script_kr": "정확한 한국어 번역 (직역이 아닌 자연스러운 번역)",
+  "key_vocab": "핵심 어휘 1-2개: word1 — 한국어 뜻; word2 — 한국어 뜻"
+}}"""
+
+    try:
+        resp = _client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw   = resp.content[0].text.strip()
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        return json.loads(raw[start:end])
+    except Exception as e:
+        log.warning(f"listening_script 생성 실패: {e}")
+        return {
+            "script_en": "Today we're looking at a common English expression used in business settings. "
+                         "When someone says 'Let's take this offline,' they mean continuing a conversation "
+                         "privately, outside the current meeting.",
+            "script_kr": "오늘은 비즈니스 환경에서 자주 쓰이는 영어 표현을 살펴봅니다. "
+                         "'Let's take this offline'은 현재 회의 밖에서, "
+                         "즉 개인적으로 대화를 이어가자는 의미입니다.",
+            "key_vocab": "offline — 회의 밖에서 (오프라인 X); take [something] offline — 나중에 따로 논의하다",
+        }
+
+
+# ── 5영역 학습 콘텐츠 생성 ────────────────────────────────────────────────────
+
+async def generate_daily_learning(
+    grammar_info: dict,
+    listening_item: dict,
+    listening_script: dict,
+    etymology: dict,
+    current_levels: dict,
+    day_number: int,
+) -> dict:
+    """5영역 학습 콘텐츠 생성 (학습 연구 기반 설계).
+
+    설계 원칙:
+    - Spaced Repetition (Ebbinghaus): 새 내용 소개 후 다음 날 퀴즈로 회상
+    - Interleaved Practice (Kornell & Bjork 2008): 매일 다른 문법 카테고리
+    - Input Hypothesis (Krashen): 현재 레벨 +1 수준의 입력 (comprehensible input)
+    - Elaborative Interrogation: 왜 그런지 설명 포함 (어원, 규칙 이유)
+
+    Returns: {grammar, listening, business, reading, etymology} 각 섹션 dict
+    """
+    avg_level = "B1"
+    if current_levels:
+        level_vals = {"A2": 0, "B1": 1, "B2": 2, "C1": 3}
+        avg = sum(level_vals.get(v, 1) for v in current_levels.values()) / len(current_levels)
+        avg_level = ["A2", "B1", "B2", "C1"][round(avg)]
+
+    grammar_topic    = grammar_info.get("topic", "")
+    grammar_topic_kr = grammar_info.get("korean", "")
+    listen_title     = listening_item.get("title", "")
+    listen_source    = listening_item.get("source", "")
+
+    prompt = f"""You are an expert English coach for Korean business professionals.
+Current level: ~{avg_level} | Day: {day_number}
+Today's grammar topic: {grammar_topic} ({grammar_topic_kr})
+Today's listening: "{listen_title}" from {listen_source}
+Etymology word: {etymology.get('word', '')} (from {etymology.get('origin', '')})
+
+Generate concise learning content for 5 areas. Keep each section SHORT and actionable.
+Return ONLY valid JSON:
+{{
+  "grammar": {{
+    "topic_en": "{grammar_topic}",
+    "topic_kr": "{grammar_topic_kr}",
+    "core_rule": "핵심 규칙을 1-2문장으로 (한국어)",
+    "example_en": "Example sentence in English",
+    "example_kr": "위 문장의 한국어 번역",
+    "contrast_en": "Contrasting/wrong example in English (what NOT to say)",
+    "contrast_kr": "위 틀린 예문 설명 (한국어)",
+    "remember": "외우기 쉬운 한 줄 요약 (한국어, 15자 이내)"
+  }},
+  "business": {{
+    "expression": "Business English expression (4-6 words)",
+    "meaning_kr": "한국어 의미",
+    "example_en": "Natural sentence using this expression",
+    "example_kr": "한국어 번역",
+    "when_to_use": "어떤 상황에서 쓰나 (한국어, 1줄)"
+  }},
+  "reading": {{
+    "strategy": "Reading strategy name (Korean OK)",
+    "how_to": "어떻게 적용하나 (한국어, 2-3문장)",
+    "why_effective": "왜 효과적인가 (연구 근거 언급, 한국어 1-2문장)"
+  }},
+  "etymology_lesson": {{
+    "word": "{etymology.get('word', '')}",
+    "origin": "{etymology.get('origin', '')}",
+    "story_kr": "{etymology.get('story', '')}",
+    "meaning_kr": "{etymology.get('meaning', '')}",
+    "memory_tip": "이 어원 스토리로 단어를 기억하는 팁 (한국어, 1줄)"
+  }}
+}}"""
+
+    try:
+        resp = _client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=900,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw   = resp.content[0].text.strip()
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        data  = json.loads(raw[start:end])
+        # 듣기 스크립트는 별도로 생성된 것을 합침
+        data["listening"] = {
+            "title":     listen_title,
+            "source":    listen_source,
+            "script_en": listening_script.get("script_en", ""),
+            "script_kr": listening_script.get("script_kr", ""),
+            "key_vocab": listening_script.get("key_vocab", ""),
+        }
+        return data
+    except Exception as e:
+        log.warning(f"daily_learning 생성 실패: {e}")
+        return _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology)
+
+
+def _fallback_learning(grammar_topic, grammar_topic_kr, listening_item, listening_script, etymology) -> dict:
+    return {
+        "grammar": {
+            "topic_en":    grammar_topic,
+            "topic_kr":    grammar_topic_kr,
+            "core_rule":   "오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.",
+            "example_en":  "I have worked here for five years.",
+            "example_kr":  "나는 여기서 5년간 일했다 (지금도 재직 중).",
+            "contrast_en": "I worked here for five years. (implies no longer working)",
+            "contrast_kr": "이미 그만뒀을 때 사용.",
+            "remember":    "경험·결과 → 현재완료",
+        },
+        "listening": {
+            "title":     listening_item.get("title", ""),
+            "source":    listening_item.get("source", ""),
+            "script_en": listening_script.get("script_en", ""),
+            "script_kr": listening_script.get("script_kr", ""),
+            "key_vocab": listening_script.get("key_vocab", ""),
+        },
+        "business": {
+            "expression":  "Let's circle back",
+            "meaning_kr":  "나중에 다시 돌아오다",
+            "example_en":  "Let's circle back on the budget after the Q2 data arrives.",
+            "example_kr":  "Q2 데이터가 나오면 예산 건으로 다시 돌아오죠.",
+            "when_to_use": "회의 중 결론을 잠시 보류할 때",
+        },
+        "reading": {
+            "strategy":      "Topic Sentence 스캔",
+            "how_to":        "각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.",
+            "why_effective": "인지심리학 연구에 따르면 '스키마(schema)' 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.",
+        },
+        "etymology_lesson": {
+            "word":       etymology.get("word", ""),
+            "origin":     etymology.get("origin", ""),
+            "story_kr":   etymology.get("story", ""),
+            "meaning_kr": etymology.get("meaning", ""),
+            "memory_tip": "어원 스토리를 이미지로 상상하면 오래 기억됩니다.",
+        },
+    }
+
+
+# ── 오답 분석 ─────────────────────────────────────────────────────────────────
 
 async def generate_wrong_analysis(wrong_items: list[dict]) -> str:
     """당일 인라인용 짧은 오답 설명 HTML (200자 이내)."""
@@ -128,9 +314,7 @@ async def generate_wrong_analysis(wrong_items: list[dict]) -> str:
 
 
 async def generate_detailed_wrong_analysis(wrong_items: list[dict]) -> dict:
-    """다음날 상세 학습 피드백 생성.
-    Returns {"html": str, "telegram": str}
-    """
+    """다음날 상세 학습 피드백. Returns {"html": str, "telegram": str}."""
     if not wrong_items:
         return {"html": "", "telegram": ""}
 
@@ -143,7 +327,6 @@ async def generate_detailed_wrong_analysis(wrong_items: list[dict]) -> dict:
     )
 
     prompt = f"""당신은 한국인 비즈니스 영어 학습자를 가르치는 전문 영어 강사입니다.
-학습자가 어제 틀린 문제에 대해 상세하고 깊이 있는 학습 피드백을 제공하세요.
 
 [오답 목록]
 {items_text}
@@ -154,11 +337,6 @@ async def generate_detailed_wrong_analysis(wrong_items: list[dict]) -> dict:
 3. 예시 3개 이상: 영어 예문 + 한국어 해석 (비즈니스 맥락 포함)
 4. 한국인 실수 패턴: 비슷하게 틀리는 유사 패턴과 비교
 5. 암기팁: 기억하기 쉬운 규칙 또는 연상법
-
-작성 지침:
-- 한국어 위주, 영어 예문은 그대로 포함
-- 각 항목당 충분히 길고 상세하게 (이해 완결성 우선)
-- 학습 당일에 이것만 읽어도 이해될 수준
 
 JSON으로 반환 (다른 텍스트 없이):
 {{
@@ -191,7 +369,6 @@ JSON으로 반환 (다른 텍스트 없이):
         log.warning(f"detailed_wrong_analysis 생성 실패: {e}")
         return {"html": "", "telegram": ""}
 
-    # HTML 버전 (페이지용)
     html_parts = []
     for item in items:
         ex_html = "".join(
@@ -208,7 +385,6 @@ JSON으로 반환 (다른 텍스트 없이):
 </div>""")
     html = "\n".join(html_parts)
 
-    # Telegram 텍스트 버전
     tg_parts = []
     for item in items:
         ex_lines = "\n".join(f"  • {ex}" for ex in item.get("examples", []))
@@ -225,7 +401,7 @@ JSON으로 반환 (다른 텍스트 없이):
     return {"html": html, "telegram": telegram}
 
 
-# ── 영역별 문제 생성 ─────────────────────────────────────────────────────────
+# ── 영역별 문제 생성 ──────────────────────────────────────────────────────────
 
 async def _gen_content_questions(domain: str, content_item: dict, mix: list) -> list[dict]:
     domain_kr   = DOMAIN_KR[domain]
@@ -314,7 +490,7 @@ async def _gen_speaking(content_item: dict, mix: list) -> list[dict]:
 
 첫 번째 문제에 반드시 아래 필드 추가:
 - "shadowing_script": 오늘 쉐도잉용 2~3문장 영어 스크립트 (비즈니스 맥락, 자연스러운 구어체)
-- "pronunciation_tip": 발음 팁 한국어 1줄 (예: 연음, 강세 주의점)
+- "pronunciation_tip": 발음 팁 한국어 1줄
 
 JSON 배열만 반환:
 [
@@ -346,78 +522,7 @@ JSON 배열만 반환:
     return _call_and_parse(prompt, mix)
 
 
-# ── Daily Lesson ─────────────────────────────────────────────────────────────
-
-async def generate_daily_lesson(
-    grammar_topic: str,
-    grammar_topic_kr: str,
-    reading_source: str,
-    current_levels: dict,
-    day_number: int,
-) -> dict:
-    avg_level = max(
-        ["A2", "B1", "B2", "C1"],
-        key=lambda l: sum(1 for v in current_levels.values() if v >= l)
-    ) if current_levels else "B1"
-
-    prompt = f"""You are an English coach for a Korean business professional (targeting B2 by Oct 2026, current level ~{avg_level}).
-
-Today's test covers:
-- Grammar topic: {grammar_topic} ({grammar_topic_kr})
-- Reading source: {reading_source}
-- Day number: {day_number}
-
-Choose ONE lesson type that adds the most value today and is NOT just a repeat of the grammar topic:
-- GRAMMAR: a common confusion point Korean speakers face (different angle from today's test)
-- EXPRESSION: a natural business idiom or phrase with 3 real-world examples
-- VOCABULARY: 3 power words useful in business contexts, with collocations
-- PRONUNCIATION: one sound/stress/rhythm issue specific to Korean speakers
-- STRATEGY: a concrete study technique for one of today's 4 skills
-
-Return ONLY valid JSON (no markdown, no extra text):
-{{
-  "type": "GRAMMAR|EXPRESSION|VOCABULARY|PRONUNCIATION|STRATEGY",
-  "icon": "one emoji",
-  "title": "Lesson title in English (max 8 words)",
-  "subtitle": "한 줄 한국어 설명",
-  "key_point": "The core rule or insight (English, 1-2 sentences)",
-  "examples": [
-    {{"text": "English example sentence", "note": "한국어 포인트"}},
-    {{"text": "English example sentence", "note": "한국어 포인트"}},
-    {{"text": "English example sentence", "note": "한국어 포인트"}}
-  ],
-  "tip": "실전 팁 한국어 1-2문장",
-  "remember": "외우기 쉬운 한 줄 요약 (한국어 OK)"
-}}"""
-
-    try:
-        resp = _client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=600,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw   = resp.content[0].text.strip()
-        start = raw.find("{")
-        end   = raw.rfind("}") + 1
-        return json.loads(raw[start:end])
-    except Exception as e:
-        log.warning(f"daily_lesson 생성 실패: {e}")
-        return {
-            "type": "EXPRESSION", "icon": "💼",
-            "title": "Business English of the Day",
-            "subtitle": "오늘의 비즈니스 표현",
-            "key_point": "\"Let's circle back\" means to return to a topic later.",
-            "examples": [
-                {"text": "Let's circle back on this after the meeting.", "note": "나중에 다시 논의하자"},
-                {"text": "Can we circle back to the budget question?", "note": "예산 문제로 돌아가볼까요?"},
-                {"text": "I'll circle back with you once I have the data.", "note": "데이터 확인 후 다시 연락드릴게요"},
-            ],
-            "tip": "회의에서 화제를 잠시 보류할 때 자연스럽게 쓸 수 있는 표현입니다.",
-            "remember": "circle back = 나중에 다시 돌아오다",
-        }
-
-
-# ── 공통 헬퍼 ────────────────────────────────────────────────────────────────
+# ── 공통 헬퍼 ─────────────────────────────────────────────────────────────────
 
 def _call_and_parse(prompt: str, mix: list) -> list[dict]:
     resp = _client.messages.create(

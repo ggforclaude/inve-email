@@ -49,18 +49,18 @@ class LevelTracker:
         rows  = []
         q_num = 1
 
-        # 듣기: 그룹 구조에서 펼치기
-        for group in questions.get("listening", []):
-            for q in group.get("questions", []):
-                opts = q.get("options", {})
-                rows.append([
-                    str(today), "listening", str(q_num),
-                    q.get("level", "B1"), q.get("question", ""),
-                    opts.get("A",""), opts.get("B",""),
-                    opts.get("C",""), opts.get("D",""),
-                    q.get("correct","A"), q.get("explanation",""), "",
-                ])
-                q_num += 1
+        # 듣기: 단일 dict {"audio": {...}, "questions": [...]}
+        listening_group = questions.get("listening", {})
+        for q in listening_group.get("questions", []):
+            opts = q.get("options", {})
+            rows.append([
+                str(today), "listening", str(q_num),
+                q.get("level", "B1"), q.get("question", ""),
+                opts.get("A",""), opts.get("B",""),
+                opts.get("C",""), opts.get("D",""),
+                q.get("correct","A"), q.get("explanation",""), "",
+            ])
+            q_num += 1
 
         # 나머지 도메인
         for domain in ["grammar", "reading", "speaking"]:

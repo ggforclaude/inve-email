@@ -1,13 +1,10 @@
 """
 Improve_Eng/content_fetcher.py
-BBC / VOA / ESL RSS에서 일일 학습 콘텐츠를 수집합니다.
+BBC / VOA RSS에서 일일 학습 콘텐츠를 수집합니다.
 
-듣기 3-티어 구조:
-  SHORT  (~1-3분): 5개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
-  MEDIUM (~4-7분): 6개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
-  LONG   (~8-15분): 5개 소스 풀에서 날짜 시드 셔플 → 오디오 있는 소스 우선
-
-오디오를 못 가져올 경우: 에피소드 페이지 URL 링크 버튼으로 대체.
+듣기: SHORT 클립 1개만 사용 (약 2-3분). 오디오 없으면 페이지 URL로 대체.
+문법: 24개 주제 일별 순환 (카테고리 교차 배치 → 같은 카테고리 최소 6일 간격).
+어원: 30개 단어 일별 순환.
 """
 import feedparser
 import requests
@@ -20,100 +17,156 @@ log = logging.getLogger(__name__)
 
 AUDIO_EXTS = (".mp3", ".m4a", ".aac", ".ogg", ".wav", ".opus")
 
-# ── 듣기 소스 (3-티어) ───────────────────────────────────────────────────────
+# ── 듣기 소스 (SHORT 전용, 약 2-3분) ─────────────────────────────────────────
 
-LISTENING_SHORT = [  # ~1-3분: 5개 소스 풀
-    {"name": "BBC The English We Speak",    "rss": "https://podcasts.files.bbci.co.uk/p02pc9s3.rss"},
-    {"name": "BBC Global News Minute",      "rss": "https://podcasts.files.bbci.co.uk/p0bf37qw.rss"},
-    {"name": "BBC Learning English Stories","rss": "https://podcasts.files.bbci.co.uk/p02pc9s1.rss"},
-    {"name": "VOA Learning English",        "rss": "https://learningenglish.voanews.com/api/zovijqmz_q"},
-    {"name": "BBC Lingohack",               "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
+LISTENING_SHORT = [
+    # ── BBC Learning English (2-3분 클립) ─────────────────────────────────────
+    {"name": "BBC The English We Speak",        "rss": "https://podcasts.files.bbci.co.uk/p02pc9s3.rss"},
+    {"name": "BBC Global News Minute",          "rss": "https://podcasts.files.bbci.co.uk/p0bf37qw.rss"},
+    {"name": "BBC Learning English Stories",    "rss": "https://podcasts.files.bbci.co.uk/p02pc9s1.rss"},
+    {"name": "BBC Lingohack",                   "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
+    {"name": "BBC English In A Minute",         "rss": "https://podcasts.files.bbci.co.uk/p0cms2fy.rss"},
+    {"name": "BBC The Experiment",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9s2.rss"},
+    # ── VOA Learning English ───────────────────────────────────────────────────
+    {"name": "VOA Learning English",            "rss": "https://learningenglish.voanews.com/api/zovijqmz_q"},
+    {"name": "VOA Learning English Words",      "rss": "https://learningenglish.voanews.com/api/zrqpie$z_t"},
+    # ── Business English ───────────────────────────────────────────────────────
+    {"name": "BBC Business English Expressions","rss": "https://podcasts.files.bbci.co.uk/p002vsmz.rss"},
+    {"name": "Speak Business English",          "rss": "https://speakbusinessenglish.libsyn.com/rss"},
+    # ── Vocabulary & Phrases ──────────────────────────────────────────────────
+    {"name": "Merriam-Webster Word of the Day", "rss": "https://www.merriam-webster.com/wotd/feed/rss2"},
+    {"name": "Cambridge English Words",         "rss": "https://dictionary.cambridge.org/feed/"},
 ]
 
-LISTENING_MEDIUM = [  # ~4-7분: 6개 소스 풀
-    {"name": "BBC 6 Minute English",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9pj.rss"},
-    {"name": "BBC 6 Minute Grammar",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9v1.rss"},
-    {"name": "BBC Learning English Conversations","rss": "https://podcasts.files.bbci.co.uk/p02pc9zn.rss"},
-    {"name": "BBC Business Daily",                "rss": "https://podcasts.files.bbci.co.uk/p002vsnb.rss"},
-    {"name": "BBC Lingohack",                     "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
-    {"name": "ESL Podcast",                       "rss": "https://www.eslpod.com/eslpod_feed.xml"},
-]
-
-LISTENING_LONG = [  # ~8-15분: 5개 소스 풀
-    {"name": "BBC English At Work",               "rss": "https://podcasts.files.bbci.co.uk/p02pc9qx.rss"},
-    {"name": "ESL Podcast",                       "rss": "https://www.eslpod.com/eslpod_feed.xml"},
-    {"name": "All Ears English",                  "rss": "https://www.allearsenglish.com/feed/podcast"},
-    {"name": "BBC 6 Minute English",              "rss": "https://podcasts.files.bbci.co.uk/p02pc9pj.rss"},
-    {"name": "BBC Learning English Conversations","rss": "https://podcasts.files.bbci.co.uk/p02pc9zn.rss"},
-]
-
-# ── 독해 소스 ────────────────────────────────────────────────────────────────
+# ── 독해 소스 ─────────────────────────────────────────────────────────────────
 
 READING_SOURCES = [
-    {
-        "name": "VOA Learning English News",
-        "rss":  "https://learningenglish.voanews.com/api/zovijqmz_q",
-    },
-    {
-        "name": "BBC Learning English Lingohack",
-        "rss":  "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml",
-    },
+    {"name": "VOA Learning English News",       "rss": "https://learningenglish.voanews.com/api/zovijqmz_q"},
+    {"name": "BBC Learning English Lingohack",  "rss": "https://feeds.bbci.co.uk/learningenglish/english/features/lingohack/rss.xml"},
 ]
 
-# ── 말하기 소스 ──────────────────────────────────────────────────────────────
+# ── 말하기 소스 ───────────────────────────────────────────────────────────────
 
 SPEAKING_SOURCES = [
-    {
-        "name": "BBC Learning English Stories",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9s1.rss",
-    },
-    {
-        "name": "BBC Learning English Conversations",
-        "rss":  "https://podcasts.files.bbci.co.uk/p02pc9zn.rss",
-    },
+    {"name": "BBC Learning English Stories",       "rss": "https://podcasts.files.bbci.co.uk/p02pc9s1.rss"},
+    {"name": "BBC Learning English Conversations", "rss": "https://podcasts.files.bbci.co.uk/p02pc9zn.rss"},
 ]
 
-# ── 문법 커리큘럼 (12주 순환) ─────────────────────────────────────────────────
-
+# ── 문법 커리큘럼 (24개, 일별 순환) ─────────────────────────────────────────
+# 카테고리별 교차 배치: 시제 / 조동사 / 가정·절 / 문장구조 / 어휘레벨 / 고급
+# 동일 카테고리 최소 6일 간격 → 반복 학습 vs 새 주제 균형 유지
 GRAMMAR_CURRICULUM = [
-    ("Present Perfect vs Simple Past",     "B1", "현재완료 vs 단순과거"),
-    ("Second Conditional",                  "B2", "가정법 과거"),
-    ("Modal Verbs (should / must / might)", "B1", "조동사"),
-    ("Passive Voice",                       "B1", "수동태"),
-    ("Reported Speech",                     "B2", "간접화법"),
-    ("Third Conditional",                   "B2", "가정법 과거완료"),
-    ("Relative Clauses",                    "B2", "관계절"),
-    ("Articles (a / an / the)",             "B1", "관사"),
-    ("Gerunds vs Infinitives",              "B2", "동명사 vs 부정사"),
-    ("Phrasal Verbs – Business Context",    "B1", "구동사 (비즈니스)"),
-    ("Mixed Conditionals",                  "B2", "혼합 가정법"),
-    ("Past Perfect Tense",                  "B2", "과거완료"),
+    # 1  시제: Present Perfect vs Simple Past
+    ("Present Perfect vs Simple Past", "B1", "현재완료 vs 단순과거"),
+    # 2  조동사: can / could
+    ("Modal Verbs: can / could — 능력과 공손", "B1", "능력·공손 조동사"),
+    # 3  절: First Conditional
+    ("First Conditional", "B1", "실현 가능한 조건문"),
+    # 4  구조: Passive Voice
+    ("Passive Voice", "B1", "수동태"),
+    # 5  어휘: Articles a / an / the
+    ("Articles: a / an / the", "B1", "관사"),
+    # 6  고급: Inversion for Emphasis
+    ("Inversion for Emphasis", "B2", "강조 도치"),
+    # 7  시제: Past Perfect
+    ("Past Perfect Tense", "B2", "과거완료"),
+    # 8  조동사: should / ought to / had better
+    ("Modal Verbs: should / ought to / had better", "B1", "의무·충고 조동사"),
+    # 9  절: Second Conditional
+    ("Second Conditional", "B2", "가정법 과거"),
+    # 10 구조: Reported Speech
+    ("Reported Speech", "B2", "간접화법"),
+    # 11 어휘: Gerunds vs Infinitives
+    ("Gerunds vs Infinitives", "B2", "동명사 vs 부정사"),
+    # 12 고급: Subjunctive Mood
+    ("Subjunctive Mood", "B2", "가정법 현재 (요구·제안 구문)"),
+    # 13 시제: Future Tenses
+    ("Future Tenses: will / going to / present continuous", "B1", "미래 표현 3가지"),
+    # 14 조동사: must / have to / need to
+    ("Modal Verbs: must / have to / need to", "B1", "의무·필요 조동사"),
+    # 15 절: Third Conditional & Mixed
+    ("Third Conditional & Mixed Conditionals", "B2", "가정법 과거완료·혼합"),
+    # 16 구조: Relative Clauses
+    ("Relative Clauses: defining vs non-defining", "B2", "관계절"),
+    # 17 어휘: Prepositions of Time
+    ("Prepositions of Time: at / in / on / by", "B1", "시간 전치사"),
+    # 18 고급: Ellipsis and Substitution
+    ("Ellipsis and Substitution", "C1", "생략과 대용"),
+    # 19 시제: Present Simple vs Continuous
+    ("Present Simple vs Present Continuous", "A2", "단순현재 vs 현재진행"),
+    # 20 어휘: Phrasal Verbs – Business
+    ("Phrasal Verbs – Business Context", "B1", "구동사 (비즈니스)"),
+    # 21 구조: Comparative & Superlative
+    ("Comparative and Superlative Adjectives", "B1", "비교급·최상급"),
+    # 22 어휘: Prepositions of Place
+    ("Prepositions of Place: at / in / on / by", "B1", "장소 전치사"),
+    # 23 시제: Past Simple vs Past Continuous
+    ("Past Simple vs Past Continuous", "B1", "단순과거 vs 과거진행"),
+    # 24 구조: Noun Clauses
+    ("Noun Clauses and Embedded Questions", "B2", "명사절과 간접의문문"),
+]
+
+# ── 어원 커리큘럼 (30개, 일별 순환) ─────────────────────────────────────────
+# (단어, 원어, 어원 설명 한국어, 현대 의미)
+ETYMOLOGY_CURRICULUM = [
+    ("sincere",    "라틴어 sine cera (밀랍 없이)",     "로마 조각가가 결함을 밀랍으로 숨겼는데, 최고 작품은 밀랍 없이(sine cera) 완성됨",          "진실한, 진심 어린"),
+    ("salary",     "라틴어 salarium (소금 급여)",       "로마 병사는 소금(sal)으로 급여를 받았음. salt와 같은 어근",                              "급여, 봉급"),
+    ("muscle",     "라틴어 musculus (작은 쥐)",        "팔을 구부릴 때 근육이 움직이는 모습이 쥐처럼 보인다 하여",                                 "근육"),
+    ("candidate",  "라틴어 candidatus (흰옷 입은)",    "로마 선거 출마자는 순결을 상징하는 흰 토가(candida)를 입었음",                            "후보자"),
+    ("disaster",   "라틴어 dis + astrum (나쁜 별)",    "별의 위치가 나쁘면 재앙이 온다는 점성술 믿음에서 유래",                                   "재앙, 참사"),
+    ("company",    "라틴어 com + panis (함께 빵을)",   "같이 빵을 나눠 먹는 동료에서 유래. companion(동료)과 동근",                              "회사, 동료"),
+    ("calculate",  "라틴어 calculus (작은 돌)",        "로마인이 주판 대신 조약돌(calculus)로 계산했음",                                       "계산하다"),
+    ("deadline",   "영어 dead + line",               "남북전쟁 포로수용소에서 그 선을 넘으면 사살한다는 경계선에서 유래",                           "마감 기한"),
+    ("bankrupt",   "이탈리아어 banca rotta (깨진 탁자)", "중세 환전상이 파산하면 거래 탁자(banca)를 부수는 관습에서",                              "파산한"),
+    ("quiz",       "18세기 아일랜드 속어",              "더블린 극장주 Daly가 무의미한 단어를 낙서하면 하루 만에 유행어로 만든 일화에서 유래",           "퀴즈, 시험"),
+    ("panic",      "그리스어 Panikos (목신 판의)",      "목신 판(Pan)이 갑자기 나타나 공포를 일으킨다는 신화에서",                                 "공황, 극도의 공포"),
+    ("strategy",   "그리스어 strategos (군대 지도자)", "stratos(군대) + agein(이끌다) → 장군의 기술",                                         "전략"),
+    ("focus",      "라틴어 focus (화덕, 중심)",        "로마 가정의 화덕이 집의 중심이었던 데서 유래",                                           "초점, 집중"),
+    ("invest",     "라틴어 investire (옷 입히다)",     "중세에 왕이 신하에게 땅을 수여할 때 옷(vestis)을 입혀 권한 부여",                          "투자하다"),
+    ("risk",       "이탈리아어 risco (암초)",          "항해 중 암초 근처를 항행하는 위험에서 유래",                                             "위험, 위험을 감수하다"),
+    ("budget",     "고프랑스어 bougette (작은 가방)",  "재무장관이 예산서를 담은 가죽 가방(bougette)을 들고 의회에 출석한 데서",                     "예산"),
+    ("magazine",   "아랍어 makhazin (창고)",          "지식·정보를 저장해 두는 '창고'라는 의미로 출판물에 사용됨",                                 "잡지, 탄창"),
+    ("candidate",  "라틴어 candidatus (흰옷 입은)",    "로마 선거 출마자는 순결을 상징하는 흰 토가를 입었음",                                     "후보자"),
+    ("serendipity","페르시아 동화 Serendip(스리랑카)", "세 왕자가 우연히 훌륭한 발견을 하는 동화에서 Horace Walpole이 만든 단어",                   "뜻밖의 행운"),
+    ("berserk",    "고대 노르드어 berserkr (곰 가죽)", "전투에서 곰 가죽을 입고 광분하던 바이킹 전사에서 유래",                                    "극도로 흥분한, 폭주하는"),
+    ("boycott",    "아일랜드 지주 대리인 Charles Boycott", "1880년 소작인들이 Boycott을 집단 거부한 사건에서 단어화",                            "불매운동, 거부하다"),
+    ("mentor",     "그리스 신화 멘토르(Mentor)",       "오디세우스가 트로이 전쟁 중 아들 텔레마코스 교육을 맡긴 현자의 이름에서",                     "멘토, 스승"),
+    ("rival",      "라틴어 rivalis (강을 공유하는)",   "같은 강(rivus) 물을 사용하는 이웃 사이의 경쟁 관계에서",                                  "경쟁자"),
+    ("travel",     "라틴어 tripalium (고문 도구)",     "중세 여행이 고문(tripalium)처럼 고달팠던 데서 travail(고통)과 동근",                     "여행하다"),
+    ("enthusiasm", "그리스어 enthousiasmos (신이 깃든)", "en(안에) + theos(신) → 신에게 감화받은 열정 상태",                                    "열정, 열의"),
+    ("lucid",      "라틴어 lucidus (빛나는)",         "lux(빛)과 동근 → 명확하고 투명한 사고",                                              "명확한, 이해하기 쉬운"),
+    ("colleague",  "라틴어 collega (함께 선택된)",     "col(함께) + legare(선택하다/보내다) → 같이 선발된 동료",                                "동료"),
+    ("quarantine", "이탈리아어 quarantina (40일)",    "14세기 흑사병 때 선박을 40일간 격리한 베네치아 방역 정책에서",                              "격리, 검역"),
+    ("clue",       "고영어 clew (실뭉치)",            "그리스 신화에서 테세우스가 미로를 탈출할 때 아리아드네의 실(clew)에서 유래",                   "단서, 실마리"),
+    ("salary",     "라틴어 salarium (소금)",          "로마 병사의 소금 급여에서. '소금값 못하는 사람'이라는 표현도 여기서 유래",                     "급여"),
 ]
 
 
-# ── 메인 진입점 ──────────────────────────────────────────────────────────────
+# ── 메인 진입점 ───────────────────────────────────────────────────────────────
 
 async def fetch_daily_content(today: date) -> dict:
-    """날짜 기반으로 콘텐츠 수집. 듣기는 3-티어(short/medium/long) 리스트로 반환."""
+    """날짜 기반 콘텐츠 수집.
+    듣기: 단일 SHORT 클립 (dict, not list).
+    문법: 24개 주제 일별 순환.
+    어원: 30개 단어 일별 순환.
+    """
     idx      = today.toordinal()
-    week_idx = (idx // 7) % len(GRAMMAR_CURRICULUM)
+    day_idx  = idx % len(GRAMMAR_CURRICULUM)   # 일별 순환 (24주기)
+    etym_idx = idx % len(ETYMOLOGY_CURRICULUM)  # 일별 순환 (30주기)
 
-    # 3-티어 듣기: 날짜 시드 셔플 후 오디오 있는 소스 우선 선택
-    ls = _pick_with_audio(LISTENING_SHORT,  seed=idx * 10 + 1)
-    lm = _pick_with_audio(LISTENING_MEDIUM, seed=idx * 10 + 2)
-    ll = _pick_with_audio(LISTENING_LONG,   seed=idx * 10 + 3)
-
-    ls["tier"] = "short";  ls["duration_hint"] = "약 1-3분"
-    lm["tier"] = "medium"; lm["duration_hint"] = "약 4-7분"
-    ll["tier"] = "long";   ll["duration_hint"] = "약 8-15분"
+    # 단일 SHORT 듣기 클립
+    listening = _pick_with_audio(LISTENING_SHORT, seed=idx)
+    listening["tier"]          = "short"
+    listening["duration_hint"] = "약 2-3분"
 
     reading  = _fetch_from_source(READING_SOURCES[idx % len(READING_SOURCES)])
     speaking = _fetch_from_source(SPEAKING_SOURCES[idx % len(SPEAKING_SOURCES)])
 
-    topic, level, topic_kr = GRAMMAR_CURRICULUM[week_idx]
+    topic, level, topic_kr = GRAMMAR_CURRICULUM[day_idx]
+    etym = ETYMOLOGY_CURRICULUM[etym_idx]
 
     return {
-        "listening": [ls, lm, ll],
+        "listening": listening,      # 단일 dict (리스트 아님)
         "reading":   reading,
         "speaking":  speaking,
         "grammar": {
@@ -123,19 +176,24 @@ async def fetch_daily_content(today: date) -> dict:
             "source": "British Council / Perfect English Grammar",
             "text":   "",
         },
+        "etymology": {
+            "word":    etym[0],
+            "origin":  etym[1],
+            "story":   etym[2],
+            "meaning": etym[3],
+        },
     }
 
 
-# ── 내부 헬퍼 ────────────────────────────────────────────────────────────────
+# ── 내부 헬퍼 ─────────────────────────────────────────────────────────────────
 
 def _pick_with_audio(sources: list, seed: int) -> dict:
-    """날짜 시드로 소스 셔플 후 오디오 URL이 있는 첫 번째 결과 반환.
-    오디오 없으면 페이지 URL이라도 있는 결과, 그것도 없으면 첫 번째 결과."""
-    rng = random.Random(seed)
+    """날짜 시드로 소스 셔플 후 오디오 URL이 있는 첫 번째 결과 반환."""
+    rng   = random.Random(seed)
     order = list(range(len(sources)))
     rng.shuffle(order)
 
-    first = None
+    first         = None
     best_with_url = None
 
     for i in order:
@@ -193,22 +251,19 @@ def _fetch_from_source(source: dict) -> dict:
 
 
 def _extract_audio_url(entry) -> str:
-    """RSS 항목에서 오디오 URL을 추출. mp3/m4a/aac/ogg 등 모든 형식 지원."""
-    # enclosures 필드 (BBC, VOA, ESL 표준)
+    """RSS 항목에서 오디오 URL을 추출."""
     for enc in getattr(entry, "enclosures", []):
         href = enc.get("href", enc.get("url", ""))
         mime = enc.get("type", "")
         if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
             return href
 
-    # links 필드 (일부 피드)
     for lnk in getattr(entry, "links", []):
         href = lnk.get("href", "")
         mime = lnk.get("type", "")
         if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
             return href
 
-    # media_content 필드 (일부 피드)
     media = getattr(entry, "media_content", [])
     for m in (media if isinstance(media, list) else []):
         href = m.get("url", "")
@@ -216,7 +271,6 @@ def _extract_audio_url(entry) -> str:
         if href and ("audio" in mime or any(href.lower().endswith(ext) for ext in AUDIO_EXTS)):
             return href
 
-    # itunes:new-feed-url 같은 확장 필드에서 직접 mp3 링크 탐색
     for key in vars(entry):
         val = getattr(entry, key, "")
         if isinstance(val, str) and any(val.lower().endswith(ext) for ext in AUDIO_EXTS):

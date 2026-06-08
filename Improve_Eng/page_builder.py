@@ -4,7 +4,8 @@ Improve_Eng/page_builder.py
 docs/YYYY-MM-DD/index.html 로 저장 → GitHub Pages 자동 배포.
 
 변경사항:
-  - 듣기 3-티어 섹션 (Short/Medium/Long 각각)
+  - 듣기: SHORT 단일 클립 (기존 3-티어 제거)
+  - 5영역 학습 콘텐츠 섹션 (문법/듣기스크립트/비즈니스/독해/어원)
   - 다음날 상세 오답 분석 (긴 설명)
   - 말하기 섹션에 Web Speech API 음성 녹음 + 발음 체크 기능
 """
@@ -30,13 +31,6 @@ TIER_META = {
     "long":   ("🎙️", "Long",   "#0369a1", "#7dd3fc"),
 }
 LEVEL_COLOR = {"A2": "#6ee7b7", "B1": "#93c5fd", "B2": "#c4b5fd", "C1": "#fca5a5"}
-LESSON_COLORS = {
-    "GRAMMAR":       ("#eef2ff", "#4338ca", "#818cf8"),
-    "EXPRESSION":    ("#fff7ed", "#c2410c", "#fb923c"),
-    "VOCABULARY":    ("#f0fdf4", "#15803d", "#4ade80"),
-    "PRONUNCIATION": ("#fdf4ff", "#7e22ce", "#c084fc"),
-    "STRATEGY":      ("#eff6ff", "#1d4ed8", "#60a5fa"),
-}
 
 
 def build_daily_page(
@@ -44,13 +38,13 @@ def build_daily_page(
     day_number: int,
     questions: dict,
     content: dict,
-    daily_lesson: dict,
+    daily_learning: dict,
     current_levels: dict,
     prev_wrong_analysis: Optional[str],
     prev_detailed_analysis: Optional[str] = None,
 ) -> pathlib.Path:
     html = _render(today, day_number, questions, content,
-                   daily_lesson, current_levels, prev_wrong_analysis, prev_detailed_analysis)
+                   daily_learning, current_levels, prev_wrong_analysis, prev_detailed_analysis)
     base = pathlib.Path(__file__).parent.parent / "docs" / str(today)
     base.mkdir(parents=True, exist_ok=True)
     out = base / "index.html"
@@ -62,16 +56,16 @@ def build_daily_page(
 
 def _flatten_questions(questions: dict):
     """questions dict → (correct_list, explanation_list, domain_list, all_qs)
-    듣기는 그룹 구조에서 펼쳐서 처리."""
+    듣기는 단일 그룹 {"audio": ..., "questions": [...]} 구조."""
     correct, explanations, domain_list, all_qs = [], [], [], []
 
-    # 듣기: [{"audio": ..., "questions": [...]}, ...]
-    for group in questions.get("listening", []):
-        for q in group.get("questions", []):
-            correct.append(q.get("correct", "A").strip().upper())
-            explanations.append(q.get("explanation", ""))
-            domain_list.append("listening")
-            all_qs.append(("listening", q))
+    # 듣기: 단일 dict {"audio": ..., "questions": [...]}
+    listening_group = questions.get("listening", {})
+    for q in listening_group.get("questions", []):
+        correct.append(q.get("correct", "A").strip().upper())
+        explanations.append(q.get("explanation", ""))
+        domain_list.append("listening")
+        all_qs.append(("listening", q))
 
     for domain in ["grammar", "reading", "speaking"]:
         for q in questions.get(domain, []):
@@ -85,7 +79,7 @@ def _flatten_questions(questions: dict):
 
 # ── HTML 렌더링 ───────────────────────────────────────────────────────────────
 
-def _render(today, day_number, questions, content, daily_lesson, current_levels,
+def _render(today, day_number, questions, content, daily_learning, current_levels,
             prev_wrong_analysis, prev_detailed_analysis):
     correct, explanations, domain_list, all_qs = _flatten_questions(questions)
     total = len(correct)
@@ -100,10 +94,11 @@ def _render(today, day_number, questions, content, daily_lesson, current_levels,
     sections_html = ""
     q_num = 0
 
-    # 듣기: 3개 그룹 각각 섹션
-    for group in questions.get("listening", []):
-        audio_item = group["audio"]
-        qs         = group["questions"]
+    # 듣기: 단일 그룹
+    listening_group = questions.get("listening", {})
+    if listening_group:
+        audio_item = listening_group["audio"]
+        qs         = listening_group["questions"]
         sections_html += _listening_group_html(audio_item, qs, q_num)
         q_num += len(qs)
 
@@ -134,7 +129,7 @@ def _render(today, day_number, questions, content, daily_lesson, current_levels,
 
   {_prev_analysis_html(prev_wrong_analysis, prev_detailed_analysis)}
 
-  {_lesson_html(daily_lesson)}
+  {_learning_html(daily_learning)}
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-label">
@@ -395,7 +390,7 @@ def _header_html(today: date, day_number: int, current_levels: dict) -> str:
     <span class="hdr-date">{today.strftime('%b %d, %Y')}</span>
   </div>
   <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
-  <p class="hdr-meta">4개 영역 · 듣기 3클립 포함 · 약 25분</p>
+  <p class="hdr-meta">4개 영역 · 듣기 1클립 · 총 11문항 · 약 15분</p>
   <div class="lv-badges">{badges}</div>
 </header>"""
 
@@ -422,35 +417,74 @@ def _prev_analysis_html(short_html: Optional[str], detailed_html: Optional[str])
     return "\n".join(parts)
 
 
-def _lesson_html(lesson: dict) -> str:
-    ltype   = lesson.get("type", "EXPRESSION")
-    bg, fg, acc = LESSON_COLORS.get(ltype, ("#f8f9fb", "#374151", "#6b7280"))
-    icon    = lesson.get("icon", "📚")
-    title   = lesson.get("title", "")
-    subtitle= lesson.get("subtitle", "")
-    key_pt  = lesson.get("key_point", "")
-    examples= lesson.get("examples", [])
-    tip     = lesson.get("tip", "")
-    remember= lesson.get("remember", "")
+def _learning_html(learning: dict) -> str:
+    """5영역 학습 콘텐츠 카드 (문법/듣기/비즈니스/독해/어원)."""
+    grammar  = learning.get("grammar", {})
+    listen   = learning.get("listening", {})
+    business = learning.get("business", {})
+    reading  = learning.get("reading", {})
+    etym     = learning.get("etymology_lesson", {})
 
-    ex_html = ""
-    for ex in examples:
-        ex_html += f"""<div class="lesson-ex">
-      <div class="lesson-ex-text">"{ex.get('text','')}"</div>
-      <div class="lesson-ex-note">{ex.get('note','')}</div>
-    </div>"""
-
-    return f"""<div class="card lesson-card" style="background:{bg};border-color:{acc}">
-  <div class="lesson-header">
-    <span class="lesson-type-badge" style="background:{fg};color:#fff">{ltype}</span>
-    <span class="lesson-icon">{icon}</span>
+    # 문법 섹션
+    grammar_html = f"""<div class="learn-section" style="border-left-color:#8b5cf6">
+  <div class="learn-tag" style="background:#8b5cf6">🔤 문법</div>
+  <div class="learn-topic">{grammar.get('topic_en','')} <span class="learn-topic-kr">({grammar.get('topic_kr','')})</span></div>
+  <div class="learn-rule">{grammar.get('core_rule','')}</div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">✅ {grammar.get('example_en','')}<span class="learn-ex-kr">{grammar.get('example_kr','')}</span></div>
+    <div class="learn-ex learn-ex-bad">❌ {grammar.get('contrast_en','')}<span class="learn-ex-kr">{grammar.get('contrast_kr','')}</span></div>
   </div>
-  <h2 class="lesson-title" style="color:{fg}">{title}</h2>
-  <p class="lesson-subtitle">{subtitle}</p>
-  <div class="lesson-keypoint">{key_pt}</div>
-  <div class="lesson-examples">{ex_html}</div>
-  {f'<div class="lesson-tip">💡 {tip}</div>' if tip else ""}
-  {f'<div class="lesson-remember" style="border-color:{acc};color:{fg}">🧠 {remember}</div>' if remember else ""}
+  <div class="learn-remember">💡 {grammar.get('remember','')}</div>
+</div>"""
+
+    # 듣기 스크립트 섹션
+    listen_html = f"""<div class="learn-section" style="border-left-color:#0ea5e9">
+  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기 스크립트</div>
+  <div class="learn-topic">{listen.get('source','')} <span class="learn-topic-kr">— {listen.get('title','')[:50]}</span></div>
+  <div class="learn-script">
+    <div class="learn-script-en">🇬🇧 {listen.get('script_en','')}</div>
+    <div class="learn-script-kr">🇰🇷 {listen.get('script_kr','')}</div>
+  </div>
+  <div class="learn-vocab">📝 핵심 어휘: {listen.get('key_vocab','')}</div>
+</div>"""
+
+    # 비즈니스 섹션
+    biz_html = f"""<div class="learn-section" style="border-left-color:#f59e0b">
+  <div class="learn-tag" style="background:#f59e0b">💼 비즈니스</div>
+  <div class="learn-topic">"{business.get('expression','')}" <span class="learn-topic-kr">— {business.get('meaning_kr','')}</span></div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">💬 {business.get('example_en','')}<span class="learn-ex-kr">{business.get('example_kr','')}</span></div>
+  </div>
+  <div class="learn-remember">📌 {business.get('when_to_use','')}</div>
+</div>"""
+
+    # 독해 전략 섹션
+    read_html = f"""<div class="learn-section" style="border-left-color:#22c55e">
+  <div class="learn-tag" style="background:#22c55e">📖 독해 전략</div>
+  <div class="learn-topic">{reading.get('strategy','')}</div>
+  <div class="learn-rule">{reading.get('how_to','')}</div>
+  <div class="learn-remember">📊 {reading.get('why_effective','')}</div>
+</div>"""
+
+    # 어원 섹션
+    etym_html = f"""<div class="learn-section" style="border-left-color:#10b981">
+  <div class="learn-tag" style="background:#10b981">🌱 어원</div>
+  <div class="learn-topic">"{etym.get('word','')}" <span class="learn-topic-kr">— {etym.get('meaning_kr','')}</span></div>
+  <div class="learn-rule">{etym.get('origin','')}</div>
+  <div class="learn-script"><div class="learn-script-kr">{etym.get('story_kr','')}</div></div>
+  <div class="learn-remember">💡 {etym.get('memory_tip','')}</div>
+</div>"""
+
+    return f"""<div class="card learning-card">
+  <div class="learning-header">
+    <span class="learning-badge">📚 오늘의 레슨</span>
+    <span class="learning-sub">퀴즈 전에 읽고 내용을 기억해보세요</span>
+  </div>
+  {grammar_html}
+  {listen_html}
+  {biz_html}
+  {read_html}
+  {etym_html}
 </div>"""
 
 
@@ -646,25 +680,31 @@ header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20
 .detail-tip { font-size: 13px; font-weight: 600; color: #4338ca;
               background: #eef2ff; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
 
-/* LESSON */
-.lesson-card { border: 1.5px solid; }
-.lesson-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.lesson-type-badge { font-size: 10px; font-weight: 700; padding: 2px 8px;
-                     border-radius: 4px; letter-spacing: 1px; }
-.lesson-icon { font-size: 20px; }
-.lesson-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.lesson-subtitle { font-size: 13px; color: #555; margin-bottom: 12px; }
-.lesson-keypoint { font-size: 14px; background: rgba(0,0,0,.04); padding: 10px 12px;
-                   border-radius: 8px; margin-bottom: 12px; }
-.lesson-examples { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
-.lesson-ex { border-left: 3px solid currentColor; padding: 8px 12px;
-             background: rgba(0,0,0,.03); border-radius: 0 6px 6px 0; }
-.lesson-ex-text { font-size: 14px; font-weight: 600; font-style: italic; margin-bottom: 3px; }
-.lesson-ex-note { font-size: 12px; color: #666; }
-.lesson-tip { font-size: 13px; color: #555; background: rgba(0,0,0,.04);
-              padding: 10px 12px; border-radius: 8px; margin-bottom: 10px; }
-.lesson-remember { font-size: 13px; font-weight: 600; border: 1.5px solid;
-                   padding: 8px 12px; border-radius: 8px; }
+/* LEARNING CARD (5영역) */
+.learning-card { border: 1.5px solid #e5e7eb; }
+.learning-header { display: flex; align-items: center; justify-content: space-between;
+                   margin-bottom: 16px; }
+.learning-badge { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.learning-sub { font-size: 11px; color: #9ca3af; }
+.learn-section { border-left: 4px solid #e5e7eb; padding: 12px 14px; margin-bottom: 12px;
+                 background: #f9fafb; border-radius: 0 8px 8px 0; }
+.learn-tag { display: inline-block; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 8px; border-radius: 4px; margin-bottom: 7px; letter-spacing: 0.5px; }
+.learn-topic { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.learn-topic-kr { font-weight: 400; color: #6b7280; font-size: 13px; }
+.learn-rule { font-size: 13px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+.learn-examples { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.learn-ex { font-size: 13px; padding: 7px 10px; border-radius: 6px; line-height: 1.5; }
+.learn-ex-ok { background: #dcfce7; color: #166534; }
+.learn-ex-bad { background: #fee2e2; color: #991b1b; }
+.learn-ex-kr { display: block; font-size: 11px; color: #6b7280; margin-top: 2px; font-style: italic; }
+.learn-remember { font-size: 12px; font-weight: 600; color: #374151;
+                  background: rgba(0,0,0,.05); padding: 6px 10px; border-radius: 6px; }
+.learn-script { margin: 8px 0; }
+.learn-script-en { font-size: 13px; color: #1a1a2e; line-height: 1.6; padding: 6px 0; font-style: italic; }
+.learn-script-kr { font-size: 12px; color: #6b7280; line-height: 1.6; padding: 6px 0; }
+.learn-vocab { font-size: 12px; color: #374151; background: #e0f2fe; padding: 6px 10px;
+               border-radius: 6px; margin-top: 6px; }
 
 /* PROGRESS */
 .progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
