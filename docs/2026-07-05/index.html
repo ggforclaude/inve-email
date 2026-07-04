@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Day 6 — Improve English</title>
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: #f0f2f5; color: #1a1a2e; line-height: 1.6;
+}
+
+/* HEADER */
+header { background: linear-gradient(135deg, #1a1a2e, #0f3460); padding: 24px 20px 20px; color: #fff; }
+.hdr-top { display: flex; justify-content: space-between; align-items: center;
+           font-size: 11px; color: #8899bb; letter-spacing: 1.5px;
+           text-transform: uppercase; margin-bottom: 10px; }
+.hdr-date { background: rgba(255,255,255,.12); padding: 3px 10px; border-radius: 20px; }
+.hdr-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.hdr-meta { font-size: 12px; color: #8899bb; margin-bottom: 14px; }
+.lv-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.lv-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; color: #1a1a2e; }
+
+/* CONTAINER */
+.container { max-width: 680px; margin: 0 auto; padding: 16px 12px 40px; }
+
+/* CARDS */
+.card { background: #fff; border-radius: 14px; padding: 20px;
+        margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+
+/* PREV ANALYSIS */
+.analysis-card { border-left: 4px solid #f97316; background: #fff7ed; }
+.card-label { font-size: 11px; font-weight: 700; color: #c2410c;
+              text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+/* DETAILED ANALYSIS */
+.detail-card { border-left: 4px solid #6366f1; background: #f5f3ff; }
+.detail-card .card-label { color: #4338ca; }
+.detail-intro { font-size: 13px; color: #4b5563; margin-bottom: 16px; }
+.detail-item { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+               padding: 16px; margin-bottom: 14px; }
+.detail-q-label { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 12px;
+                  padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; }
+.detail-section { margin-bottom: 10px; }
+.detail-section b { font-size: 12px; color: #6366f1; display: block; margin-bottom: 4px; }
+.detail-section p { font-size: 13px; color: #374151; line-height: 1.7; }
+.detail-ex { font-size: 13px; color: #374151; padding: 4px 0; }
+.detail-tip { font-size: 13px; font-weight: 600; color: #4338ca;
+              background: #eef2ff; padding: 8px 12px; border-radius: 8px; margin-top: 10px; }
+
+/* LEARNING CARD (5영역) */
+.learning-card { border: 1.5px solid #e5e7eb; }
+.learning-header { display: flex; align-items: center; justify-content: space-between;
+                   margin-bottom: 16px; }
+.learning-badge { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.learning-sub { font-size: 11px; color: #9ca3af; }
+.learn-section { border-left: 4px solid #e5e7eb; padding: 12px 14px; margin-bottom: 12px;
+                 background: #f9fafb; border-radius: 0 8px 8px 0; }
+.learn-tag { display: inline-block; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 8px; border-radius: 4px; margin-bottom: 7px; letter-spacing: 0.5px; }
+.learn-topic { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.learn-topic-kr { font-weight: 400; color: #6b7280; font-size: 13px; }
+.learn-rule { font-size: 13px; color: #374151; line-height: 1.6; margin-bottom: 8px; }
+.learn-examples { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+.learn-ex { font-size: 13px; padding: 7px 10px; border-radius: 6px; line-height: 1.5; }
+.learn-ex-ok { background: #dcfce7; color: #166534; }
+.learn-ex-bad { background: #fee2e2; color: #991b1b; }
+.learn-ex-kr { display: block; font-size: 11px; color: #6b7280; margin-top: 2px; font-style: italic; }
+.learn-remember { font-size: 12px; font-weight: 600; color: #374151;
+                  background: rgba(0,0,0,.05); padding: 6px 10px; border-radius: 6px; }
+.learn-script { margin: 8px 0; }
+.learn-script-en { font-size: 13px; color: #1a1a2e; line-height: 1.6; padding: 6px 0; font-style: italic; }
+.learn-script-kr { font-size: 12px; color: #6b7280; line-height: 1.6; padding: 6px 0; }
+.learn-vocab { font-size: 12px; color: #374151; background: #e0f2fe; padding: 6px 10px;
+               border-radius: 6px; margin-top: 6px; }
+.learn-when { font-size: 12px; color: #4b5563; background: #ede9fe; padding: 5px 9px;
+              border-radius: 6px; margin-bottom: 8px; }
+.learn-mistake { font-size: 12px; color: #92400e; background: #fef3c7; padding: 6px 9px;
+                 border-radius: 6px; margin: 6px 0; }
+.learn-pron-ex { font-size: 13px; margin: 8px 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.learn-pron-practice { font-size: 13px; color: #374151; margin: 6px 0;
+                       display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tts-btn { background: #0ea5e9; color: #fff; border: none; border-radius: 6px;
+           padding: 6px 12px; font-size: 13px; cursor: pointer; margin: 6px 0; }
+.tts-btn:hover { background: #0284c7; }
+.tts-sm { padding: 3px 8px; font-size: 12px; margin: 0; }
+.vocab-item { background: #f0f0ff; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.vocab-word { font-size: 16px; font-weight: 700; color: #4338ca; margin-right: 6px; }
+.vocab-level { font-size: 10px; background: #c7d2fe; color: #3730a3; padding: 2px 6px;
+               border-radius: 10px; font-weight: 700; margin-right: 6px; }
+.vocab-meaning { font-size: 13px; color: #374151; }
+.vocab-col { font-size: 12px; color: #6b7280; margin-top: 4px; }
+.learn-passage { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;
+                 padding: 10px 12px; margin-top: 10px; }
+.learn-passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                       text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.learn-passage-text { font-size: 13px; color: #1a1a2e; line-height: 1.7; font-style: italic; margin-bottom: 8px; }
+.learn-passage-apply { font-size: 12px; color: #166534; background: #dcfce7;
+                       padding: 6px 8px; border-radius: 6px; }
+
+/* PROGRESS */
+.progress-wrap { background: #fff; border-radius: 10px; padding: 12px 16px;
+                 margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.progress-label { display: flex; justify-content: space-between;
+                  font-size: 12px; color: #6b7280; margin-bottom: 6px; }
+.progress-bar-bg { background: #e5e7eb; border-radius: 4px; height: 6px; }
+.progress-bar-fill { background: linear-gradient(90deg, #22c55e, #0ea5e9);
+                     height: 6px; border-radius: 4px; transition: width .3s; }
+
+/* SECTION */
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.section-icon-wrap { width: 40px; height: 40px; border-radius: 10px;
+                     display: flex; align-items: center; justify-content: center;
+                     font-size: 18px; flex-shrink: 0; }
+.section-title { font-size: 15px; font-weight: 700; }
+.duration-badge { font-size: 10px; background: #e0f2fe; color: #0369a1;
+                  padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 600; }
+.section-source { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.src-link { color: #9ca3af; text-decoration: none; }
+.src-link:hover { color: #6b7280; }
+
+/* AUDIO */
+.audio-box { background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 10px;
+             padding: 14px 16px; margin-bottom: 16px; }
+.audio-box-warn { background: #fef9c3; border-color: #fde047; }
+.audio-box-warn .audio-hint { color: #854d0e; }
+.audio-hint { font-size: 12px; color: #0369a1; margin-bottom: 8px; }
+.audio-link-btn { display: inline-block; background: #0ea5e9; color: #fff;
+                  font-size: 14px; font-weight: 600; padding: 10px 20px;
+                  border-radius: 8px; text-decoration: none; }
+
+/* PASSAGE */
+.passage-box { background: #f8faf8; border: 1px solid #bbddc0; border-left: 4px solid #22c55e;
+               border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+.passage-label { font-size: 11px; font-weight: 700; color: #166534;
+                 text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.passage-text { font-size: 14px; line-height: 1.8; color: #1a1a2e; }
+
+/* SHADOWING */
+.shadow-box { background: #fefce8; border: 1px solid #fde047; border-radius: 10px;
+              padding: 14px 16px; margin-bottom: 16px; }
+.shadow-label { font-size: 11px; font-weight: 700; color: #a16207;
+                text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.shadow-text { font-size: 15px; line-height: 1.8; color: #1a1a2e; font-weight: 500; margin-bottom: 12px; }
+.shadow-tip { font-size: 12px; color: #92400e; margin-bottom: 12px; font-style: italic; }
+
+/* RECORDING */
+.record-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px;
+              padding: 14px 16px; margin-top: 8px; }
+.record-title { font-size: 13px; font-weight: 700; color: #0369a1; margin-bottom: 6px; }
+.record-hint { font-size: 12px; color: #0369a1; margin-bottom: 10px; }
+.record-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.btn-record { background: #0ea5e9; color: #fff; border: none; border-radius: 8px;
+              padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-record:hover { background: #0284c7; }
+.rec-status { font-size: 12px; color: #6b7280; }
+.rec-transcript-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+                      padding: 10px 12px; margin-bottom: 10px; min-height: 40px; }
+.rec-label { font-size: 11px; font-weight: 700; color: #9ca3af;
+             text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 4px; }
+.rec-text-output { font-size: 14px; color: #374151; font-style: italic; }
+.rec-feedback { font-size: 13px; }
+.rec-perfect { color: #16a34a; font-weight: 700; padding: 10px; background: #dcfce7;
+               border-radius: 8px; text-align: center; }
+.rec-warn { color: #9a3412; background: #fff7ed; padding: 8px 12px; border-radius: 8px; }
+.rec-score { font-size: 15px; margin-bottom: 10px; padding: 8px 12px;
+             background: #f9fafb; border-radius: 8px; }
+.rec-missed { background: #fff; border: 1px solid #fca5a5; border-radius: 8px;
+              padding: 12px; margin-bottom: 8px; }
+.rec-missed ul { list-style: none; padding: 0; margin-top: 6px; }
+.rec-missed li { padding: 4px 0; font-size: 13px; }
+.rec-tip { font-size: 12px; color: #6b7280; font-style: italic; }
+.rec-advice { font-size: 13px; color: #374151; background: #fffbeb;
+              border: 1px solid #fde68a; padding: 8px 12px; border-radius: 8px; }
+
+/* QUESTIONS */
+.question { margin-bottom: 20px; padding: 14px; border-radius: 10px;
+            border: 1.5px solid #e5e7eb; transition: border-color .2s; }
+.question.q-correct { border-color: #86efac; background: #f0fdf4; }
+.question.q-wrong   { border-color: #fca5a5; background: #fff1f2; }
+.q-text { font-size: 14px; font-weight: 600; margin-bottom: 12px; line-height: 1.5; }
+.q-num { display: inline-flex; align-items: center; justify-content: center;
+         width: 22px; height: 22px; background: #1a1a2e; color: #fff;
+         border-radius: 50%; font-size: 10px; font-weight: 700;
+         margin-right: 6px; flex-shrink: 0; }
+.q-level { font-size: 10px; font-weight: 700; padding: 2px 7px;
+           border-radius: 10px; margin-left: 6px; }
+.opts { display: flex; flex-direction: column; gap: 7px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 10px 13px;
+       border: 1.5px solid #e5e7eb; border-radius: 8px; background: #fff;
+       cursor: pointer; text-align: left; width: 100%; font-size: 14px;
+       color: #374151; transition: all .15s; }
+.opt:hover:not([disabled]) { border-color: #93c5fd; background: #eff6ff; }
+.opt.sel { border-color: #3b82f6; background: #eff6ff; }
+.opt.opt-correct { border-color: #22c55e !important; background: #dcfce7 !important; color: #166534 !important; }
+.opt.opt-wrong   { border-color: #ef4444 !important; background: #fee2e2 !important; color: #991b1b !important; }
+.opt-letter { width: 22px; height: 22px; border: 1.5px solid #d1d5db; border-radius: 50%;
+              display: inline-flex; align-items: center; justify-content: center;
+              font-size: 11px; font-weight: 700; color: #6b7280; flex-shrink: 0; }
+.opt-text { flex: 1; }
+.expl { font-size: 13px; color: #374151; background: #f9fafb; padding: 10px 12px;
+        border-radius: 8px; margin-top: 10px; line-height: 1.6; }
+
+/* SUBMIT */
+.submit-area { text-align: center; padding: 24px 0; }
+.submit-hint { font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+.btn-submit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff;
+              font-size: 16px; font-weight: 700; padding: 14px 40px;
+              border-radius: 12px; border: none; cursor: pointer; transition: opacity .2s; }
+.btn-submit:hover { opacity: .85; }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* RESULTS */
+.results-panel { background: #fff; border-radius: 14px; padding: 24px 20px;
+                 margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.1); }
+.result-score { font-size: 52px; font-weight: 800; text-align: center; }
+.result-sub { text-align: center; font-size: 18px; color: #6b7280; margin-bottom: 20px; }
+.dom-scores { display: flex; gap: 8px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.dom-score { text-align: center; background: #f8f9fb; border-radius: 10px; padding: 12px 16px; min-width: 70px; }
+.dom-pct { font-size: 22px; font-weight: 800; }
+.dom-name { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+.wrong-title { font-size: 13px; font-weight: 700; color: #c2410c;
+               text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.wrong-item { background: #fff7ed; border: 1px solid #fed7aa; border-left: 4px solid #f97316;
+              border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; font-size: 13px; }
+.wrong-tag { background: #f97316; color: #fff; font-size: 10px; font-weight: 700;
+             padding: 2px 6px; border-radius: 4px; margin-right: 6px; }
+.wrong-expl { color: #78350f; margin-top: 6px; line-height: 1.5; }
+.all-correct { text-align: center; font-size: 16px; font-weight: 700; color: #22c55e;
+               padding: 20px; background: #dcfce7; border-radius: 10px; }
+.result-note { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 16px; }
+
+@media (max-width: 480px) {
+  .container { padding: 12px 8px 32px; }
+  .card { padding: 16px 14px; }
+  .hdr-title { font-size: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <span class="hdr-sub">Improve English &nbsp;·&nbsp; Day 6</span>
+    <span class="hdr-date">Jul 05, 2026</span>
+  </div>
+  <h1 class="hdr-title">오늘의 영어 테스트 📚</h1>
+  <p class="hdr-meta">4개 영역 · 듣기 1클립 · 총 11문항 · 약 15분</p>
+  <div class="lv-badges"><span class="lv-badge" style="background:#6ee7b7">🎧 듣기: A2</span><span class="lv-badge" style="background:#6ee7b7">✏️ 문법: A2</span><span class="lv-badge" style="background:#c4b5fd">📖 독해: B2</span><span class="lv-badge" style="background:#c4b5fd">🗣️ 말하기: B2</span></div>
+</header>
+
+<div class="container">
+
+  
+
+  <div class="card learning-card">
+  <div class="learning-header">
+    <span class="learning-badge">📚 오늘의 레슨 — 7영역</span>
+    <span class="learning-sub">퀴즈 전에 읽고 내용을 기억해보세요</span>
+  </div>
+  <div class="learn-section" style="border-left-color:#8b5cf6">
+  <div class="learn-tag" style="background:#8b5cf6">🔤 문법</div>
+  <div class="learn-topic">First Conditional <span class="learn-topic-kr">(실현 가능한 조건문)</span></div>
+  <div class="learn-rule">오늘 문법 규칙을 퀴즈 문제 해설에서 확인하세요.</div>
+  <div class="learn-when">📌 언제: 퀴즈를 풀며 맥락을 파악하세요.</div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">✅ <b>I have worked here for five years.</b><span class="learn-ex-kr">5년간 일해왔다 (지금도 재직 중)</span></div><div class="learn-ex learn-ex-ok">✅ <b>She has already finished the report.</b><span class="learn-ex-kr">그녀는 이미 보고서를 끝냈다</span></div><div class="learn-ex learn-ex-ok">✅ <b>We have never met before.</b><span class="learn-ex-kr">우리는 전에 만난 적이 없다</span></div>
+    <div class="learn-ex learn-ex-bad">❌ <b>I worked here for five years.</b>
+      <span class="learn-ex-kr">단순과거 → 이미 그만뒀을 때 사용.</span></div>
+  </div>
+  <div class="learn-mistake">⚠️ ① '어제' 같은 과거 시점과 현재완료 혼용 ② have+동사원형 실수</div>
+  <div class="learn-remember">💡 경험·결과·지속 → 현재완료</div>
+</div>
+  <div class="learn-section" style="border-left-color:#0ea5e9">
+  <div class="learn-tag" style="background:#0ea5e9">🎧 듣기</div>
+  <div class="learn-topic">BBC Learning English Stories <span class="learn-topic-kr">— Classic Stories: The Red Shoes</span></div>
+  <audio controls style="width:100%;border-radius:8px;margin:8px 0">
+    <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nwmmn5.mp3" type="audio/mpeg">
+    <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nwmmn5.mp3" target="_blank">🎧 오디오 직접 열기</a>
+  </audio>
+  <button class="tts-btn" onclick="speakText('Today we&#39;re looking at a classic story called &#39;The Red Shoes,&#39; which explores different ways we use the word &#39;wear&#39; in English. You&#39;ll discover thirteen different meanings of this common verb through the narrative. It&#39;s a great way to expand your vocabulary and understand how one word can have multiple uses in everyday conversation.')">🔊 스크립트 읽어주기 (TTS)</button>
+  <div class="learn-script">
+    <div class="learn-script-en">🇬🇧 Today we're looking at a classic story called 'The Red Shoes,' which explores different ways we use the word 'wear' in English. You'll discover thirteen different meanings of this common verb through the narrative. It's a great way to expand your vocabulary and understand how one word can have multiple uses in everyday conversation.</div>
+    <div class="learn-script-kr">🇰🇷 오늘은 '빨간 신발'이라는 고전 이야기를 통해 영어에서 'wear'라는 단어를 어떻게 사용하는지 알아봅니다. 이 이야기를 통해 이 흔한 동사의 13가지 다른 의미를 배우게 될 것입니다. 일상 대화에서 한 단어가 어떻게 여러 가지 의미로 사용되는지 이해하고 어휘를 늘릴 수 있는 좋은 방법입니다.</div>
+  </div>
+  <div class="learn-vocab">📝 핵심 어휘: explores — 탐구하다, 살펴보다; vocabulary — 어휘, 단어</div>
+</div>
+  <div class="learn-section" style="border-left-color:#f59e0b">
+  <div class="learn-tag" style="background:#f59e0b">💼 비즈니스</div>
+  <div class="learn-topic">"Let's circle back" <span class="learn-topic-kr">— 나중에 다시 돌아오다</span></div>
+  <div class="learn-examples">
+    <div class="learn-ex learn-ex-ok">💬 <b>Let's circle back on the budget after the Q2 data arrives.</b>
+      <span class="learn-ex-kr">Q2 데이터가 나오면 예산 건으로 다시 돌아오죠.</span></div>
+  </div>
+  <div class="learn-remember">📌 회의 중 결론을 잠시 보류할 때</div>
+</div>
+  <div class="learn-section" style="border-left-color:#ec4899">
+  <div class="learn-tag" style="background:#ec4899">🔊 발음</div>
+  <div class="learn-topic">v vs b 구분</div>
+  <div class="learn-rule">v는 윗니를 아랫입술에 대고 진동, b는 두 입술로 막아 터뜨림</div>
+  <div class="learn-pron-ex"><code>very /véri/</code> &nbsp;|&nbsp; <code>berry /béri/</code> &nbsp;|&nbsp; <code>vest /vest/</code> &nbsp;|&nbsp; <code>best /best/</code></div>
+  <div class="learn-mistake">⚠️ 한국어 발음 습관이 영향을 미칩니다.</div>
+  <div class="learn-pron-practice">
+    연습 문장: <i>Please feel free to call me if you have any questions.</i>
+    <button class="tts-btn tts-sm" onclick="speakText('Please feel free to call me if you have any questions.')">🔊</button>
+  </div>
+  <div class="learn-remember">💡 거울 앞에서 입 모양을 확인하며 연습하세요.</div>
+</div>
+  <div class="learn-section" style="border-left-color:#6366f1">
+  <div class="learn-tag" style="background:#6366f1">📝 어휘</div>
+  <div class="vocab-item">
+  <span class="vocab-word">allocate</span>
+  <span class="vocab-level">B2</span>
+  <span class="vocab-meaning">할당하다, 배정하다</span>
+  <div class="vocab-col">연어: <i>allocate resources / allocate time / allocate budget</i></div>
+  <div class="learn-ex learn-ex-ok" style="margin-top:5px">
+    We need to allocate more resources to the marketing team. <span class="learn-ex-kr">마케팅팀에 더 많은 자원을 배정해야 합니다.</span>
+  </div>
+</div>
+</div>
+  <div class="learn-section" style="border-left-color:#22c55e">
+  <div class="learn-tag" style="background:#22c55e">📖 독해 전략</div>
+  <div class="learn-topic">Topic Sentence 스캔</div>
+  <div class="learn-rule">각 단락 첫 문장만 먼저 읽어 전체 구조를 파악한 후 세부 내용을 읽습니다.</div>
+  <div class="learn-remember">📊 스키마(schema) 형성 후 읽을 때 이해도가 30% 이상 향상됩니다.</div>
+  <div class="learn-passage">
+    <div class="learn-passage-label">📄 예시 지문</div>
+    <div class="learn-passage-text">The global economy has shown signs of recovery. Consumer spending increased by 3% last quarter. However, inflation remains a concern for policymakers.</div>
+    <div class="learn-passage-apply">▶ 적용: 첫 문장 'The global economy has shown signs of recovery'에서 주제를 파악한 후 나머지를 읽으면 세부 내용이 자연스럽게 연결됩니다.</div>
+  </div>
+</div>
+  <div class="learn-section" style="border-left-color:#10b981">
+  <div class="learn-tag" style="background:#10b981">🌱 어원</div>
+  <div class="learn-topic">"muscle" <span class="learn-topic-kr">— 근육</span></div>
+  <div class="learn-rule">라틴어 musculus (작은 쥐)</div>
+  <div class="learn-script"><div class="learn-script-kr">팔을 구부릴 때 근육이 움직이는 모습이 쥐처럼 보인다 하여</div></div>
+  <div class="learn-remember">💡 어원 스토리를 이미지로 상상하면 오래 기억됩니다.</div>
+</div>
+</div>
+<script>
+function speakText(text) {
+  if (!window.speechSynthesis) { alert("이 브라우저는 TTS를 지원하지 않습니다."); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-US"; u.rate = 0.85; u.pitch = 1.0;
+  window.speechSynthesis.speak(u);
+}
+</script>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label">
+      <span>진행률</span>
+      <span id="progressText">0 / 11 문항</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#e0f2fe">⚡</div>
+    <div>
+      <div class="section-title" style="color:#0ea5e9">
+        Listening · Short
+        <span class="duration-badge">약 2-3분</span>
+      </div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nwmnj2">BBC Learning English Stories</a> · Classic Stories: The Red Shoes</div>
+    </div>
+  </div>
+  <div class="audio-box">
+      <p class="audio-hint">▼ 음성을 먼저 들은 후 문제를 풀어보세요 (약 2-3분)</p>
+      <audio controls controlsList="nodownload" style="width:100%;border-radius:8px">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nwmmn5.mp3" type="audio/mpeg">
+        <source src="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nwmmn5.mp3" type="audio/mp4">
+        <a href="http://open.live.bbc.co.uk/mediaselector/6/redir/version/2.0/mediaset/audio-nondrm-download-rss-low/proto/http/vpid/p0nwmmn5.mp3" target="_blank">음성 파일 직접 열기</a>
+      </audio>
+    </div>
+  <div class="question" id="q0">
+  <div class="q-text">
+    <span class="q-num">1</span>
+    Listen to the conversation between two colleagues about a business meeting. Why did Mark decide to wear a formal suit?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="0" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Because he always wears suits to the office</span>
+  </button><button class="opt" data-q="0" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Because he wanted to make a good impression on the new client</span>
+  </button><button class="opt" data-q="0" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Because the weather was cold that day</span>
+  </button><button class="opt" data-q="0" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Because his casual clothes were dirty</span>
+  </button></div>
+  <div class="expl" id="expl0" style="display:none">💬 음성에서 Mark가 '새로운 클라이언트를 만나기 때문에 좋은 인상을 주고 싶어서 정장을 입기로 결정했다'고 말합니다. A는 일반적인 가정일 뿐이고, C와 D는 텍스트에서 언급되지 않습니다.</div>
+</div><div class="question" id="q1">
+  <div class="q-text">
+    <span class="q-num">2</span>
+    Listen to the story about Sarah's new job. What does Sarah say about wearing different clothes at her new workplace?
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="1" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">She has to wear a uniform every day</span>
+  </button><button class="opt" data-q="1" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">She prefers wearing casual clothes but the company requires business attire</span>
+  </button><button class="opt" data-q="1" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">She wears the same outfit every day because it's convenient</span>
+  </button><button class="opt" data-q="1" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">She doesn't need to wear formal clothes at all</span>
+  </button></div>
+  <div class="expl" id="expl1" style="display:none">💬 음성에서 Sarah는 '편한 옷을 입고 싶지만 회사에서는 비즈니스 복장을 요구한다'고 설명합니다. A는 유니폼이 아니고, C는 같은 옷을 매일 입는 것이 아니며, D는 정장이 필요하다는 내용과 모순됩니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#ede9fe">✏️</div>
+    <div>
+      <div class="section-title" style="color:#8b5cf6">Section · Grammar</div>
+      <div class="section-source"><span>British Council / Perfect English Grammar</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q2">
+  <div class="q-text">
+    <span class="q-num">3</span>
+    If you _____ the project on time, your boss will be happy.
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="2" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">finish</span>
+  </button><button class="opt" data-q="2" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">will finish</span>
+  </button><button class="opt" data-q="2" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">finishes</span>
+  </button><button class="opt" data-q="2" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">finished</span>
+  </button></div>
+  <div class="expl" id="expl2" style="display:none">💬 First Conditional에서 if절은 현재형을 사용하고, 주절은 will + 동사원형입니다. 한국인 학습자들이 if절에도 will을 넣는 실수를 자주 합니다.</div>
+</div><div class="question" id="q3">
+  <div class="q-text">
+    <span class="q-num">4</span>
+    _____ you send the email before 5 PM, it will arrive in their inbox tomorrow morning.
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="3" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">If</span>
+  </button><button class="opt" data-q="3" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Unless</span>
+  </button><button class="opt" data-q="3" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Although</span>
+  </button><button class="opt" data-q="3" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Because</span>
+  </button></div>
+  <div class="expl" id="expl3" style="display:none">💬 실현 가능한 조건문을 나타내려면 'If'를 사용합니다. Unless는 부정 조건, Although는 양보, Because는 이유를 나타내므로 문맥상 맞지 않습니다.</div>
+</div><div class="question" id="q4">
+  <div class="q-text">
+    <span class="q-num">5</span>
+    Which sentence is grammatically INCORRECT?
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="4" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">If the client agrees with the proposal, we will proceed with the contract.</span>
+  </button><button class="opt" data-q="4" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">If you don't update your software regularly, your computer will be vulnerable to security threats.</span>
+  </button><button class="opt" data-q="4" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">If she will attend the meeting tomorrow, I will prepare the presentation slides.</span>
+  </button><button class="opt" data-q="4" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">If we receive the payment by Friday, we will deliver the goods immediately.</span>
+  </button></div>
+  <div class="expl" id="expl4" style="display:none">💬 if절 내에서 'will'을 사용하면 안 됩니다. 'If she will attend'는 틀렸고, 'If she attends'가 올바른 표현입니다. 한국인 학습자들이 주절과 if절을 혼동하여 자주 범하는 오류입니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#dcfce7">📖</div>
+    <div>
+      <div class="section-title" style="color:#22c55e">Section · Reading</div>
+      <div class="section-source"><span>VOA Learning English News</span></div>
+    </div>
+  </div>
+  
+  <div class="question" id="q5">
+  <div class="q-text">
+    <span class="q-num">6</span>
+    Read the passage about a coffee shop opening. What does the owner plan to do?
+
+Passage: Maria opened a small coffee shop in her neighborhood last month. She wants to serve fresh coffee and homemade cakes every day. Next week, she will have a special opening event with free samples for customers.
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="5" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Close her coffee shop</span>
+  </button><button class="opt" data-q="5" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Serve fresh coffee and homemade cakes</span>
+  </button><button class="opt" data-q="5" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Move to a different location</span>
+  </button><button class="opt" data-q="5" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Stop making cakes</span>
+  </button></div>
+  <div class="expl" id="expl5" style="display:none">💬 텍스트에서 'She wants to serve fresh coffee and homemade cakes every day'라고 명확히 나옵니다. A는 반대 의미, C와 D는 텍스트에 언급되지 않은 내용입니다.</div>
+</div><div class="question" id="q6">
+  <div class="q-text">
+    <span class="q-num">7</span>
+    According to the article about online shopping trends, why are more people buying clothes online?
+
+Passage: Online shopping has become very popular in recent years. Many customers prefer buying clothes online because they can compare prices easily, find a wider selection of products, and shop from home without spending time traveling. However, some people still worry about the quality and fitting of clothes they cannot see in person.
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="6" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Online stores have better quality clothes than physical stores</span>
+  </button><button class="opt" data-q="6" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">It is cheaper and more convenient than shopping in stores</span>
+  </button><button class="opt" data-q="6" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">Physical stores are closing down</span>
+  </button><button class="opt" data-q="6" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Online shopping is faster than trying clothes in fitting rooms</span>
+  </button></div>
+  <div class="expl" id="expl6" style="display:none">💬 텍스트에서 가격 비교 용이성, 다양한 상품, 집에서 쇼핑 가능이 언급되어 편리성과 가격 이점이 강조됩니다. A는 품질에 대한 우려가 있다고 했으므로 틀림, C와 D는 텍스트에 없는 정보입니다.</div>
+</div><div class="question" id="q7">
+  <div class="q-text">
+    <span class="q-num">8</span>
+    What can be inferred about why some customers remain hesitant about online clothing purchases based on the passage?
+
+Passage: The e-commerce industry has grown exponentially, particularly in the fashion sector. While the convenience of online shopping attracts millions of consumers daily, a significant gap remains between online and offline retail experiences. Customers can instantly access global brands and compare specifications, yet the inability to physically examine fabric quality, assess color accuracy, or ensure proper fit creates friction in the purchasing decision. Return policies, though improving, often do not fully compensate for the initial disappointment when expectations diverge from reality.
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="7" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">Online stores charge higher shipping fees than competitors</span>
+  </button><button class="opt" data-q="7" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">Global brands are only available in physical stores</span>
+  </button><button class="opt" data-q="7" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">The lack of sensory verification and uncertain return processes create purchasing doubt</span>
+  </button><button class="opt" data-q="7" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">Offline retail experiences are becoming completely obsolete</span>
+  </button></div>
+  <div class="expl" id="expl7" style="display:none">💬 텍스트는 '직접 확인 불가능'(fabric, color, fit), '기대와 현실의 불일치', '반품 정책의 불완전성'을 언급합니다. C가 이를 종합적으로 반영합니다. A는 언급 없음, B는 반대 의미(온라인에서도 접근 가능), D는 극단적 주장으로 텍스트의 주제와 맞지 않습니다.</div>
+</div>
+</div><div class="card section-card">
+  <div class="section-header">
+    <div class="section-icon-wrap" style="background:#fef9c3">🗣️</div>
+    <div>
+      <div class="section-title" style="color:#f59e0b">Section · Speaking</div>
+      <div class="section-source"><a class="src-link" href="http://www.bbc.co.uk/programmes/p0nwmnj2">BBC Learning English Stories</a> · Classic Stories: The Red Shoes</div>
+    </div>
+  </div>
+  <div class="shadow-box">
+      <div class="shadow-label">🎯 오늘의 쉐도잉 스크립트</div>
+      <p class="shadow-text" id="shadowScript0">I always wear business casual to the office on Fridays. My colleagues wear suits and ties, but our company has a relaxed dress code.</p>
+      <p class="shadow-tip">🔊 'wear'는 '웨어'로 발음하되, 'w'를 입술을 동그랗게 모아 발음하세요.</p>
+
+      <div class="record-box">
+        <div class="record-title">🎙️ 발음 녹음 & 체크</div>
+        <p class="record-hint">스크립트를 보며 따라 말하고, 녹음 버튼을 눌러보세요. Chrome/Edge에서 동작합니다.</p>
+        <div class="record-controls">
+          <button class="btn-record" id="recBtn0"
+            onclick="startSpeechRecognition('shadowScript0','recBtn0','recStatus0','recTranscript0','recFeedback0')">
+            🎤 녹음 시작
+          </button>
+          <span class="rec-status" id="recStatus0"></span>
+        </div>
+        <div class="rec-transcript-box">
+          <span class="rec-label">인식된 음성:</span>
+          <p id="recTranscript0" class="rec-text-output">—</p>
+        </div>
+        <div id="recFeedback0" class="rec-feedback"></div>
+      </div>
+    </div>
+  <div class="question" id="q8">
+  <div class="q-text">
+    <span class="q-num">9</span>
+    직장 미팅에서 복장에 대해 이야기할 때, 가장 자연스러운 표현은?
+    <span class="q-level" style="background:#6ee7b7">A2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="8" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">I wear a formal suit to important client meetings.</span>
+  </button><button class="opt" data-q="8" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">I wearing formal suit to important client meetings.</span>
+  </button><button class="opt" data-q="8" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">I am wearing formal suit to important client meetings.</span>
+  </button><button class="opt" data-q="8" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">I wears formal suit to important client meetings.</span>
+  </button></div>
+  <div class="expl" id="expl8" style="display:none">💬 일반적인 습관이나 규칙적인 행동을 나타낼 때는 현재형 'wear'를 사용합니다. 'wear'는 불규칙 동사이므로 'wears'가 아닌 'wear'를 씁니다. B는 문법 오류(동사 생략), C는 진행형으로 현재 입고 있는 상황, D는 3인칭 단수 형태로 부자연스럽습니다.</div>
+</div><div class="question" id="q9">
+  <div class="q-text">
+    <span class="q-num">10</span>
+    다음 문장에서 강세(stress)가 올바르게 표시된 것은? 'I can't wear these shoes to the presentation because they're uncomfortable.'
+    <span class="q-level" style="background:#93c5fd">B1</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="9" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">'PRE-sen-ta-tion' - 첫 음절에 강세</span>
+  </button><button class="opt" data-q="9" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">'pre-SEN-ta-tion' - 두 번째 음절에 강세</span>
+  </button><button class="opt" data-q="9" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">'pre-sen-TA-tion' - 세 번째 음절에 강세</span>
+  </button><button class="opt" data-q="9" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">'pre-sen-ta-TION' - 마지막 음절에 강세</span>
+  </button></div>
+  <div class="expl" id="expl9" style="display:none">💬 'presentation'의 올바른 강세는 두 번째 음절 'SEN'에 있습니다(pre-SEN-ta-tion /ˌprez.ənˈteɪ.ʃən/). 이는 영어에서 자주 틀리는 발음 중 하나이므로 주의가 필요합니다.</div>
+</div><div class="question" id="q10">
+  <div class="q-text">
+    <span class="q-num">11</span>
+    다음 쉐도잉 스크립트의 빈칸을 올바른 'wear' 관련 표현으로 채우세요: 'The CEO will _____ a new collection of designer glasses to the annual shareholders meeting. She always _____ statement pieces that reflect the company's innovative brand image.'
+    <span class="q-level" style="background:#c4b5fd">B2</span>
+  </div>
+  <div class="opts"><button class="opt" data-q="10" data-l="A" type="button">
+    <span class="opt-letter">A</span>
+    <span class="opt-text">put on / wears</span>
+  </button><button class="opt" data-q="10" data-l="B" type="button">
+    <span class="opt-letter">B</span>
+    <span class="opt-text">wear / puts on</span>
+  </button><button class="opt" data-q="10" data-l="C" type="button">
+    <span class="opt-letter">C</span>
+    <span class="opt-text">wear / wears</span>
+  </button><button class="opt" data-q="10" data-l="D" type="button">
+    <span class="opt-letter">D</span>
+    <span class="opt-text">be wearing / wear</span>
+  </button></div>
+  <div class="expl" id="expl10" style="display:none">💬 첫 번째 빈칸은 미래의 계획된 행동이므로 'will wear'입니다. 두 번째 빈칸은 일반적인 습관이므로 현재형 'wears'를 사용합니다. 'put on'은 입는 동작(action), 'wear'는 입고 있는 상태(state)를 나타내므로 구분이 중요합니다.</div>
+</div>
+</div>
+
+  <div class="submit-area" id="submitArea">
+    <p class="submit-hint">모든 문항에 답한 후 제출하세요</p>
+    <button class="btn-submit" id="submitBtn" onclick="submitAnswers()">
+      📝 제출하기
+    </button>
+  </div>
+
+  <div class="results-panel" id="resultsPanel" style="display:none"></div>
+
+</div>
+
+<script>
+const CORRECT  = ["B", "B", "A", "A", "C", "B", "B", "C", "A", "B", "C"];
+const EXPLS    = ["음성에서 Mark가 '새로운 클라이언트를 만나기 때문에 좋은 인상을 주고 싶어서 정장을 입기로 결정했다'고 말합니다. A는 일반적인 가정일 뿐이고, C와 D는 텍스트에서 언급되지 않습니다.", "음성에서 Sarah는 '편한 옷을 입고 싶지만 회사에서는 비즈니스 복장을 요구한다'고 설명합니다. A는 유니폼이 아니고, C는 같은 옷을 매일 입는 것이 아니며, D는 정장이 필요하다는 내용과 모순됩니다.", "First Conditional에서 if절은 현재형을 사용하고, 주절은 will + 동사원형입니다. 한국인 학습자들이 if절에도 will을 넣는 실수를 자주 합니다.", "실현 가능한 조건문을 나타내려면 'If'를 사용합니다. Unless는 부정 조건, Although는 양보, Because는 이유를 나타내므로 문맥상 맞지 않습니다.", "if절 내에서 'will'을 사용하면 안 됩니다. 'If she will attend'는 틀렸고, 'If she attends'가 올바른 표현입니다. 한국인 학습자들이 주절과 if절을 혼동하여 자주 범하는 오류입니다.", "텍스트에서 'She wants to serve fresh coffee and homemade cakes every day'라고 명확히 나옵니다. A는 반대 의미, C와 D는 텍스트에 언급되지 않은 내용입니다.", "텍스트에서 가격 비교 용이성, 다양한 상품, 집에서 쇼핑 가능이 언급되어 편리성과 가격 이점이 강조됩니다. A는 품질에 대한 우려가 있다고 했으므로 틀림, C와 D는 텍스트에 없는 정보입니다.", "텍스트는 '직접 확인 불가능'(fabric, color, fit), '기대와 현실의 불일치', '반품 정책의 불완전성'을 언급합니다. C가 이를 종합적으로 반영합니다. A는 언급 없음, B는 반대 의미(온라인에서도 접근 가능), D는 극단적 주장으로 텍스트의 주제와 맞지 않습니다.", "일반적인 습관이나 규칙적인 행동을 나타낼 때는 현재형 'wear'를 사용합니다. 'wear'는 불규칙 동사이므로 'wears'가 아닌 'wear'를 씁니다. B는 문법 오류(동사 생략), C는 진행형으로 현재 입고 있는 상황, D는 3인칭 단수 형태로 부자연스럽습니다.", "'presentation'의 올바른 강세는 두 번째 음절 'SEN'에 있습니다(pre-SEN-ta-tion /ˌprez.ənˈteɪ.ʃən/). 이는 영어에서 자주 틀리는 발음 중 하나이므로 주의가 필요합니다.", "첫 번째 빈칸은 미래의 계획된 행동이므로 'will wear'입니다. 두 번째 빈칸은 일반적인 습관이므로 현재형 'wears'를 사용합니다. 'put on'은 입는 동작(action), 'wear'는 입고 있는 상태(state)를 나타내므로 구분이 중요합니다."];
+const DNAMES   = ["listening", "listening", "grammar", "grammar", "grammar", "reading", "reading", "reading", "speaking", "speaking", "speaking"];
+const TOTAL    = 11;
+const TODAY    = "2026-07-05";
+const AS_URL   = "https://script.google.com/macros/s/AKfycbxLg5DQoUXuMl4R7ENFpVv8XZYeamkrZAU2CXIm-062HZpvDm2XWcv0pvpb1JmP3l-h/exec";
+const DOMAINS_KR = {listening:"듣기",grammar:"문법",reading:"독해",speaking:"말하기"};
+
+let answers   = new Array(TOTAL).fill(null);
+let submitted = false;
+
+document.querySelectorAll(".opt").forEach(btn => {
+  btn.addEventListener("click", function() {
+    if (submitted) return;
+    const q = parseInt(this.dataset.q);
+    const l = this.dataset.l;
+    document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b => b.classList.remove("sel"));
+    this.classList.add("sel");
+    answers[q] = l;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const n = answers.filter(a => a !== null).length;
+  document.getElementById("progressText").textContent = n + " / " + TOTAL + " 문항";
+  document.getElementById("progressFill").style.width = (n / TOTAL * 100) + "%";
+}
+
+function submitAnswers() {
+  if (submitted) return;
+  const unanswered = answers.filter(a => a === null).length;
+  if (unanswered > 0) {
+    alert("아직 " + unanswered + "문항에 답하지 않았어요.");
+    return;
+  }
+  submitted = true;
+  document.getElementById("submitBtn").disabled = true;
+  document.getElementById("submitBtn").textContent = "채점 중...";
+
+  let correct = 0;
+  const domSc = {listening:{c:0,t:0},grammar:{c:0,t:0},reading:{c:0,t:0},speaking:{c:0,t:0}};
+  const wrongItems = [];
+
+  answers.forEach((ans, i) => {
+    const domain = DNAMES[i];
+    const ok     = CORRECT[i];
+    const isOk   = ans === ok;
+    if (isOk) { correct++; domSc[domain].c++; }
+    else { wrongItems.push({q:i+1, domain, chosen:ans, correct:ok, expl:EXPLS[i]}); }
+    domSc[domain].t++;
+
+    const qEl = document.getElementById("q" + i);
+    if (qEl) qEl.classList.add(isOk ? "q-correct" : "q-wrong");
+    document.querySelectorAll(`.opt[data-q="${i}"]`).forEach(b => {
+      if (b.dataset.l === ok)  b.classList.add("opt-correct");
+      if (b.dataset.l === ans && !isOk) b.classList.add("opt-wrong");
+    });
+    const explEl = document.getElementById("expl" + i);
+    if (explEl) explEl.style.display = "block";
+  });
+
+  showResults(correct, domSc, wrongItems);
+  saveResults(answers, correct, domSc);
+}
+
+function showResults(correct, domSc, wrongItems) {
+  const pct   = Math.round(correct / TOTAL * 100);
+  const color = pct >= 80 ? "#22c55e" : pct >= 60 ? "#f59e0b" : "#ef4444";
+  const emoji = pct >= 80 ? "🎉" : pct >= 60 ? "👍" : "💪";
+
+  let domHtml = "";
+  ["listening","grammar","reading","speaking"].forEach(d => {
+    const s = domSc[d];
+    const p = s.t > 0 ? Math.round(s.c / s.t * 100) : 0;
+    const c = p >= 80 ? "#22c55e" : p >= 60 ? "#f59e0b" : "#ef4444";
+    domHtml += `<div class="dom-score"><div class="dom-pct" style="color:${c}">${p}%</div><div class="dom-name">${DOMAINS_KR[d]}</div></div>`;
+  });
+
+  let wrongHtml = "";
+  wrongItems.forEach(w => {
+    wrongHtml += `<div class="wrong-item"><span class="wrong-tag">${DOMAINS_KR[w.domain]}</span> Q${w.q} — 선택: <b>${w.chosen}</b> / 정답: <b>${w.correct}</b><div class="wrong-expl">${w.expl}</div></div>`;
+  });
+
+  const panel = document.getElementById("resultsPanel");
+  panel.innerHTML = `
+    <div class="result-score" style="color:${color}">${emoji} ${pct}%</div>
+    <div class="result-sub">${correct} / ${TOTAL} 정답</div>
+    <div class="dom-scores">${domHtml}</div>
+    ${wrongItems.length > 0 ? '<div class="wrong-title">오늘의 오답</div>' + wrongHtml : '<div class="all-correct">전체 정답! 완벽해요 🌟</div>'}
+    <div class="result-note">내일 아침 테스트 페이지에서 상세 피드백을 확인하세요.</div>
+  `;
+  panel.style.display = "block";
+  panel.scrollIntoView({behavior: "smooth", block: "start"});
+  document.getElementById("submitArea").style.display = "none";
+}
+
+function saveResults(answers, correct, domSc) {
+  if (!AS_URL) return;
+  // 문항별 정오답: 정답이면 "O", 틀리면 "X"
+  const qResults = answers.map((ans, i) => (ans === CORRECT[i] ? "O" : "X")).join(",");
+  const params = new URLSearchParams({
+    date: TODAY, answers: answers.join(","), correct,
+    results: qResults,
+    listening: domSc.listening.c + "/" + domSc.listening.t,
+    grammar:   domSc.grammar.c   + "/" + domSc.grammar.t,
+    reading:   domSc.reading.c   + "/" + domSc.reading.t,
+    speaking:  domSc.speaking.c  + "/" + domSc.speaking.t,
+  });
+  fetch(AS_URL + "?" + params.toString(), {mode:"no-cors"}).catch(() => {});
+}
+
+// ── 말하기 음성 인식 ───────────────────────────────────────────────────────
+const TH_WORDS   = new Set(["the","this","that","these","those","think","thought","through","three","there","their","they","though","than","then","them","with","both","other","another","either"]);
+const RL_WORDS   = new Set(["really","result","role","rule","level","rely","rally","recall","roll","relate","rely","already","world","early","clearly","regularly","literally","carefully"]);
+const FINAL_CLUSTERS = new Set(["next","text","acts","helped","asked","mixed","worked","talked","jumped","changed","missed","fixed","asked","looked","passed"]);
+const SHORT_VOWELS   = new Set(["ship","sheet","hit","heat","sit","seat","bit","beat","live","leave","fill","feel","will","wheel","it","eat"]);
+
+function getPhonemeIssue(word) {
+  if (TH_WORDS.has(word))         return "th 발음 — 혀끝을 윗니에 살짝 대고 공기를 내뱉으세요 (예: /ð/ or /θ/)";
+  if (RL_WORDS.has(word))         return "r/l 구분 — r은 혀를 말아 올리고, l은 혀끝을 윗잇몸에";
+  if (FINAL_CLUSTERS.has(word))   return "어말 자음군 — 끝 자음 두 개를 모두 발음하세요";
+  if (SHORT_VOWELS.has(word))     return "모음 길이 — 짧은 소리와 긴 소리를 구분하세요";
+  if (word.endsWith("ed"))        return "-ed 발음 — /t/, /d/, /ɪd/ 중 올바른 발음 확인";
+  if (word.endsWith("s") || word.endsWith("es")) return "-s 발음 — /s/, /z/, /ɪz/ 중 올바른 발음";
+  if (word.includes("v"))         return "v 발음 — 윗니를 아랫입술에 대고 진동시키세요 (b와 구분)";
+  if (word.includes("f") && word.length > 2) return "f 발음 — 윗니를 아랫입술에 대고 공기를 내뱉으세요";
+  return "";
+}
+
+function startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId) {
+  const scriptEl = document.getElementById(scriptId);
+  const script   = scriptEl ? scriptEl.textContent.trim() : "";
+  const btn      = document.getElementById(btnId);
+  const statusEl = document.getElementById(statusId);
+  const transEl  = document.getElementById(transcriptId);
+  const feedEl   = document.getElementById(feedbackId);
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    statusEl.textContent = "⚠️ Chrome 또는 Edge에서 지원됩니다";
+    return;
+  }
+
+  const rec = new SR();
+  rec.lang = "en-US";
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+
+  btn.textContent = "⏹ 중지";
+  btn.onclick = () => rec.stop();
+  statusEl.textContent = "🔴 녹음 중...";
+  transEl.textContent = "";
+  feedEl.innerHTML = "";
+
+  let finalTranscript = "";
+
+  rec.onresult = e => {
+    let interim = "";
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + " ";
+      else interim += e.results[i][0].transcript;
+    }
+    transEl.textContent = (finalTranscript + interim).trim();
+  };
+
+  rec.onend = () => {
+    btn.textContent = "🎤 다시 녹음";
+    btn.onclick = () => startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId);
+    statusEl.textContent = "✅ 녹음 완료";
+    analyzeSpeech(finalTranscript.trim(), script, feedEl);
+  };
+
+  rec.onerror = e => {
+    statusEl.textContent = "❌ 오류: " + e.error;
+    btn.textContent = "🎤 다시 시도";
+    btn.onclick = () => startSpeechRecognition(scriptId, btnId, statusId, transcriptId, feedbackId);
+  };
+
+  rec.start();
+}
+
+function analyzeSpeech(spoken, expected, feedEl) {
+  if (!spoken) { feedEl.innerHTML = '<div class="rec-warn">음성이 감지되지 않았습니다. 다시 시도해 주세요.</div>'; return; }
+
+  const normalize = s => s.toLowerCase().replace(/[^a-z'\s]/g,"").split(/\s+/).filter(Boolean);
+  const expWords = normalize(expected);
+  const spkSet   = new Set(normalize(spoken));
+
+  const missed = expWords.filter(w => !spkSet.has(w));
+  const score  = Math.round((1 - missed.length / Math.max(expWords.length, 1)) * 100);
+
+  if (missed.length === 0) {
+    feedEl.innerHTML = '<div class="rec-perfect">🌟 완벽합니다! 모든 단어가 인식되었어요.</div>';
+    return;
+  }
+
+  let html = `<div class="rec-score">정확도: <b style="color:${score>=80?'#22c55e':score>=60?'#f59e0b':'#ef4444'}">${score}%</b> (${expWords.length - missed.length}/${expWords.length} 단어 인식)</div>`;
+  html += '<div class="rec-missed"><b>인식되지 않은 단어:</b><ul>';
+  missed.forEach(w => {
+    const tip = getPhonemeIssue(w);
+    html += `<li><b>${w}</b>${tip ? ' <span class="rec-tip">→ ' + tip + '</span>' : ''}</li>`;
+  });
+  html += '</ul></div>';
+
+  if (score < 70) {
+    html += '<div class="rec-advice">💡 천천히 또렷하게 다시 말해보세요. 속도보다 정확성이 중요합니다.</div>';
+  } else if (score < 90) {
+    html += '<div class="rec-advice">👍 거의 다 됐어요! 위 단어들을 집중 연습해 보세요.</div>';
+  }
+
+  feedEl.innerHTML = html;
+}
+</script>
+</body>
+</html>
